@@ -3,7 +3,7 @@ defmodule PhrasingWeb.PhraseController do
 
   alias Phrasing.Dict
   alias Phrasing.Dict.Phrase
-  alias PhrasingWeb.PhraseLive.Index
+  alias PhrasingWeb.PhraseLive.{Index,Edit}
 
   def index(conn, _params) do
     # phrases = Dict.list_phrases()
@@ -35,9 +35,13 @@ defmodule PhrasingWeb.PhraseController do
   end
 
   def edit(conn, %{"id" => id}) do
-    phrase = Dict.get_phrase!(id)
-    changeset = Dict.change_phrase(phrase)
-    render(conn, "edit.html", phrase: phrase, changeset: changeset)
+    # phrase = Dict.get_phrase!(id)
+    # changeset = Dict.change_phrase(phrase)
+    # render(conn, "edit.html", phrase: phrase, changeset: changeset)
+
+    live_render(conn, Edit, session: %{
+      id: id,
+    })
   end
 
   def update(conn, %{"id" => id, "phrase" => phrase_params}) do

@@ -17,6 +17,10 @@
   <%= textarea f, :lang %>
   <%= error_tag f, :lang %>
 
+  <a phx-click="translate">
+    translate:<%= input_value f, :source %>
+  </a>
+
   <div>
     <%= submit "Save" %>
   </div>

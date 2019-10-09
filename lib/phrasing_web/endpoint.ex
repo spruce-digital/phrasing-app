@@ -5,7 +5,7 @@ defmodule PhrasingWeb.Endpoint do
     websocket: true,
     longpoll: false
 
-  socket "/live", Phoenix.LiveView.Socket
+  socket "/live", PhrasingWeb.SharedLiveSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
