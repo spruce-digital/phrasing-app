@@ -6,6 +6,7 @@ defmodule Phrasing.Dict.Phrase do
     field :english, :string
     field :source, :string
     field :lang, :string
+    field :dialect, :string
 
     timestamps()
   end
@@ -13,7 +14,7 @@ defmodule Phrasing.Dict.Phrase do
   @doc false
   def changeset(phrase, attrs) do
     phrase
-    |> cast(attrs, [:source, :english])
-    |> validate_required([:source, :english])
+    |> cast(attrs, [:source, :english, :lang, :dialect])
+    |> validate_required([:source, :english, :lang])
   end
 end

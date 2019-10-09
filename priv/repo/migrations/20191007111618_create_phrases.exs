@@ -6,6 +6,7 @@ defmodule Phrasing.Repo.Migrations.CreatePhrases do
       add :source, :text
       add :english, :text
       add :lang, :text
+      add :dialect, :text
 
       timestamps()
     end

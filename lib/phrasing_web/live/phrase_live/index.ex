@@ -12,4 +12,17 @@ defmodule PhrasingWeb.PhraseLive.Index do
   def render(assigns) do
     PhraseView.render("index.html", assigns)
   end
+
+  def handle_event("delete:" <> phrase_id, params, socket) do
+    phrase_id = String.to_integer(phrase_id)
+
+    socket.assigns.phrases
+      |> Enum.find(&(&1.id == phrase_id))
+      |> Dict.delete_phrase()
+
+    phrases = socket.assigns.phrases
+      |> Enum.find(&(&1.id != phrase_id))
+
+    {:noreply, assign(socket, phrases: phrases)}
+  end
 end

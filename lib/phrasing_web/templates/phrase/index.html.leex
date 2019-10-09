@@ -5,6 +5,8 @@
     <tr>
       <th>Source</th>
       <th>English</th>
+      <th>Language</th>
+      <th>Dialect</th>
 
       <th></th>
     </tr>
@@ -14,11 +16,13 @@
     <tr>
       <td><%= phrase.source %></td>
       <td><%= phrase.english %></td>
+      <td><%= phrase.lang %></td>
+      <td><%= phrase.dialect %></td>
 
       <td>
         <span><%= link "Show", to: Routes.phrase_path(@socket, :show, phrase) %></span>
         <span><%= link "Edit", to: Routes.phrase_path(@socket, :edit, phrase) %></span>
-        <span><%= link "Delete", to: Routes.phrase_path(@socket, :delete, phrase), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        <span><a href="#" phx-click="delete:<%= phrase.id %>">Delete</a></span>
       </td>
     </tr>
 <% end %>

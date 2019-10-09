@@ -1,5 +1,0 @@
-<h1>Edit Phrase</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.phrase_path(@conn, :update, @phrase)) %>
-
-<span><%= link "Back", to: Routes.phrase_path(@conn, :index) %></span>

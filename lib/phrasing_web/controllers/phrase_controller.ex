@@ -3,7 +3,7 @@ defmodule PhrasingWeb.PhraseController do
 
   alias Phrasing.Dict
   alias Phrasing.Dict.Phrase
-  alias PhrasingWeb.PhraseLive.Index
+  alias PhrasingWeb.PhraseLive.{Index,New,Show,Edit}
 
   def index(conn, _params) do
     # phrases = Dict.list_phrases()
@@ -13,45 +13,51 @@ defmodule PhrasingWeb.PhraseController do
   end
 
   def new(conn, _params) do
-    changeset = Dict.change_phrase(%Phrase{})
-    render(conn, "new.html", changeset: changeset)
-  end
+    # changeset = Dict.change_phrase(%Phrase{})
+    # render(conn, "new.html", changeset: changeset)
 
-  def create(conn, %{"phrase" => phrase_params}) do
-    case Dict.create_phrase(phrase_params) do
-      {:ok, phrase} ->
-        conn
-        |> put_flash(:info, "Phrase created successfully.")
-        |> redirect(to: Routes.phrase_path(conn, :show, phrase))
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
-    end
+    live_render(conn, New, session: %{})
   end
 
   def show(conn, %{"id" => id}) do
-    phrase = Dict.get_phrase!(id)
-    render(conn, "show.html", phrase: phrase)
+    # phrase = Dict.get_phrase!(id)
+    # render(conn, "show.html", phrase: phrase)
+
+    live_render(conn, Show, session: %{id: id})
   end
 
   def edit(conn, %{"id" => id}) do
-    phrase = Dict.get_phrase!(id)
-    changeset = Dict.change_phrase(phrase)
-    render(conn, "edit.html", phrase: phrase, changeset: changeset)
+    # phrase = Dict.get_phrase!(id)
+    # changeset = Dict.change_phrase(phrase)
+    # render(conn, "edit.html", phrase: phrase, changeset: changeset)
+
+    live_render(conn, Edit, session: %{id: id})
+  end
+
+  def create(conn, %{"phrase" => phrase_params}) do
+    # case Dict.create_phrase(phrase_params) do
+    #   {:ok, phrase} ->
+    #     conn
+    #     |> put_flash(:info, "Phrase created successfully.")
+    #     |> redirect(to: Routes.phrase_path(conn, :show, phrase))
+
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     render(conn, "new.html", changeset: changeset)
+    # end
   end
 
   def update(conn, %{"id" => id, "phrase" => phrase_params}) do
-    phrase = Dict.get_phrase!(id)
+    # phrase = Dict.get_phrase!(id)
 
-    case Dict.update_phrase(phrase, phrase_params) do
-      {:ok, phrase} ->
-        conn
-        |> put_flash(:info, "Phrase updated successfully.")
-        |> redirect(to: Routes.phrase_path(conn, :show, phrase))
+    # case Dict.update_phrase(phrase, phrase_params) do
+    #   {:ok, phrase} ->
+    #     conn
+    #     |> put_flash(:info, "Phrase updated successfully.")
+    #     |> redirect(to: Routes.phrase_path(conn, :show, phrase))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", phrase: phrase, changeset: changeset)
-    end
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     render(conn, "edit.html", phrase: phrase, changeset: changeset)
+    # end
   end
 
   def delete(conn, %{"id" => id}) do

@@ -1,0 +1,28 @@
+<h1>Show Phrase</h1>
+
+<ul>
+
+  <li>
+    <strong>Source:</strong>
+    <%= @phrase.source %>
+  </li>
+
+  <li>
+    <strong>English:</strong>
+    <%= @phrase.english %>
+  </li>
+
+  <li>
+    <strong>Language:</strong>
+    <%= @phrase.lang %>
+  </li>
+
+  <li>
+    <strong>Dialect:</strong>
+    <%= @phrase.dialect %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.phrase_path(@socket, :edit, @phrase) %></span>
+<span><%= link "Back", to: Routes.phrase_path(@socket, :index) %></span>
