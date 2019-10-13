@@ -7,6 +7,8 @@ defmodule Phrasing.Dict.Phrase do
     field :source, :string
     field :lang, :string
     field :dialect, :string
+    has_one :card, Phrasing.SRS.Card
+
 
     timestamps()
   end

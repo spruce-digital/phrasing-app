@@ -3,18 +3,19 @@ defmodule Phrasing.Repo.Migrations.CreateReps do
 
   def change do
     create table(:reps) do
-      add :score, :integer
-      add :overdue, :integer
+      add :due_date, :date
       add :ease, :float
       add :interval, :integer
-      add :due_date, :date
+      add :iteration, :integer
+      add :overdue, :integer
+      add :score, :integer
       add :card_id, references(:cards, on_delete: :nothing)
-      add :last_rep_id, references(:reps, on_delete: :nothing)
+      add :prev_rep_id, references(:reps, on_delete: :nothing)
 
       timestamps()
     end
 
     create index(:reps, [:card_id])
-    create index(:reps, [:last_rep_id])
+    create index(:reps, [:prev_rep_id])
   end
 end
