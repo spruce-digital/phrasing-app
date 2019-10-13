@@ -44,6 +44,7 @@ defmodule Phrasing.MixProject do
       {:phoenix_live_view, "~> 0.3.0"},
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
+      {:poison, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
     ]
   end
