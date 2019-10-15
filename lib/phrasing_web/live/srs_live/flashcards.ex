@@ -4,23 +4,39 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
   alias Phrasing.SRS
   alias PhrasingWeb.SRSView
 
+  def deconstruct_queue([]), do: [nil]
+  def deconstruct_queue(queue), do: queue
+
   def mount(_session, socket) do
-    [current|queue] = SRS.queued_cards()
+    [current|queue] = deconstruct_queue SRS.queued_cards()
     history = []
 
-    {:ok, assign(socket, queue: queue, current: current, history: history)}
+    {:ok, assign(socket, queue: queue, current: current, history: history, flipped: false)}
   end
 
   def render(assigns) do
     SRSView.render("flashcards.html", assigns)
   end
 
-  def handle_event("score:" <> card_id, %{score: score}, socket) do
-    history = [socket.assigns.current|socket.assigns.history]
-    [current|queue] = socket.assigns.queue
-
-    {:noreply, assign(socket, history: history, current: current, queue: queue)}
+  def handle_event("flip", _params, socket) do
+    {:noreply, assign(socket, flipped: true)}
   end
+
+  def handle_event("score", %{"score" => score}, socket) do
+    case SRS.score_card socket.assigns.current, String.to_integer(score) do
+      {:ok, card} ->
+        history = [card|socket.assigns.history]
+        [current|queue] = deconstruct_queue SRS.queued_cards()
+
+        {:noreply, assign(socket, history: history, current: current, queue: queue, flipped: false)}
+
+      {:error, msg} ->
+        {:noreply,
+          socket
+          |> put_flash(:error, "An error occured")}
+    end
+  end
+
   # def handle_event("delete:" <> phrase_id, params, socket) do
   #   phrase_id = String.to_integer(phrase_id)
 

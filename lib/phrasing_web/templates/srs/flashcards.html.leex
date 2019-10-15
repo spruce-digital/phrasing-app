@@ -2,14 +2,34 @@
 
 <h3>History</h3>
 <%= for card <- @history do %>
-  <div><%= card.phrase.source %></div>
+  <div style="display: flex; justify-content: space-between">
+    <div style="flex: 1"><%= card.phrase.source %></div>
+    <div><%= card.prev_rep.due_date %></div>
+  </div>
 <% end %>
 
-<h3>Current</h3>
-<div>
-  <%= @current.phrase.source %>
+<%= if !is_nil(@current) do %>
+  <h3>Current</h3>
+  <div>
+    <%= if @flipped do %>
+      <h4>
+        <%= @current.phrase.english %>
+      </h4>
 
-</div>
+      <%= for score <- 0..5 do %>
+        <button phx-click="score" phx-value-score="<%= score %>">
+          <%= score %>
+        </button>
+      <% end %>
+    <% else %>
+      <h4>
+        <%= @current.phrase.source %>
+      </h4>
+
+      <button phx-click="flip">Show Answer</button>
+    <% end %>
+  </div>
+<% end %>
 
 <h3>Queue</h3>
 <%= for card <- @queue do %>

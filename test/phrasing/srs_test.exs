@@ -6,7 +6,6 @@ defmodule Phrasing.SRSTest do
 
   alias Phrasing.SRS
   alias Phrasing.Dict
-  alias Phrasing.SRS.{Card,Rep}
 
   def for_each_score(callback) do
     # IO.inspect Enum.map(0..5, fn s -> callback.(s) end)
@@ -122,6 +121,12 @@ defmodule Phrasing.SRSTest do
       assert card_3.prev_rep.due_date == Timex.today
       assert card_3.prev_rep.interval == card.prev_rep.interval
       assert card_3.prev_rep.ease     != card.prev_rep.ease
+    end
+
+    test "first pass of card is always scheduled for tomorrow", %{card: card} do
+      {:ok, card} = score_card_multi card, [0,0,0,0,0,5]
+
+      assert card.prev_rep.due_date == Timex.shift(Timex.today, days: 1)
     end
   end
 

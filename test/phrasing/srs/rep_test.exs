@@ -16,7 +16,7 @@ defmodule Phrasing.SRS.RepTest do
 
   describe "score_changeset" do
     property :add_next_iteration do
-      for_all iteration in int do
+      for_all iteration in int() do
         implies iteration >= 0 do
           for_each_score fn score ->
             rep = %Rep{iteration: iteration}
