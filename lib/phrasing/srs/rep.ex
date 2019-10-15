@@ -85,11 +85,10 @@ defmodule Phrasing.SRS.Rep do
 
   def add_next_due_date(changeset, rep) do
     score = get_field(changeset, :score)
-    next_interval = get_field(changeset, :interval)
 
     cond do
       score > @repeat_boundary ->
-        put_change(changeset, :due_date, Timex.shift(Timex.today(), days: next_interval))
+        put_change(changeset, :due_date, Timex.shift(Timex.today(), days: rep.interval))
 
       score == @repeat_boundary ->
         changeset
