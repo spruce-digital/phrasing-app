@@ -51,7 +51,7 @@ defmodule Phrasing.SRS.Rep do
     score = get_field(changeset, :score)
     %{iteration: iteration} = rep
 
-    if score < @iteration_reset_boundary do
+    if is_nil(rep.score) or score < @iteration_reset_boundary do
       put_change(changeset, :iteration, 0)
     else
       put_change(changeset, :iteration, iteration + 1)
@@ -75,8 +75,7 @@ defmodule Phrasing.SRS.Rep do
     score = get_field(changeset, :score)
 
     # Do not change easing when an existing word is being restarted
-    # for the first two iterations
-    if rep.ease == @default_ease || rep.iteration >= 2 do
+    if rep.iteration >= 2 do
       next_ease = adjust_ease(rep.ease, score)
       put_change(changeset, :ease, Enum.max([1.3, next_ease]))
     else
@@ -107,6 +106,6 @@ defmodule Phrasing.SRS.Rep do
   end
 
   def adjust_ease(ease, score) do
-    ease + (0.1 - (5 - score) * (0.08 + (5 - score) * 0.2))
+    ease + (0.1 - (5 - score) * (0.08 + (5 - score) * 0.02))
   end
 end

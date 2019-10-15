@@ -3,6 +3,7 @@ defmodule PhrasingWeb.PhraseLive.New do
 
   alias Phrasing.Dict
   alias Phrasing.Dict.Phrase
+  alias Phrasing.SRS
   alias PhrasingWeb.PhraseView
   alias PhrasingWeb.Router.Helpers, as: Routes
 
@@ -18,6 +19,7 @@ defmodule PhrasingWeb.PhraseLive.New do
   def handle_event("create", %{"phrase" => phrase_params}, socket) do
     case Dict.create_phrase(phrase_params) do
       {:ok, phrase} ->
+        SRS.create_card %{phrase: phrase}
         {:stop,
           socket
           |> put_flash(:info, "Phrase created successfully.")

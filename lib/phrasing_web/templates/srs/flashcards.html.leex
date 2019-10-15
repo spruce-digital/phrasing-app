@@ -1,0 +1,18 @@
+<h1>Flashcards</h1>
+
+<h3>History</h3>
+<%= for card <- @history do %>
+  <div><%= card.phrase.source %></div>
+<% end %>
+
+<h3>Current</h3>
+<div>
+  <%= @current.phrase.source %>
+
+</div>
+
+<h3>Queue</h3>
+<%= for card <- @queue do %>
+  <div><%= card.phrase.source %></div>
+<% end %>
+

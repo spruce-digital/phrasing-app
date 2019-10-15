@@ -18,6 +18,7 @@ defmodule PhrasingWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/flashcards", SRSController, :flashcards
     resources "/phrases", PhraseController
   end
 

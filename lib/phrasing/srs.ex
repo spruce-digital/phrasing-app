@@ -19,6 +19,13 @@ defmodule Phrasing.SRS do
 
   def get_card!(id), do: Repo.get(Card, id)
 
+  def queued_cards() do
+    Repo.all from c in Card,
+      join: r in assoc(c, :prev_rep),
+      where: r.due_date <= ^Timex.today(),
+      preload: [:prev_rep, :phrase]
+  end
+
   def create_card(%{phrase: phrase}) do
     phrase
     |> Ecto.build_assoc(:card)
@@ -41,6 +48,12 @@ defmodule Phrasing.SRS do
     %Rep{score: score, card_id: card_id}
     |> Rep.score_changeset(prev_rep)
     |> Repo.insert
+  end
+
+  def update_rep(rep, attrs \\ %{}) do
+    rep
+    |> Rep.changeset(attrs)
+    |> Repo.update
   end
 
   def score_card({:ok, %Card{} = card}) do

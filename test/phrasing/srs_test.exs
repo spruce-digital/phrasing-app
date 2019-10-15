@@ -2,10 +2,11 @@ defmodule Phrasing.SRSTest do
   use Phrasing.DataCase
   use ExUnit.Case
   use ExCheck
+  import Ecto.Query, warn: false
 
   alias Phrasing.SRS
   alias Phrasing.Dict
-  alias Phrasing.SRS.Card
+  alias Phrasing.SRS.{Card,Rep}
 
   def for_each_score(callback) do
     # IO.inspect Enum.map(0..5, fn s -> callback.(s) end)
@@ -13,6 +14,18 @@ defmodule Phrasing.SRSTest do
       |> Enum.member?(false)
 
     !score_failed
+  end
+
+  def score_card_all(card) do
+    Enum.reduce 0..5, [], fn (score, acc) ->
+      [SRS.score_card(card, score) | acc]
+    end
+  end
+
+  def score_card_multi(card, scores) do
+    Enum.reduce scores, {:ok, card}, fn (score, {_, card}) ->
+      SRS.score_card card, score
+    end
   end
 
   def fixture(:phrase) do
@@ -46,106 +59,106 @@ defmodule Phrasing.SRSTest do
   describe "score_card" do
     setup [:setup_card]
 
-    test "score a default card 0", %{card: card} do
-      {status, next_card} = SRS.score_card card, 0
+    test "scoring card creates new rep", %{card: card} do
+      cards = score_card_all card
 
-      assert status == :ok
-      assert next_card.prev_rep_id != card.prev_rep_id
-      assert next_card.prev_rep.card_id == next_card.id
-
-      next_card = Repo.preload(next_card, [prev_rep: :prev_rep])
-
-      assert next_card.prev_rep.ease < next_card.prev_rep.prev_rep.ease
-      assert Timex.diff(next_card.prev_rep.due_date, Timex.today, :days) == 0
+      Enum.each cards, fn {status, c} ->
+        assert status == :ok
+        assert c.prev_rep_id != card.prev_rep_id
+      end
     end
 
-    test "score a default card 1", %{card: card} do
-      {status, next_card} = SRS.score_card card, 1
+    test "scoring card preserves card_id", %{card: card} do
+      cards = score_card_all card
 
-      assert status == :ok
-      assert next_card.prev_rep_id != card.prev_rep_id
-      assert next_card.prev_rep.card_id == next_card.id
-
-      next_card = Repo.preload(next_card, [prev_rep: :prev_rep])
-
-      assert next_card.prev_rep.ease < next_card.prev_rep.prev_rep.ease
-      assert Timex.diff(next_card.prev_rep.due_date, Timex.today, :days) == 0
+      Enum.each cards, fn {status, c} ->
+        assert status == :ok
+        assert c.prev_rep.card_id == card.id
+      end
     end
 
-    test "score a default card 2", %{card: card} do
-      {status, next_card} = SRS.score_card card, 2
+    test "ease does not change for first iteration", %{card: card} do
+      cards = score_card_all card
 
-      assert status == :ok
-      assert next_card.prev_rep_id != card.prev_rep_id
-      assert next_card.prev_rep.card_id == next_card.id
-
-      next_card = Repo.preload(next_card, [prev_rep: :prev_rep])
-
-      assert next_card.prev_rep.ease < next_card.prev_rep.prev_rep.ease
-      assert Timex.diff(next_card.prev_rep.due_date, Timex.today, :days) == 0
+      Enum.each cards, fn {status, c} ->
+        assert status == :ok
+        assert c.prev_rep.ease == 2.5
+      end
     end
 
-    test "score a default card 3", %{card: card} do
-      {status, next_card} = SRS.score_card card, 3
+    test "ease does not change for second iteration", %{card: card} do
+      {_status, card} = SRS.score_card card, 3
+      cards = score_card_all card
 
-      assert status == :ok
-      assert next_card.prev_rep_id != card.prev_rep_id
-      assert next_card.prev_rep.card_id == next_card.id
-
-      next_card = Repo.preload(next_card, [prev_rep: :prev_rep])
-
-      assert next_card.prev_rep.ease < next_card.prev_rep.prev_rep.ease
-      assert Timex.diff(next_card.prev_rep.due_date, Timex.today, :days) == 0
+      Enum.each cards, fn {status, c} ->
+        assert status == :ok
+        assert c.prev_rep.ease == 2.5
+      end
     end
 
-    test "score a default card 4", %{card: card} do
-      {status, next_card} = SRS.score_card card, 4
+    test "scoring below 4 repeats today", %{card: card} do
+      cards = score_card_all card
 
-      assert status == :ok
-      assert next_card.prev_rep_id != card.prev_rep_id
-      assert next_card.prev_rep.card_id == next_card.id
+      Enum.each cards, fn {status, c} ->
+        assert status == :ok
 
-      next_card = Repo.preload(next_card, [prev_rep: :prev_rep])
-
-      assert next_card.prev_rep.ease < next_card.prev_rep.prev_rep.ease
-      assert Timex.diff(next_card.prev_rep.due_date, Timex.today, :days) > 0
+        if c.prev_rep.score < 4 do
+          assert c.prev_rep.due_date == Timex.today
+        end
+      end
     end
 
-    test "score a default card 5", %{card: card} do
-      {status, next_card} = SRS.score_card card, 5
+    test "scoring 4 does not change ease", %{card: card} do
+      {status, card} = score_card_multi card, [4,4,4,4,4,4,4,4,4,4]
 
       assert status == :ok
-      assert next_card.prev_rep_id != card.prev_rep_id
-      assert next_card.prev_rep.card_id == next_card.id
-
-      next_card = Repo.preload(next_card, [prev_rep: :prev_rep])
-
-      assert next_card.prev_rep.ease > next_card.prev_rep.prev_rep.ease
-      assert Timex.diff(next_card.prev_rep.due_date, Timex.today, :days) > 0
+      assert card.prev_rep.ease == 2.5
     end
 
-    test "pass several times then fail", %{card: card} do
-      card = Repo.preload(card, :prev_rep)
-      assert card.prev_rep.interval == 1
-      assert card.prev_rep.iteration == 0
-      {status, card} = SRS.score_card card, 4
-      assert card.prev_rep.interval == 6
-      assert card.prev_rep.iteration == 1
-      {status, card} = SRS.score_card card, 4
-      assert card.prev_rep.interval == 14
-      assert card.prev_rep.iteration == 2
-      {status, card} = SRS.score_card card, 4
-      assert card.prev_rep.interval == 32
-      assert card.prev_rep.iteration == 3
-      {status, card} = SRS.score_card card, 3
-      assert card.prev_rep.interval == 32
-      assert card.prev_rep.iteration == 4
-      {status, card} = SRS.score_card card, 4
-      assert card.prev_rep.interval == 42
-      assert card.prev_rep.iteration == 5
-      {status, card} = SRS.score_card card, 2
-      assert card.prev_rep.interval == 1
-      assert card.prev_rep.iteration == 0
+    test "scoring 3 repeats today and changes ease but does not change interval", %{card: card} do
+      {:ok, card} = score_card_multi card, [5,5,5,5,5]
+      {:ok, card_3} = score_card_multi card, [3,3,3,3,3]
+
+      assert card_3.prev_rep.due_date == Timex.today
+      assert card_3.prev_rep.interval == card.prev_rep.interval
+      assert card_3.prev_rep.ease     != card.prev_rep.ease
+    end
+  end
+
+  describe "queued_cards" do
+    setup [:setup_card]
+
+    test "gets all cards due today", %{card: card} do
+      card = Repo.preload card, :prev_rep
+      queued_cards = SRS.queued_cards()
+
+      assert Enum.any? queued_cards, fn c ->
+        c.prev_rep == card.prev_rep
+      end
+    end
+
+    test "gets all cards that are overdue", %{card: card} do
+      card = Repo.preload card, :prev_rep
+      rep_params = %{due_date: Timex.shift(Timex.today, days: -1)}
+
+      with {:ok, rep}   <- SRS.update_rep(card.prev_rep, rep_params),
+           queued_cards <- SRS.queued_cards() do
+        assert Enum.any? queued_cards, fn card ->
+          card.prev_rep == rep
+        end
+      end
+    end
+
+    test "does not get cards that aren't due", %{card: card} do
+      card = Repo.preload card, :prev_rep
+      rep_params = %{due_date: Timex.shift(Timex.today, days: 1)}
+
+      with {:ok, rep}   <- SRS.update_rep(card.prev_rep, rep_params),
+           queued_cards <- SRS.queued_cards() do
+        refute Enum.any? queued_cards, fn card ->
+          card.prev_rep == rep
+        end
+      end
     end
   end
 
