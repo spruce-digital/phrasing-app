@@ -47,10 +47,10 @@ defmodule Phrasing.SRS.RepTest do
             next_iteration = get_field(changeset, :iteration)
             next_interval = get_field(changeset, :interval)
 
-            if next_iteration > 1 do
+            if next_iteration > 2 do
               next_interval == round(interval * 2.5)
             else
-              Enum.member?([1, 6], next_interval)
+              Enum.member?([0, 1, 6], next_interval)
             end
           end
         end
@@ -72,7 +72,7 @@ defmodule Phrasing.SRS.RepTest do
             next_ease = get_field(changeset, :ease)
 
             cond do
-              iteration < 2 && ease != 2.5 ->
+              iteration < 3 ->
                 next_ease == ease
 
               next_ease > 1.3 ->

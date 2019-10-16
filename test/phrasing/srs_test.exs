@@ -124,9 +124,31 @@ defmodule Phrasing.SRSTest do
     end
 
     test "first pass of card is always scheduled for tomorrow", %{card: card} do
-      {:ok, card} = score_card_multi card, [0,0,0,0,0,5]
+      {:ok, card} = score_card_multi card, [0,0,0,5]
 
       assert card.prev_rep.due_date == Timex.shift(Timex.today, days: 1)
+    end
+
+    test "failing a card always schedules it for today", %{card: card} do
+      {:ok, card} = score_card_multi card, [5,4,5,0]
+
+      assert card.prev_rep.due_date == Timex.today
+    end
+
+    test "scores 5 are scheduled later than scores 4", %{card: card} do
+      {:ok, card} = score_card_multi card, [5,5,5]
+      {:ok, card_5} = SRS.score_card card, 5
+      {:ok, card_4} = SRS.score_card card, 4
+
+      assert card_5.prev_rep.due_date > card_4.prev_rep.due_date
+    end
+
+    test "passing a card the first time schedules for tomorrow", %{card: card} do
+      {:ok, card_4} = SRS.score_card card, 4
+      {:ok, card_5} = SRS.score_card card, 5
+
+      assert card_4.prev_rep.due_date == Timex.shift(Timex.today, days: 1)
+      assert card_5.prev_rep.due_date == Timex.shift(Timex.today, days: 1)
     end
   end
 

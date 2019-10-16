@@ -33,8 +33,8 @@ defmodule Phrasing.SRS.Rep do
     rep
     |> cast(%{prev_rep_id: prev_rep.id}, [:prev_rep_id])
     |> add_next_iteration(prev_rep)
-    |> add_next_interval(prev_rep)
     |> add_next_ease(prev_rep)
+    |> add_next_interval(prev_rep)
     |> add_next_due_date(prev_rep)
     |> validate_required([:overdue, :ease, :interval, :iteration, :due_date, :card_id])
   end
@@ -51,31 +51,18 @@ defmodule Phrasing.SRS.Rep do
     score = get_field(changeset, :score)
     %{iteration: iteration} = rep
 
-    if is_nil(rep.score) or score < @iteration_reset_boundary do
+    if score < @iteration_reset_boundary do
       put_change(changeset, :iteration, 0)
     else
       put_change(changeset, :iteration, iteration + 1)
     end
   end
 
-  def add_next_interval(changeset, rep) do
-    next_iteration = get_field(changeset, :iteration)
-
-    next_interval =
-      case next_iteration do
-        0 -> 1
-        1 -> 6
-        _ -> round(rep.interval * rep.ease)
-      end
-
-    put_change(changeset, :interval, next_interval)
-  end
-
   def add_next_ease(changeset, rep) do
     score = get_field(changeset, :score)
 
     # Do not change easing when an existing word is being restarted
-    if rep.iteration >= 2 do
+    if rep.iteration >= 3 do
       next_ease = adjust_ease(rep.ease, score)
       put_change(changeset, :ease, Enum.max([1.3, next_ease]))
     else
@@ -83,12 +70,28 @@ defmodule Phrasing.SRS.Rep do
     end
   end
 
+  def add_next_interval(changeset, rep) do
+    next_iteration = get_field(changeset, :iteration)
+    next_ease = get_field(changeset, :ease)
+
+    next_interval =
+      case next_iteration do
+        0 -> 0
+        1 -> 1
+        2 -> 6
+        _ -> round(rep.interval * next_ease)
+      end
+
+    put_change(changeset, :interval, next_interval)
+  end
+
   def add_next_due_date(changeset, rep) do
     score = get_field(changeset, :score)
+    next_interval = get_field(changeset, :interval)
 
     cond do
       score > @repeat_boundary ->
-        put_change(changeset, :due_date, Timex.shift(Timex.today(), days: rep.interval))
+        put_change(changeset, :due_date, Timex.shift(Timex.today(), days: next_interval))
 
       score == @repeat_boundary ->
         changeset
