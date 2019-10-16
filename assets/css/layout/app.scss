@@ -1,0 +1,21 @@
+section.layout-app {
+  background-color: $white-;
+  min-height: 100vh;
+
+  header {
+    display: flex;
+    padding: 12px;
+  }
+
+  header .home {
+    flex: 1;
+  }
+
+  header nav ul {
+    display: flex;
+  }
+
+  header nav ul li {
+    padding: 4px 12px;
+  }
+}

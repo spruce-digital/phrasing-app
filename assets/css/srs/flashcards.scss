@@ -1,0 +1,18 @@
+section.srs-flashcards {
+  .card {
+    background-color: $white;
+    padding: 24px;
+    border-radius: 4px;
+    box-shadow: 0 3px 6px -2px $black----;
+  }
+
+  .answers {
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .answers div.score {
+    padding: 0 12px;
+  }
+}

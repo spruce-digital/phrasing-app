@@ -1,38 +1,50 @@
-<h1>Flashcards</h1>
+<section class="srs-flashcards">
+  <%= if !is_nil(@current) do %>
+    <section class="deck">
+      <article class="card">
+        <%= if @flipped do %>
+          <h4>
+            <%= @current.phrase.english %>
+          </h4>
+        <% else %>
+          <h4>
+            <%= @current.phrase.source %>
+          </h4>
+        <% end %>
+      </article>
 
-<h3>History</h3>
-<%= for card <- @history do %>
-  <div style="display: flex; justify-content: space-between">
-    <div style="flex: 1"><%= card.phrase.source %></div>
-    <div><%= card.prev_rep.due_date %></div>
-  </div>
-<% end %>
+      <aside class="answers">
+        <%= if @flipped do %>
+          <%= for score <- 0..5 do %>
+            <div class="score" phx-click="score" phx-value-score="<%= score %>">
+              <i class="<%= icon_for_score score %>"></i>
+            </div>
+          <% end %>
+          <div class="score">
+            <i class="fad fa-ellipsis-h"></i>
+          </div>
+        <% else %>
+          <div phx-click="flip">
+            <i class="fad fa-sync-alt"></i>
+          </div>
+        <% end %>
+      </aside>
 
-<%= if !is_nil(@current) do %>
-  <h3>Current</h3>
-  <div>
-    <%= if @flipped do %>
-      <h4>
-        <%= @current.phrase.english %>
-      </h4>
+    </section>
+  <% end %>
 
-      <%= for score <- 0..5 do %>
-        <button phx-click="score" phx-value-score="<%= score %>">
-          <%= score %>
-        </button>
-      <% end %>
-    <% else %>
-      <h4>
-        <%= @current.phrase.source %>
-      </h4>
+  <h1>Flashcards</h1>
 
-      <button phx-click="flip">Show Answer</button>
-    <% end %>
-  </div>
-<% end %>
+  <h3 class="red">History</h3>
+  <%= for card <- @history do %>
+    <div style="display: flex; justify-content: space-between">
+      <div style="flex: 1"><%= card.phrase.source %></div>
+      <div><%= card.prev_rep.due_date %></div>
+    </div>
+  <% end %>
 
-<h3>Queue</h3>
-<%= for card <- @queue do %>
-  <div><%= card.phrase.source %></div>
-<% end %>
-
+  <h3>Queue</h3>
+  <%= for card <- @queue do %>
+    <div><%= card.phrase.source %></div>
+  <% end %>
+</section>
