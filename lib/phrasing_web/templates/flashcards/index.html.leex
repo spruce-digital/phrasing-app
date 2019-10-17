@@ -1,4 +1,4 @@
-<section class="srs-flashcards">
+<section class="flashcards--index">
   <%= if !is_nil(@current) do %>
     <section class="deck">
       <article class="card">
@@ -13,23 +13,7 @@
         <% end %>
       </article>
 
-      <aside class="answers">
-        <%= if @flipped do %>
-          <%= for score <- 0..5 do %>
-            <div class="score" phx-click="score" phx-value-score="<%= score %>">
-              <i class="<%= icon_for_score score %>"></i>
-            </div>
-          <% end %>
-          <div class="score">
-            <i class="fad fa-ellipsis-h"></i>
-          </div>
-        <% else %>
-          <div phx-click="flip">
-            <i class="fad fa-sync-alt"></i>
-          </div>
-        <% end %>
-      </aside>
-
+      <%= render "_answers.html", flipped: @flipped %>
     </section>
   <% end %>
 

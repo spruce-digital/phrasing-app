@@ -1,8 +1,8 @@
-defmodule PhrasingWeb.SRSLive.Flashcards do
+defmodule PhrasingWeb.FlashcardsLive.Index do
   use Phoenix.LiveView
 
   alias Phrasing.SRS
-  alias PhrasingWeb.SRSView
+  alias PhrasingWeb.FlashcardsView
 
   def deconstruct_queue([]), do: [nil]
   def deconstruct_queue(queue), do: queue
@@ -15,7 +15,7 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
   end
 
   def render(assigns) do
-    SRSView.render("flashcards.html", assigns)
+    FlashcardsView.render("index.html", assigns)
   end
 
   def handle_event("flip", _params, socket) do

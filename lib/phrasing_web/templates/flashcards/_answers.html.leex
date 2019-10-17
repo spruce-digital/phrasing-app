@@ -1,0 +1,27 @@
+<aside class="flashcards--answers">
+  <%= unless @flipped do %>
+    <div class="score-container-blackout">
+      <%= raw render_score 0 %>
+    </div>
+
+    <div class="score-container">
+      <%= raw render_score 1 %>
+
+      <div class="score-primary">
+        <%= raw render_score 2 %>
+        <%= raw render_score 3 %>
+        <%= raw render_score 4 %>
+      </div>
+
+      <%= raw render_score 5 %>
+    </div>
+
+    <div class="score-container-more">
+      <%= raw render_score %>
+    </div>
+  <% else %>
+    <div phx-click="flip">
+      <i class="fad fa-sync-alt"></i>
+    </div>
+  <% end %>
+</aside>

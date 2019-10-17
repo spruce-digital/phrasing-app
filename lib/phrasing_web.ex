@@ -43,6 +43,7 @@ defmodule PhrasingWeb do
       import PhrasingWeb.ErrorHelpers
       import PhrasingWeb.Gettext
       import Phoenix.LiveView, only: [live_render: 2, live_render: 3, live_link: 1, live_link: 2]
+      import FontAwesomePhoenix.HTML
       alias PhrasingWeb.Router.Helpers, as: Routes
     end
   end
