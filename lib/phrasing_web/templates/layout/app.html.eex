@@ -9,13 +9,11 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/fa/css/all.css") %>"/>
   </head>
   <body>
-    <section class="layout-app">
+    <section class="layout--app">
       <header>
-        <div class="home">
-          <a href="/">
-            <h1>Phrasing</h1>
-          </a>
-        </div>
+        <a class="home" href="/">
+          <h1>Phrasing</h1>
+        </a>
 
         <nav role="navigation">
           <ul>

@@ -1,0 +1,13 @@
+<main class="flashcards--deck">
+  <article class="card">
+    <%= if @flipped do %>
+      <h4>
+        <%= @card.phrase.english %>
+      </h4>
+    <% else %>
+      <h4>
+        <%= @card.phrase.source %>
+      </h4>
+    <% end %>
+  </article>
+</main>

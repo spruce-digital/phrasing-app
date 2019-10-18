@@ -1,5 +1,5 @@
-<aside class="flashcards--answers">
-  <%= unless @flipped do %>
+<aside class="flashcards--answers" data-flipped="<%= @flipped %>">
+  <%= if @flipped do %>
     <div class="score-container-blackout">
       <%= raw render_score 0 %>
     </div>
@@ -20,8 +20,8 @@
       <%= raw render_score %>
     </div>
   <% else %>
-    <div phx-click="flip">
-      <i class="fad fa-sync-alt"></i>
+    <div class="flip" phx-click="flip">
+      <i class="far fa-redo"></i>
     </div>
   <% end %>
 </aside>

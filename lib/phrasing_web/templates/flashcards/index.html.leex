@@ -1,34 +1,6 @@
 <section class="flashcards--index">
   <%= if !is_nil(@current) do %>
-    <section class="deck">
-      <article class="card">
-        <%= if @flipped do %>
-          <h4>
-            <%= @current.phrase.english %>
-          </h4>
-        <% else %>
-          <h4>
-            <%= @current.phrase.source %>
-          </h4>
-        <% end %>
-      </article>
-
-      <%= render "_answers.html", flipped: @flipped %>
-    </section>
-  <% end %>
-
-  <h1>Flashcards</h1>
-
-  <h3 class="red">History</h3>
-  <%= for card <- @history do %>
-    <div style="display: flex; justify-content: space-between">
-      <div style="flex: 1"><%= card.phrase.source %></div>
-      <div><%= card.prev_rep.due_date %></div>
-    </div>
-  <% end %>
-
-  <h3>Queue</h3>
-  <%= for card <- @queue do %>
-    <div><%= card.phrase.source %></div>
+    <%= render "_deck.html", flipped: @flipped, card: @current %>
+    <%= render "_answers.html", flipped: @flipped %>
   <% end %>
 </section>

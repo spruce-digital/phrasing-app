@@ -3,11 +3,11 @@ defmodule PhrasingWeb.FlashcardsView do
 
   @icons_for_score [
     "fal fa-exclamation-square",
-    "fal fa-thumbs-down",
+    "fal fa-tired",
     "fal fa-times",
     "fal fa-repeat",
     "fal fa-check",
-    "fal fa-thumbs-up",
+    "fal fa-laugh-beam",
   ]
 
   def render_score() do

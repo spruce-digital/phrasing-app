@@ -1,32 +1,48 @@
 $answer-size: 48px;
 $answer-color: $black----;
+$answer-radius: $answer-size / 5;
+$answer-spacing: 1.2;
 
 section.flashcards--index {
+  @include flex-column;
+  justify-content: space-between;
+}
+
+main.flashcards--deck {
   .card {
     background-color: $white;
-    padding: 24px;
+    padding: 36px;
+    font-size: 36px;
     border-radius: 4px;
-    box-shadow: 0 3px 6px -2px $black----;
+    box-shadow: 0 3px 6px -2px rgba($black----, 0.5);
   }
 }
 
 aside.flashcards--answers {
-  padding: 24px;
+  padding: 0 24px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
 
+  &[data-flipped=false] {
+    justify-content: center;
+  }
+
   .score-container-blackout {
+    align-items: center;
+    display: flex;
+    height: $answer-size * $answer-spacing;
     order: 2;
   }
 
   .score-container {
-    order: 1;
+    align-items: center;
     display: flex;
     justify-content: space-between;
+    order: 1;
     width: 100%;
-    align-items: center;
+    height: $answer-size * $answer-spacing;
 
     @include break {
       order: 3;
@@ -37,6 +53,9 @@ aside.flashcards--answers {
   }
 
   .score-container-more {
+    align-items: center;
+    display: flex;
+    height: $answer-size * $answer-spacing;
     order: 4;
   }
 
@@ -46,23 +65,28 @@ aside.flashcards--answers {
     height: $answer-size;
     border-radius: $answer-size / 2;
     box-sizing: border-box;
-    padding: 12px;
+    padding: 12px 0;
+    margin: 0 24px;
+    background-color: $yellow;
   }
 
   .score {
     padding: 0 12px;
     font-size: $answer-size * 0.4;
     color: $answer-color;
-    margin: 12px 0;
+  }
+
+  .score-3 {
+    margin: 0 12px;
+    font-size: $answer-size * 0.3;
   }
 
   .score-2, .score-4 {
-    margin: 12px;
     align-items: center;
     background: $answer-color;
-    border-radius: $answer-size / 5;
+    border-radius: $answer-radius;
     box-sizing: border-box;
-    color: white;
+    color: $white;
     display: flex;
     font-size: $answer-size * 0.5;
     height: $answer-size;
@@ -76,5 +100,21 @@ aside.flashcards--answers {
 
   .score-4 {
     background-color: $green;
+  }
+
+  .flip {
+    @include flex-center;
+    background: $frost-;
+    border-radius: $answer-radius;
+    color: $white;
+    font-size: $answer-size * 0.4;
+    height: $answer-size;
+    justify-self: center !important;
+    width: 206px;
+    margin-bottom: $answer-size * $answer-spacing + 5px;
+
+    @include break {
+      margin-bottom: 5px;
+    }
   }
 }
