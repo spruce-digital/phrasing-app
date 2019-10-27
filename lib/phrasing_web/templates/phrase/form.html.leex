@@ -1,4 +1,4 @@
-<%= form_for @changeset, "#", [phx_submit: @action], fn f -> %>
+<%= form_for @changeset, "#", [phx_submit: @action, phx_change: :change], fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -13,13 +13,27 @@
   <%= textarea f, :english %>
   <%= error_tag f, :english %>
 
-  <%= label f, :lang %>
-  <%= textarea f, :lang %>
-  <%= error_tag f, :lang %>
+  <div style="display: flex; align-items: center">
+    <div style="flex: 1">
+      <%= label f, :lang %>
+      <%= select f, :lang, @languages %>
+      <%= error_tag f, :lang %>
+    </div>
 
-  <%= label f, :dialect %>
-  <%= textarea f, :dialect %>
-  <%= error_tag f, :dialect %>
+    <div style="flex: 1">
+      <%= label f, :dialect %>
+      <%= select f, :dialect, @dialects, disabled: Enum.empty?(@dialects) %>
+      <%= error_tag f, :dialect %>
+    </div>
+  </div>
+
+  <%= label f, :literal %>
+  <%= textarea f, :literal %>
+  <%= error_tag f, :literal %>
+
+  <%= label f, :translit %>
+  <%= textarea f, :translit %>
+  <%= error_tag f, :translit %>
 
   <div>
     <%= submit "Save" %>

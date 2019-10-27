@@ -19,6 +19,17 @@ defmodule Phrasing.SRS do
 
   def get_card!(id), do: Repo.get(Card, id)
 
+  def list_cards do
+    Repo.all from c in Card,
+      preload: [:prev_rep, :phrase]
+  end
+
+  def list_active_cards do
+    Repo.all from c in Card,
+      distinct: c.phrase_id,
+      preload: [:prev_rep, :phrase]
+  end
+
   def queued_cards() do
     Repo.all from c in Card,
       join: r in assoc(c, :prev_rep),

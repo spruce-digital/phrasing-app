@@ -1,0 +1,27 @@
+<main class="cards--table">
+  <table>
+    <thead>
+      <tr>
+        <th>Phrase</th>
+        <th>Next Due</th>
+        <th>Ease</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for card <- @cards do %>
+        <tr>
+          <td><%= card.phrase.source %></td>
+          <td>
+            <%= card.prev_rep.due_date %>
+            [<%= card.prev_rep.interval %>]
+          </td>
+          <td><%= card.prev_rep.ease %></td>
+          <td>
+            <span><a href="#" phx-click="reset:<%= card.phrase.id %>">Reset</a></span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</main>

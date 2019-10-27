@@ -19,6 +19,7 @@ defmodule PhrasingWeb.Router do
 
     get "/", PageController, :index
     get "/flashcards", SRSController, :flashcards
+    get "/cards", SRSController, :cards
     resources "/phrases", PhraseController
   end
 

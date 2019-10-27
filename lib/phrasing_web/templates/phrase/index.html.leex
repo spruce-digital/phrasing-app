@@ -6,7 +6,6 @@
       <th>Source</th>
       <th>English</th>
       <th>Language</th>
-      <th>Dialect</th>
 
       <th></th>
     </tr>
@@ -16,7 +15,12 @@
     <tr>
       <td><%= phrase.source %></td>
       <td><%= phrase.english %></td>
-      <td><%= phrase.lang %></td>
+      <td>
+        <%= phrase.lang %>
+        <%= if phrase.dialect do %>
+          /<%= phrase.dialect %>
+        <% end %>
+      </td>
       <td><%= phrase.dialect %></td>
 
       <td>

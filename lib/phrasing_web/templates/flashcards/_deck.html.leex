@@ -1,13 +1,42 @@
 <main class="flashcards--deck">
-  <article class="card">
-    <%= if @flipped do %>
-      <h4>
-        <%= @card.phrase.english %>
-      </h4>
+  <ul class="phrase-container">
+    <li class="phrase-attr-source">
+      <i class="fad fa-signal-alt-3"></i>
+      <h2><%= @card.phrase.source %></h2>
+    </li>
+
+    <%= unless @flipped do %>
+      <%= if @card.hint do %>
+        <li class="phrase-attr-hint">
+          <i class="fal fa-question-square"></i>
+          <h4><%= @card.hint %></h4>
+        </li>
+      <% end %>
     <% else %>
-      <h4>
-        <%= @card.phrase.source %>
-      </h4>
+      <li class="phrase-attr-english">
+        <i class="fal fa-flag-usa"></i>
+        <h3><%= @card.phrase.english %></h3>
+      </li>
+
+      <%= if @card.phrase.literal do %>
+        <li class="phrase-attr-literal">
+          <i class="fal fa-exchange"></i>
+          <h4><%= @card.phrase.literal %></h4>
+        </li>
+      <% end %>
+
+      <%= if @card.phrase.translit do %>
+        <li class="phrase-attr-translit">
+          <i class="fal fa-language"></i>
+          <h4><%= @card.phrase.translit %></h4>
+        </li>
+      <% end %>
+
+      <%= if @card.mnem do %>
+        <li class="phrase-attr-mnem">
+          <i class="fal fa-magic"></i>
+          <h4><%= @card.mnem %></h4>
+        </li>
+      <% end %>
     <% end %>
-  </article>
 </main>

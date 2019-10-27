@@ -16,14 +16,44 @@ main.flashcards--deck {
     border-radius: 4px;
     box-shadow: 0 3px 6px -2px rgba($black----, 0.5);
   }
+
+  .phrase-container {
+    list-style-type: none;
+  }
+
+  li[class^=phrase-attr] {
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+
+    i {
+      color: $black----;
+      width: 24px;
+      padding-right: 12px;
+      @include flex-center;
+      font-size: 12px;
+    }
+
+    :nth-child(2) {
+      flex: 1;
+    }
+  }
+
+  .phrase-source {
+
+  }
 }
 
 aside.flashcards--answers {
-  padding: 0 24px;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+
+  @include break {
+    padding: 0 24px;
+  }
 
   &[data-flipped=false] {
     justify-content: center;
@@ -66,14 +96,22 @@ aside.flashcards--answers {
     border-radius: $answer-size / 2;
     box-sizing: border-box;
     padding: 12px 0;
-    margin: 0 24px;
+    margin: 0 12px;
     background-color: $yellow;
+
+    @include break {
+      margin: 0 24px;
+    }
   }
 
   .score {
-    padding: 0 12px;
+    padding: 0 6px;
     font-size: $answer-size * 0.4;
     color: $answer-color;
+
+    @include break {
+      padding: 0 12px;
+    }
   }
 
   .score-3 {
@@ -117,4 +155,23 @@ aside.flashcards--answers {
       margin-bottom: 5px;
     }
   }
+}
+
+main.flashcards--finished {
+  @include flex-column;
+  flex: 2;
+  justify-content: center;
+  text-align: center;
+
+  i {
+    font-size: 48px;
+  }
+
+  > * {
+    margin-bottom: 24px;
+  }
+}
+
+aside.flashcards--finished {
+  flex: 1;
 }

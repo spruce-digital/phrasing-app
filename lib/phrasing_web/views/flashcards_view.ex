@@ -19,7 +19,7 @@ defmodule PhrasingWeb.FlashcardsView do
   end
   def render_score(score) when score < 6 do
     """
-    <div class="score score-#{score}">
+    <div class="score score-#{score}" phx-click="score" phx-value-score="#{score}">
       <i class="#{Enum.at @icons_for_score, score}"></i>
     </div>
     """

@@ -1,4 +1,4 @@
-defmodule PhrasingWeb.FlashcardsLive.Index do
+defmodule PhrasingWeb.SRSLive.Flashcards do
   use Phoenix.LiveView
 
   alias Phrasing.SRS
