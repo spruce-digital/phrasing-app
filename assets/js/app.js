@@ -13,7 +13,28 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import LiveSocket from "phoenix_live_view"
 
-let liveSocket = new LiveSocket("/live", Socket)
+let pushAdderEvent
+const Hooks = {}
+
+Hooks.Adder = {
+  mounted() {
+    pushAdderEvent = this.pushEvent.bind(this)
+    const height = this.el.offsetHeight
+    this.el.style.transform = `translateY(-${height}px)`
+  },
+  updated() {
+    const height = this.el.offsetHeight
+    this.el.style.transform = `translateY(-${height}px)`
+  },
+}
+
+window.Add = {
+  navbar() {
+    pushAdderEvent('open', {})
+  }
+}
+
+let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks})
 liveSocket.connect()
 
 // Import local files

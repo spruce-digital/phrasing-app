@@ -17,6 +17,7 @@
 
         <nav role="navigation">
           <ul>
+            <li><a href="#" onclick="javascript:Add.navbar()">Add</a></li>
             <li><a href="/phrases">Phrases</a></li>
             <li><a href="/cards">Cards</a></li>
             <li><a href="/flashcards">Flashcards</a></li>
@@ -29,6 +30,9 @@
         <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
         <%= render @view_module, @view_template, assigns %>
       </main>
+
+      <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: %{}, container:
+          {:aside, class: "adder--adder"}) %>
     </section>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>

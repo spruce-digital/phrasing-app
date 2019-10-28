@@ -1,0 +1,18 @@
+.adder--adder {
+  position: relative;
+  height: 0;
+
+  section.drawer {
+    background: $white--;
+    border-top: 1px solid $white----;
+    box-shadow: 0 5px 9px 3px rgba($black----, 0.3);
+    box-sizing: border-box;
+    left: 0;
+    padding: 24px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(0); /* this is set in Hooks.Adder#update */
+    transition: transform 200ms ease;
+  }
+}
