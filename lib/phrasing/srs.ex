@@ -32,6 +32,7 @@ defmodule Phrasing.SRS do
 
   def queued_cards() do
     Repo.all from c in Card,
+      distinct: c.phrase_id,
       join: r in assoc(c, :prev_rep),
       where: r.due_date <= ^Timex.today(),
       preload: [:prev_rep, :phrase]

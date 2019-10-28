@@ -3,6 +3,7 @@
     <thead>
       <tr>
         <th>Phrase</th>
+        <th>Prev Rep</th>
         <th>Next Due</th>
         <th>Ease</th>
         <th>Actions</th>
@@ -12,8 +13,9 @@
       <%= for card <- @cards do %>
         <tr>
           <td><%= card.phrase.source %></td>
+          <td><%= card.prev_rep.inserted_at |> relative_time! %></td>
           <td>
-            <%= card.prev_rep.due_date %>
+            <%= card.prev_rep.due_date |> relative_day! %>
             [<%= card.prev_rep.interval %>]
           </td>
           <td><%= card.prev_rep.ease %></td>
