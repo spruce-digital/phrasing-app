@@ -1,0 +1,16 @@
+<div class="left-column adder--phrase">
+  <%= label @form, :source do %>
+    <%= language_name(input_value @form, :lang) %>
+  <% end %>
+  <%= textarea @form, :source %>
+  <%= error_tag @form, :source %>
+
+  <div class="interpretations <%= @interpretation %>">
+    <%= label @form, :english, [phx_click: :change_interpretation, phx_value_interpretation: :english] %>
+    <%= label @form, :literal, [phx_click: :change_interpretation, phx_value_interpretation: :literal] %>
+    <%= label @form, :translit, [phx_click: :change_interpretation, phx_value_interpretation: :translit] %>
+  </div>
+
+  <%= textarea @form, @interpretation %>
+  <%= error_tag @form, @interpretation %>
+</div>

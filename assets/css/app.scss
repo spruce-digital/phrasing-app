@@ -5,6 +5,10 @@ body, html, h1, h2, h3, h4, h5, h6, p, header {
   padding: 0;
 }
 
+button {
+  margin: 0;
+}
+
 @mixin break() {
   @media screen and (min-width: 768px) { @content; }
 }

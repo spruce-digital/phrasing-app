@@ -1,0 +1,15 @@
+<div class="adder--controls">
+  <div>Cancel</div>
+
+  <div class="title-bar">
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+      </div>
+    <% else %>
+      <h4>Add Phrase</h4>
+    <% end %>
+  </div>
+
+  <%= submit "Save" %>
+</div>
