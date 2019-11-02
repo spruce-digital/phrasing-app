@@ -1,0 +1,7 @@
+<div class="adder--language-select">
+  <%= for lang <- @languages do %>
+    <div class="<%= language_class lang, @changeset %>" phx-click="select_language" phx-value-lang="<%= lang[:value] %>">
+      <%= lang[:key] %>
+    </div>
+  <% end %>
+</div>

@@ -25,6 +25,28 @@ button {
   flex-direction: column;
 }
 
+@mixin dark-hover($property, $value, $percent: 10%) {
+  #{$property}: $value;
+
+  &:hover {
+    #{$property}: darken($value, $percent);
+  }
+}
+
+@mixin light-hover($property, $value, $percent: 10%) {
+  #{$property}: $value;
+
+  &:hover {
+    #{$property}: lighten($value, $percent);
+  }
+}
+
+@mixin hoverable() {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 @import "colors";
 @import "phoenix.css";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";

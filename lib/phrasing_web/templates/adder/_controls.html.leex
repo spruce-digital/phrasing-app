@@ -1,5 +1,7 @@
 <div class="adder--controls">
-  <div>Cancel</div>
+  <button phx-click="close" type="button">
+    <i class="fal fa-times"></i>
+  </button>
 
   <div class="title-bar">
     <%= if @changeset.action do %>
@@ -11,5 +13,7 @@
     <% end %>
   </div>
 
-  <%= submit "Save" %>
+  <%= submit do %>
+    <i class="fal fa-check"></i>
+  <% end %>
 </div>
