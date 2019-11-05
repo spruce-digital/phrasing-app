@@ -8,6 +8,12 @@ defmodule Phrasing.Dict do
 
   alias Phrasing.Dict.Phrase
 
+  @topic "phrases"
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Phrasing.PubSub, @topic)
+  end
+
   @doc """
   Returns the list of phrases.
 
@@ -18,7 +24,9 @@ defmodule Phrasing.Dict do
 
   """
   def list_phrases do
-    Repo.all(Phrase)
+    Repo.all from p in Phrase,
+      where: p.active == true,
+      order_by: [desc: p.updated_at]
   end
 
   @doc """
@@ -53,6 +61,12 @@ defmodule Phrasing.Dict do
     %Phrase{}
     |> Phrase.changeset(attrs)
     |> Repo.insert()
+    |> notify_dict_subscribers(:phrase_update)
+  end
+
+  def notify_dict_subscribers({:ok, payload}, event) do
+    Phoenix.PubSub.broadcast(Phrasing.PubSub, @topic, {event, payload})
+    {:ok, payload}
   end
 
   @doc """
@@ -86,7 +100,7 @@ defmodule Phrasing.Dict do
 
   """
   def delete_phrase(%Phrase{} = phrase) do
-    Repo.delete(phrase)
+    update_phrase(phrase, %{active: false})
   end
 
   @doc """

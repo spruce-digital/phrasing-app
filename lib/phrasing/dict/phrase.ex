@@ -22,6 +22,7 @@ defmodule Phrasing.Dict.Phrase do
   }
 
   schema "phrases" do
+    field :active, :boolean
     field :dialect, :string
     field :english, :string
     field :lang, :string

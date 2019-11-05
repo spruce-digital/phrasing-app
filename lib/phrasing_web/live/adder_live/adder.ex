@@ -37,15 +37,17 @@ defmodule PhrasingWeb.AdderLive.Adder do
   end
 
   def handle_event("open", _params, socket) do
-    {:noreply, assign(socket, open: true)}
+    {:noreply, assign(socket, open: true, changeset: new_changeset())}
   end
 
   def handle_event("close", _params, socket) do
+    Dict.notify_dict_subscribers({:ok, nil}, :phrase_input)
     {:noreply, assign(socket, open: false)}
   end
 
   def handle_event("select_language", %{"lang" => lang}, socket) do
     changeset = Changeset.put_change socket.assigns.changeset, :lang, lang
+    Dict.notify_dict_subscribers({:ok, changeset}, :phrase_input)
     {:noreply, assign(socket, select_language: false, changeset: changeset)}
   end
   def handle_event("select_language", _params, socket) do
@@ -58,13 +60,14 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
   def handle_event("update", %{"_target" => target, "phrase" => phrase}, socket) do
     changeset = update_changeset socket.assigns.changeset, target, phrase
-
+    Dict.notify_dict_subscribers({:ok, changeset}, :phrase_input)
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("submit", %{"phrase" => phrase_params}, socket) do
     with {:ok, phrase} <- Dict.create_phrase(phrase_params),
          {:ok, card}   <- SRS.score_card({:ok, phrase.card}) do
+      Dict.notify_dict_subscribers({:ok, nil}, :phrase_input)
       {:noreply, assign(socket, open: false, changeset: new_changeset())}
     end
   end

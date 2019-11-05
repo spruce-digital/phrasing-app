@@ -5,12 +5,22 @@ defmodule PhrasingWeb.PhraseLive.Index do
   alias PhrasingWeb.PhraseView
 
   def mount(_session, socket) do
+    if connected?(socket), do: Dict.subscribe()
     phrases = Dict.list_phrases()
-    {:ok, assign(socket, phrases: phrases)}
+    {:ok, assign(socket, phrases: phrases, changeset: nil)}
   end
 
   def render(assigns) do
     PhraseView.render("index.html", assigns)
+  end
+
+  def handle_info({:phrase_update, _phrase}, socket) do
+    phrases = Dict.list_phrases()
+    {:noreply, assign(socket, phrases: phrases)}
+  end
+
+  def handle_info({:phrase_input, changeset}, socket) do
+    {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("delete:" <> phrase_id, _params, socket) do
@@ -21,7 +31,7 @@ defmodule PhrasingWeb.PhraseLive.Index do
       |> Dict.delete_phrase()
 
     phrases = socket.assigns.phrases
-      |> Enum.find(&(&1.id != phrase_id))
+      |> Enum.filter(&(&1.id != phrase_id))
 
     {:noreply, assign(socket, phrases: phrases)}
   end
