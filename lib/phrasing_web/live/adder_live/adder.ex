@@ -1,21 +1,33 @@
 defmodule PhrasingWeb.AdderLive.Adder do
   use Phoenix.LiveView
 
+  alias Ecto.Changeset
   alias Phrasing.Dict
   alias Phrasing.Dict.Phrase
+  alias Phrasing.Repo
+  alias Phrasing.SRS
   alias PhrasingWeb.AdderView
-  alias Ecto.Changeset
 
   def new_changeset() do
-    Dict.change_phrase(%Phrase{lang: "nl"})
+    %Phrase{lang: "nl"}
+    |> Repo.preload(:card)
+    |> Dict.change_phrase
+  end
+
+  def update_changeset(changeset, [_phrase, field], phrase) do
+    value = phrase[field]
+    Changeset.put_change changeset, String.to_atom(field), value
+  end
+  def update_changeset(changeset, _target, _phrase) do
+    changeset
   end
 
   def mount(_session, socket) do
-    changeset = new_changeset
+    changeset = new_changeset()
     interpretation = :english
     languages = Phrase.languages
 
-    {:ok, assign(socket, open: true, changeset: changeset,
+    {:ok, assign(socket, open: false, changeset: changeset,
       interpretation: interpretation, select_language: false,
       languages: languages)}
   end
@@ -45,19 +57,15 @@ defmodule PhrasingWeb.AdderLive.Adder do
   end
 
   def handle_event("update", %{"_target" => target, "phrase" => phrase}, socket) do
-    value = get_in phrase, tl(target)
-    field = target
-            |> List.last
-            |> String.to_atom
-
-    changeset = Changeset.put_change socket.assigns.changeset, field, value
+    changeset = update_changeset socket.assigns.changeset, target, phrase
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("submit", %{"phrase" => phrase}, socket) do
-    IO.inspect phrase
-
-    {:noreply, assign(socket, open: false, changeset: new_changeset)}
+  def handle_event("submit", %{"phrase" => phrase_params}, socket) do
+    with {:ok, phrase} <- Dict.create_phrase(phrase_params),
+         {:ok, card}   <- SRS.score_card({:ok, phrase.card}) do
+      {:noreply, assign(socket, open: false, changeset: new_changeset())}
+    end
   end
 end

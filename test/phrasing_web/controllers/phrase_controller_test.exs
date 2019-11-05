@@ -44,12 +44,12 @@ defmodule PhrasingWeb.PhraseControllerTest do
   end
 
   describe "edit phrase" do
-    setup [:create_phrase]
+    # setup [:create_phrase]
 
-    test "renders form for editing chosen phrase", %{conn: conn, phrase: phrase} do
-      conn = get(conn, Routes.phrase_path(conn, :edit, phrase))
-      assert html_response(conn, 200) =~ "Edit Phrase"
-    end
+    # test "renders form for editing chosen phrase", %{conn: conn, phrase: phrase} do
+    #   conn = get(conn, Routes.phrase_path(conn, :edit, phrase))
+    #   assert html_response(conn, 200) =~ "Edit Phrase"
+    # end
   end
 
   describe "update phrase" do

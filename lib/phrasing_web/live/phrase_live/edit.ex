@@ -2,7 +2,6 @@ defmodule PhrasingWeb.PhraseLive.Edit do
   use Phoenix.LiveView
 
   alias Phrasing.Dict
-  alias Phrasing.Dict.Phrase
   alias PhrasingWeb.PhraseView
   alias PhrasingWeb.Router.Helpers, as: Routes
 

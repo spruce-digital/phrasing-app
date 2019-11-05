@@ -13,7 +13,7 @@ defmodule PhrasingWeb.PhraseLive.Index do
     PhraseView.render("index.html", assigns)
   end
 
-  def handle_event("delete:" <> phrase_id, params, socket) do
+  def handle_event("delete:" <> phrase_id, _params, socket) do
     phrase_id = String.to_integer(phrase_id)
 
     socket.assigns.phrases

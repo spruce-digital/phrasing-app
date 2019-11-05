@@ -10,12 +10,12 @@
   <%= error_tag @form, :source %>
 
   <div class="interpretations <%= @interpretation %>">
-    <%= for interp <- interpretations do %>
+    <%= for interp <- interpretations() do %>
       <%= label @form, interp, [phx_click: :change_interpretation, phx_value_interpretation: interp] %>
     <% end %>
   </div>
 
-  <%= for interp <- interpretations do %>
+  <%= for interp <- interpretations() do %>
     <%= if interp == @interpretation do %>
       <%= textarea @form, interp %>
       <%= error_tag @form, interp %>

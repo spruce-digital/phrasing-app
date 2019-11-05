@@ -30,7 +30,7 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
 
         {:noreply, assign(socket, history: history, current: current, queue: queue, flipped: false)}
 
-      {:error, msg} ->
+      {:error, _msg} ->
         {:noreply,
           socket
           |> put_flash(:error, "An error occured")}

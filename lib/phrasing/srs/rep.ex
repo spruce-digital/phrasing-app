@@ -2,7 +2,6 @@ defmodule Phrasing.SRS.Rep do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @default_ease 2.5
   @iteration_reset_boundary 3
   @repeat_boundary 3
 

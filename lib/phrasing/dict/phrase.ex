@@ -38,6 +38,7 @@ defmodule Phrasing.Dict.Phrase do
   def changeset(phrase, attrs) do
     phrase
     |> cast(attrs, [:source, :english, :lang, :dialect, :literal, :translit])
+    |> cast_assoc(:card)
     |> validate_required([:source, :english, :lang])
   end
 

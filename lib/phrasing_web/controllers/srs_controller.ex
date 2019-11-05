@@ -1,7 +1,6 @@
 defmodule PhrasingWeb.SRSController do
   use PhrasingWeb, :controller
 
-  alias Phrasing.SRS
   alias PhrasingWeb.SRSLive
 
   def flashcards(conn, _params) do

@@ -5,15 +5,11 @@ defmodule Phrasing.SRS do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.Changeset
   alias Phrasing.Repo
   alias Phrasing.SRS.{Card,Rep}
 
-  @min_ease 1.3
-  @first_interval 1
-  @second_interval 6
   @iteration_reset_boundary 3
-  @repeat_boundary 4
-  @score_values 0..5
 
   def iteration_reset_boundary, do: @iteration_reset_boundary
 

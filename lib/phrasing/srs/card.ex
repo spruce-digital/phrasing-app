@@ -16,6 +16,6 @@ defmodule Phrasing.SRS.Card do
   def changeset(card, attrs) do
     card
     |> cast(attrs, [:phrase_id, :prev_rep_id, :hint, :mnem])
-    |> validate_required([:phrase_id])
+    # |> validate_required([:phrase_id])
   end
 end

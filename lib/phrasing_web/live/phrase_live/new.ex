@@ -41,7 +41,7 @@ defmodule PhrasingWeb.PhraseLive.New do
     IO.inspect phrase_params
 
     prev_lang = Access.get socket.assigns, :lang
-    prev_dialect = Access.get socket.assigns, :dialect
+    # prev_dialect = Access.get socket.assigns, :dialect
     next_lang = phrase_params["lang"]
     next_dialect = phrase_params["dialect"]
 

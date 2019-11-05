@@ -34,10 +34,8 @@ defmodule Phrasing.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.0"},
-      {:ex_css_modules, "~> 0.0.5"},
       {:excheck, "~> 0.6", only: :test},
       {:floki, ">= 0.0.0", only: :test},
-      {:font_awesome_phoenix, "~> 1.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:phoenix, "~> 1.4.0"},
