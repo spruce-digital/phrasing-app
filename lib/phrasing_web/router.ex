@@ -17,9 +17,12 @@ defmodule PhrasingWeb.Router do
   scope "/", PhrasingWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", LibraryController, :index
     get "/flashcards", SRSController, :flashcards
     get "/cards", SRSController, :cards
+    resources "/journals", JournalController, only: [:new]
+    resources "/songs", SongController, only: [:new]
+    resources "/books", BookController, only: [:new]
     resources "/phrases", PhraseController
   end
 
