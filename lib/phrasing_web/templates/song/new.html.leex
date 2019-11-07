@@ -1,1 +1,24 @@
-New Song!
+<section class="song--new">
+  <%= form_for @changeset, "#", [phx_submit: :create], fn f -> %>
+
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+
+    <%= label f, :lang %>
+    <%= select f, :lang, @languages %>
+    <%= error_tag f, :lang %>
+
+    <%= label f, :body %>
+    <%= textarea f, :body %>
+    <%= error_tag f, :body %>
+
+    <%= label f, :url %>
+    <%= url_input f, :url %>
+    <%= error_tag f, :url %>
+
+    <div>
+      <%= submit "Create" %>
+    </div>
+  <% end %>
+</section>

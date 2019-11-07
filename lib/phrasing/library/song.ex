@@ -14,7 +14,7 @@ defmodule Phrasing.Library.Song do
   @doc false
   def changeset(song, attrs) do
     song
-    |> cast(attrs, [:lang, :body, :url])
-    |> validate_required([:lang, :body, :url])
+    |> cast(attrs, [:lang, :body, :url, :title])
+    |> validate_required([:lang, :body, :url, :title])
   end
 end

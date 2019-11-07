@@ -1,11 +1,12 @@
 defmodule PhrasingWeb.LibraryLive.Index do
   use Phoenix.LiveView
 
+  alias Phrasing.Library
   alias PhrasingWeb.LibraryView
 
   def mount(_session, socket) do
     journals = []
-    songs = []
+    songs = Library.list_songs
     books = []
     {:ok, assign(socket, journals: journals, songs: songs, books: books)}
   end

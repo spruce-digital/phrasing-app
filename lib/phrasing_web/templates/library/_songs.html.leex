@@ -12,6 +12,17 @@
       Start by adding one by clicking the plus button in the upper right hand corner.
     </div>
   <% else %>
-    Some songs
+    <div class="library---slider">
+      <%= for song <- @songs do %>
+        <div class="tile">
+          <div class="image">
+            <img src="https://via.placeholder.com/150" />
+          </div>
+          <h4 class="title">
+            <%= song.title %>
+          </h4>
+        </div>
+      <% end %>
+    </div>
   <% end %>
 </section>
