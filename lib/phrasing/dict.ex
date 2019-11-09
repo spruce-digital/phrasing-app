@@ -10,6 +10,12 @@ defmodule Phrasing.Dict do
 
   @topic "phrases"
 
+  def language_name language_code do
+    Phrase.languages
+    |> Enum.find(fn x -> x[:value] == language_code end)
+    |> Access.get(:key)
+  end
+
   def subscribe do
     Phoenix.PubSub.subscribe(Phrasing.PubSub, @topic)
   end

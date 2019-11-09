@@ -3,8 +3,7 @@ defmodule Phrasing.Repo.Migrations.CreateSongs do
 
   def change do
     create table(:songs) do
-      add :body, :text
-      add :lang, :string
+      add :body, :map
       add :title, :string
       add :url, :string
 

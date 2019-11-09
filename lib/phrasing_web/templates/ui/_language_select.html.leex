@@ -1,0 +1,18 @@
+<%= if @button do %>
+  <div class="ui--language-select">
+    <%= label @f, @field %>
+    <div class="select-and-button">
+      <%= select @f, @field, language_options(@f, @field) %>
+      <button type="button"
+              phx-click="language_select"
+              phx-value-field="<%= @field %>">
+        <i class="<%= @button %>"></i>
+      </button>
+    </div>
+    <%= error_tag @f, @field %>
+  </div>
+<% else %>
+  <%= label @f, @field %>
+  <%= select @f, @field, language_options(@f, @field) %>
+  <%= error_tag @f, @field %>
+<% end %>

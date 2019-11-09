@@ -194,8 +194,8 @@ defmodule Phrasing.Library do
       %Ecto.Changeset{source: %Song{}}
 
   """
-  def change_song(%Song{} = song) do
-    Song.changeset(song, %{})
+  def change_song(%Song{} = song, attrs \\ %{}) do
+    Song.changeset(song, attrs)
   end
 
   alias Phrasing.Library.Book

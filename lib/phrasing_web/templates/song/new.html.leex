@@ -1,17 +1,17 @@
 <section class="song--new">
-  <%= form_for @changeset, "#", [phx_submit: :create], fn f -> %>
+  <%= form_for @changeset, "#", [phx_submit: :create, phx_change: :change], fn f -> %>
 
     <%= label f, :title %>
     <%= text_input f, :title %>
     <%= error_tag f, :title %>
 
-    <%= label f, :lang %>
-    <%= select f, :lang, @languages %>
-    <%= error_tag f, :lang %>
+    <%= render PhrasingWeb.UIView, "_language_select.html", f: f, field: :lang, button: "fal fa-plus" %>
 
-    <%= label f, :body %>
-    <%= textarea f, :body %>
     <%= error_tag f, :body %>
+    <%= for l <- @languages do %>
+      <%= label_lang f, :body, l %>
+      <%= textarea_lang f, :body, l %>
+    <% end %>
 
     <%= label f, :url %>
     <%= url_input f, :url %>

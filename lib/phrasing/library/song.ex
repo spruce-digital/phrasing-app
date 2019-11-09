@@ -3,8 +3,8 @@ defmodule Phrasing.Library.Song do
   import Ecto.Changeset
 
   schema "songs" do
-    field :body, :string
-    field :lang, :string
+    field :body, {:map, :string}
+    field :lang, :string, virtual: true
     field :title, :string
     field :url, :string
 
@@ -14,7 +14,7 @@ defmodule Phrasing.Library.Song do
   @doc false
   def changeset(song, attrs) do
     song
-    |> cast(attrs, [:lang, :body, :url, :title])
-    |> validate_required([:lang, :body, :url, :title])
+    |> cast(attrs, [:body, :url, :title, :lang])
+    |> validate_required([:body, :url, :title])
   end
 end

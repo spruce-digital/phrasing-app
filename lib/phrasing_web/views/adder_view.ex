@@ -1,14 +1,9 @@
 defmodule PhrasingWeb.AdderView do
   use PhrasingWeb, :view
+  import Phrasing.Dict, only: [language_name: 1]
 
   alias Phrasing.Dict.Phrase
   alias Ecto.Changeset
-
-  def language_name language_code do
-    Phrase.languages
-    |> Enum.find(fn x -> x[:value] == language_code end)
-    |> Access.get(:key)
-  end
 
   def language_class language, changeset do
     value = Access.get(language, :value)
