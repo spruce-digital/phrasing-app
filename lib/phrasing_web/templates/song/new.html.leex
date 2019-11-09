@@ -5,12 +5,16 @@
     <%= text_input f, :title %>
     <%= error_tag f, :title %>
 
-    <%= render PhrasingWeb.UIView, "_language_select.html", f: f, field: :lang, button: "fal fa-plus" %>
+    <%= render PhrasingWeb.UIView, "_language_select.html", f: f, field: :lang %>
 
     <%= error_tag f, :body %>
     <%= for l <- @languages do %>
       <%= label_lang f, :body, l %>
       <%= textarea_lang f, :body, l %>
+    <% end %>
+
+    <%= unless Enum.empty?(@languages) do %>
+      <%= render PhrasingWeb.UIView, "_language_select.html", f: f, field: :add_lang, button: "fal fa-plus" %>
     <% end %>
 
     <%= label f, :url %>

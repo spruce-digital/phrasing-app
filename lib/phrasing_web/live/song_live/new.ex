@@ -22,7 +22,7 @@ defmodule PhrasingWeb.SongLive.New do
     case get_field_from_socket(socket, field) do
       "" -> {:noreply, socket}
       lang ->
-        languages = socket.assigns.languages ++ [lang]
+        languages = add_languages_from_socket(socket, field)
         {:noreply, assign(socket, languages: languages)}
     end
   end
@@ -56,5 +56,13 @@ defmodule PhrasingWeb.SongLive.New do
     field = get_field changeset, String.to_atom(field), ""
 
     field
+  end
+
+  defp add_languages_from_socket(socket, "lang") do
+    [old_lang, added_langs] = socket.assigns.languages
+    if
+  end
+
+  defp add_languages_from_socket(socket, "add_lang") do
   end
 end
