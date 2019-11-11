@@ -22,20 +22,20 @@ defmodule PhrasingWeb.SongLive.New do
     case get_field_from_socket(socket, field) do
       "" -> {:noreply, socket}
       lang ->
-        languages = add_languages_from_socket(socket, field)
+        languages = add_languages_from_socket(socket, field, lang)
         {:noreply, assign(socket, languages: languages)}
     end
   end
 
   def handle_event("change", %{"song" => song_params}, socket) do
-    IO.inspect song_params
-
     changeset =
       %Library.Song{}
       |> Library.change_song(song_params)
       |> Map.put(:action, :ignore)
 
-    {:noreply, assign(socket, changeset: changeset)}
+    languages = add_languages_from_socket(socket, "lang", song_params["lang"])
+
+    {:noreply, assign(socket, changeset: changeset, languages: languages)}
   end
 
   def handle_event("create", %{"song" => song_params}, socket) do
@@ -58,11 +58,27 @@ defmodule PhrasingWeb.SongLive.New do
     field
   end
 
-  defp add_languages_from_socket(socket, "lang") do
-    [old_lang, added_langs] = socket.assigns.languages
-    if
+  defp add_languages_from_socket(socket, "lang", lang) do
+    languages = socket.assigns.languages
+
+    case languages do
+      []      -> [lang]
+      [_lang] -> [lang]
+      [_lang | added_langs] ->
+        [lang | added_langs]
+        |> Enum.uniq
+    end
   end
 
-  defp add_languages_from_socket(socket, "add_lang") do
+  defp add_languages_from_socket(socket, "add_lang", lang) do
+    languages = socket.assigns.languages
+
+    case lang do
+      nil  -> languages
+      ""   -> languages
+      lang ->
+        languages ++ [lang]
+        |> Enum.uniq
+    end
   end
 end

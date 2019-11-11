@@ -7,9 +7,6 @@ defmodule PhrasingWeb.SongView do
     id = "song_#{field}_#{lang}"
     name = language_name(lang)
 
-    IO.puts id
-    IO.puts name
-
     label form, field, for: id do
       name
     end
