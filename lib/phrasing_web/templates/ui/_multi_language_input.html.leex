@@ -1,0 +1,29 @@
+<section class="ui--multi-language-input---languages">
+  <%= if assigns[:lang] do %>
+    <%= render "_language_select.html", f: @f, field: @lang %>
+  <% end %>
+
+  <%= if assigns[:translations] do %>
+    <%= unless Enum.empty?(@languages) do %>
+      <%= for {language, index} <- Enum.with_index(tl(@languages)) do %>
+        <%= render "_language_select.html", f: @f, field: @translations,
+                    language: language, index: index,
+                    label: if index == 0, do: "Translations", else: " " %>
+      <% end %>
+      <%= render "_language_select.html", f: @f, field: :add_translation,
+                  language: @add_translation, index: length(tl(@languages)),
+                  button: "fal fa-plus",
+                  label: if Enum.empty?(tl(@languages)), do: "Translations", else: " " %>
+    <% end %>
+  <% end %>
+</section>
+
+<%= if assigns[:body] do %>
+  <%= for l <- @languages do %>
+
+    <%= label_lang @f, @body, l %>
+
+    <%= textarea_lang @f, @body, l %>
+  <% end %>
+  <%= error_tag @f, @body %>
+<% end %>

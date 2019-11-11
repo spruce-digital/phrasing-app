@@ -189,4 +189,63 @@ defmodule Phrasing.LibraryTest do
       assert %Ecto.Changeset{} = Library.change_book(book)
     end
   end
+
+  describe "chapters" do
+    alias Phrasing.Library.Chapter
+
+    @valid_attrs %{body: %{}}
+    @update_attrs %{body: %{}}
+    @invalid_attrs %{body: nil}
+
+    def chapter_fixture(attrs \\ %{}) do
+      {:ok, chapter} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Library.create_chapter()
+
+      chapter
+    end
+
+    test "list_chapters/0 returns all chapters" do
+      chapter = chapter_fixture()
+      assert Library.list_chapters() == [chapter]
+    end
+
+    test "get_chapter!/1 returns the chapter with given id" do
+      chapter = chapter_fixture()
+      assert Library.get_chapter!(chapter.id) == chapter
+    end
+
+    test "create_chapter/1 with valid data creates a chapter" do
+      assert {:ok, %Chapter{} = chapter} = Library.create_chapter(@valid_attrs)
+      assert chapter.body == %{}
+    end
+
+    test "create_chapter/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Library.create_chapter(@invalid_attrs)
+    end
+
+    test "update_chapter/2 with valid data updates the chapter" do
+      chapter = chapter_fixture()
+      assert {:ok, %Chapter{} = chapter} = Library.update_chapter(chapter, @update_attrs)
+      assert chapter.body == %{}
+    end
+
+    test "update_chapter/2 with invalid data returns error changeset" do
+      chapter = chapter_fixture()
+      assert {:error, %Ecto.Changeset{}} = Library.update_chapter(chapter, @invalid_attrs)
+      assert chapter == Library.get_chapter!(chapter.id)
+    end
+
+    test "delete_chapter/1 deletes the chapter" do
+      chapter = chapter_fixture()
+      assert {:ok, %Chapter{}} = Library.delete_chapter(chapter)
+      assert_raise Ecto.NoResultsError, fn -> Library.get_chapter!(chapter.id) end
+    end
+
+    test "change_chapter/1 returns a chapter changeset" do
+      chapter = chapter_fixture()
+      assert %Ecto.Changeset{} = Library.change_chapter(chapter)
+    end
+  end
 end

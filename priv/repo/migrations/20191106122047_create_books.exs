@@ -4,7 +4,6 @@ defmodule Phrasing.Repo.Migrations.CreateBooks do
   def change do
     create table(:books) do
       add :lang, :string
-      add :body, :string
       add :title, :string
 
       timestamps()

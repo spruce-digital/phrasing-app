@@ -1,1 +1,26 @@
-New Book!
+<section class="book--new">
+  <%= form_for @changeset, "#", [phx_submit: :create, phx_change: :change], fn f -> %>
+
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+
+    <%= render PhrasingWeb.UIView, "_multi_language_input.html",
+               f: f, lang: :lang, translations: :translations,
+               languages: @languages, add_translation: @add_translation %>
+
+    <%= inputs_for f, :chapters, fn fch -> %>
+      <%= render PhrasingWeb.UIView, "_multi_language_input.html", f: fch, body: :body, languages: @languages %>
+    <% end %>
+
+    <button type="button" phx-click="add-chapter">Add Chapter</button>
+
+    <%= label f, :url %>
+    <%= url_input f, :url %>
+    <%= error_tag f, :url %>
+
+    <div>
+      <%= submit "Create" %>
+    </div>
+  <% end %>
+</section>

@@ -6,6 +6,8 @@ defmodule Phrasing.Library.Book do
     field :body, :string
     field :lang, :string
     field :title, :string
+    field :translations, {:array, :string}, virtual: true
+    has_many :chapters, Phrasing.Library.Chapter
 
     timestamps()
   end
