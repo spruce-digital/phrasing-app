@@ -22,3 +22,15 @@
     margin-left: 12px;
   }
 }
+
+.ui--multi-language-input---inputs {
+  display: flex;
+
+  .language-input {
+    flex: 1;
+  }
+
+  .language-input:not(:first-child) {
+    margin-left: 12px;
+  }
+}

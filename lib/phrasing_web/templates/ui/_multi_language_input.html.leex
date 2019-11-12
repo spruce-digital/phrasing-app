@@ -19,11 +19,14 @@
 </section>
 
 <%= if assigns[:body] do %>
-  <%= for l <- @languages do %>
+  <section class="ui--multi-language-input---inputs">
+    <%= for l <- @languages do %>
+      <div class="language-input">
+        <%= label_lang @f, @body, l %>
 
-    <%= label_lang @f, @body, l %>
-
-    <%= textarea_lang @f, @body, l %>
-  <% end %>
-  <%= error_tag @f, @body %>
+        <%= textarea_lang @f, @body, l %>
+      </div>
+    <% end %>
+    <%= error_tag @f, @body %>
+  </section>
 <% end %>

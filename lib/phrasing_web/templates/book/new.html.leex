@@ -10,10 +10,13 @@
                languages: @languages, add_translation: @add_translation %>
 
     <%= inputs_for f, :chapters, fn fch -> %>
+      <label for="book[chapters][<%= fch.index %>]_body_<%= hd(@languages) %>">Chapter <%= fch.index + 1 %></label>
       <%= render PhrasingWeb.UIView, "_multi_language_input.html", f: fch, body: :body, languages: @languages %>
     <% end %>
 
-    <button type="button" phx-click="add-chapter">Add Chapter</button>
+    <%= unless Enum.empty?(@languages) do %>
+      <button type="button" phx-click="add_chapter">Add Chapter</button>
+    <% end %>
 
     <%= label f, :url %>
     <%= url_input f, :url %>

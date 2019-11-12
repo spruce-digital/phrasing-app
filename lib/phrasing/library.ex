@@ -343,6 +343,14 @@ defmodule Phrasing.Library do
     |> Repo.insert()
   end
 
+  def create_chapters_for_book(book, chapters_attrs) do
+    Repo.transaction(fn ->
+      Enum.map(chapters_attrs, fn chapter_attrs ->
+        create_chapter(Map.put(chapter_attrs, "book_id", book.id))
+      end)
+    end)
+  end
+
   @doc """
   Updates a chapter.
 
