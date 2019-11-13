@@ -1,0 +1,15 @@
+<!-- This is rendered within an <aside class="aside\-\-aside" /> element -->
+<section class="drawer" phx-hook="Adder">
+  <%= if @open do %>
+    <%= form_for @changeset, "#", [phx_change: :update, phx_submit: :submit], fn form -> %>
+      <%= render "_controls.html", Map.put(assigns, :form, form) %>
+      <%= hidden_input form, :lang %>
+      <%= if @select_language do %>
+        <%= render "_language_select.html", Map.put(assigns, :form, form) %>
+      <% else %>
+        <%= render "_phrase.html", Map.put(assigns, :form, form) %>
+        <%= render "_card.html", Map.put(assigns, :form, form) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>

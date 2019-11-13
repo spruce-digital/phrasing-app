@@ -1,0 +1,36 @@
+.ui--language-select {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .select-and-button {
+    display: flex;
+  }
+
+  button {
+    margin-bottom: 0;
+    margin-left: 12px;
+    font-size: 18px;
+  }
+}
+
+.ui--multi-language-input---languages {
+  display: flex;
+  justify-content: flex-start;
+
+  .ui--language-select:not(:first-child) {
+    margin-left: 12px;
+  }
+}
+
+.ui--multi-language-input---inputs {
+  display: flex;
+
+  .language-input {
+    flex: 1;
+  }
+
+  .language-input:not(:first-child) {
+    margin-left: 12px;
+  }
+}

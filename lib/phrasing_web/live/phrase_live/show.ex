@@ -2,7 +2,6 @@ defmodule PhrasingWeb.PhraseLive.Show do
   use Phoenix.LiveView
 
   alias Phrasing.Dict
-  alias Phrasing.Dict.Phrase
   alias PhrasingWeb.PhraseView
 
   def mount(%{id: id}, socket) do

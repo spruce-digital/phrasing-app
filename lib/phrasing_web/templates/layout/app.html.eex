@@ -6,29 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Phrasing</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/fa/css/all.css") %>"/>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <li><a href="/phrases">Phrases</a></li>
-          </ul>
-        </nav>
-        <a href="/" class="phx-logo">
-          <!--
-            <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
-          -->
-
+    <section class="layout--app">
+      <header>
+        <a class="home" href="/">
           <h1>Phrasing</h1>
         </a>
-      </section>
-    </header>
-    <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= render @view_module, @view_template, assigns %>
-    </main>
+
+        <nav role="navigation">
+          <ul>
+            <li><a href="#" onclick="javascript:Add.navbar()">Add</a></li>
+            <li><a href="/phrases">Phrases</a></li>
+            <li><a href="/cards">Cards</a></li>
+            <li><a href="/flashcards">Flashcards</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <main role="main" class="container">
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+        <%= render @view_module, @view_template, assigns %>
+      </main>
+
+      <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: %{}, container:
+          {:aside, class: "adder--adder"}) %>
+    </section>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

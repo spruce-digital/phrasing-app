@@ -3,13 +3,15 @@ defmodule Phrasing.Repo.Migrations.CreatePhrases do
 
   def change do
     create table(:phrases) do
-      add :source, :text
+      add :active, :boolean, default: true
+      add :dialect, :text
       add :english, :text
       add :lang, :text
-      add :dialect, :text
+      add :literal, :text
+      add :source, :text
+      add :translit, :text
 
       timestamps()
     end
-
   end
 end

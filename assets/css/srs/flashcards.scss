@@ -1,0 +1,177 @@
+$answer-size: 48px;
+$answer-color: $black----;
+$answer-radius: $answer-size / 5;
+$answer-spacing: 1.2;
+
+section.flashcards--index {
+  @include flex-column;
+  justify-content: space-between;
+}
+
+main.flashcards--deck {
+  .card {
+    background-color: $white;
+    padding: 36px;
+    font-size: 36px;
+    border-radius: 4px;
+    box-shadow: 0 3px 6px -2px rgba($black----, 0.5);
+  }
+
+  .phrase-container {
+    list-style-type: none;
+  }
+
+  li[class^=phrase-attr] {
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+
+    i {
+      color: $black----;
+      width: 24px;
+      padding-right: 12px;
+      @include flex-center;
+      font-size: 12px;
+    }
+
+    :nth-child(2) {
+      flex: 1;
+    }
+  }
+
+  .phrase-source {
+
+  }
+}
+
+aside.flashcards--answers {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+
+  @include break {
+    padding: 0 24px;
+  }
+
+  &[data-flipped=false] {
+    justify-content: center;
+  }
+
+  .score-container-blackout {
+    align-items: center;
+    display: flex;
+    height: $answer-size * $answer-spacing;
+    order: 2;
+  }
+
+  .score-container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    order: 1;
+    width: 100%;
+    height: $answer-size * $answer-spacing;
+
+    @include break {
+      order: 3;
+      flex: 1;
+      width: auto;
+      justify-content: center;
+    }
+  }
+
+  .score-container-more {
+    align-items: center;
+    display: flex;
+    height: $answer-size * $answer-spacing;
+    order: 4;
+  }
+
+  .score-primary {
+    display: flex;
+    align-items: center;
+    height: $answer-size;
+    border-radius: $answer-size / 2;
+    box-sizing: border-box;
+    padding: 12px 0;
+    margin: 0 12px;
+    background-color: $yellow;
+
+    @include break {
+      margin: 0 24px;
+    }
+  }
+
+  .score {
+    padding: 0 6px;
+    font-size: $answer-size * 0.4;
+    color: $answer-color;
+
+    @include break {
+      padding: 0 12px;
+    }
+  }
+
+  .score-3 {
+    margin: 0 12px;
+    font-size: $answer-size * 0.3;
+  }
+
+  .score-2, .score-4 {
+    align-items: center;
+    background: $answer-color;
+    border-radius: $answer-radius;
+    box-sizing: border-box;
+    color: $white;
+    display: flex;
+    font-size: $answer-size * 0.5;
+    height: $answer-size;
+    justify-content: center;
+    width: $answer-size * 1.5;
+  }
+
+  .score-2 {
+    background-color: $red;
+  }
+
+  .score-4 {
+    background-color: $green;
+  }
+
+  .flip {
+    @include flex-center;
+    background: $frost-;
+    border-radius: $answer-radius;
+    color: $white;
+    font-size: $answer-size * 0.4;
+    height: $answer-size;
+    justify-self: center !important;
+    width: 206px;
+    margin-bottom: $answer-size * $answer-spacing + 5px;
+
+    @include break {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+main.flashcards--finished {
+  @include flex-column;
+  flex: 2;
+  justify-content: center;
+  text-align: center;
+
+  i {
+    font-size: 48px;
+  }
+
+  > * {
+    margin-bottom: 24px;
+  }
+}
+
+aside.flashcards--finished {
+  flex: 1;
+}

@@ -34,6 +34,7 @@ defmodule Phrasing.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.0"},
+      {:excheck, "~> 0.6", only: :test},
       {:floki, ">= 0.0.0", only: :test},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
@@ -44,7 +45,10 @@ defmodule Phrasing.MixProject do
       {:phoenix_live_view, "~> 0.3.0"},
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
+      {:poison, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
+      {:timex, "~> 3.6"},
+      {:triq, "~> 1.3", only: [:dev, :test]},
     ]
   end
 

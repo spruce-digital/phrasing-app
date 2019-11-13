@@ -1,0 +1,33 @@
+section.layout--app {
+  @include flex-column;
+  background-color: $white-;
+  min-height: 100vh;
+
+  header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 24px;
+  }
+
+  header .home {
+  }
+
+  header nav ul {
+    display: flex;
+  }
+
+  header nav ul li {
+    padding: 4px 12px;
+  }
+
+  > main {
+    @include flex-column;
+    box-sizing: border-box;
+    padding: 24px;
+  }
+
+  > main > div[data-phx-view] {
+    @include flex-column;
+  }
+}

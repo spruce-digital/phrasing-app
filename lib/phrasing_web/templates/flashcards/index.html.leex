@@ -1,0 +1,8 @@
+<section class="flashcards--index">
+  <%= if !is_nil(@current) do %>
+    <%= render "_deck.html", flipped: @flipped, card: @current %>
+    <%= render "_answers.html", flipped: @flipped %>
+  <% else %>
+    <%= render "_finished.html" %>
+  <% end %>
+</section>

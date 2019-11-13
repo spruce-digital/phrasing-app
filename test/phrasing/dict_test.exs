@@ -6,9 +6,9 @@ defmodule Phrasing.DictTest do
   describe "phrases" do
     alias Phrasing.Dict.Phrase
 
-    @valid_attrs %{english: "some english", source: "some source"}
-    @update_attrs %{english: "some updated english", source: "some updated source"}
-    @invalid_attrs %{english: nil, source: nil}
+    @valid_attrs %{english: "some english", source: "some source", lang: "some lang"}
+    @update_attrs %{english: "some updated english", source: "some updated source", lang: "some updated lang"}
+    @invalid_attrs %{english: nil, source: nil, lang: nil}
 
     def phrase_fixture(attrs \\ %{}) do
       {:ok, phrase} =
@@ -44,6 +44,7 @@ defmodule Phrasing.DictTest do
       assert {:ok, %Phrase{} = phrase} = Dict.update_phrase(phrase, @update_attrs)
       assert phrase.english == "some updated english"
       assert phrase.source == "some updated source"
+      assert phrase.lang == "some updated lang"
     end
 
     test "update_phrase/2 with invalid data returns error changeset" do

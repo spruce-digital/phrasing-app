@@ -1,0 +1,57 @@
+/* This file is for your main application css. */
+
+body, html, h1, h2, h3, h4, h5, h6, p, header {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  margin: 0;
+}
+
+@mixin break() {
+  @media screen and (min-width: 768px) { @content; }
+}
+
+@mixin flex-center() {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+@mixin flex-column() {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin dark-hover($property, $value, $percent: 10%) {
+  #{$property}: $value;
+
+  &:hover {
+    #{$property}: darken($value, $percent);
+  }
+}
+
+@mixin light-hover($property, $value, $percent: 10%) {
+  #{$property}: $value;
+
+  &:hover {
+    #{$property}: lighten($value, $percent);
+  }
+}
+
+@mixin hoverable() {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+@import "colors";
+@import "phoenix.css";
+@import "../../deps/phoenix_live_view/assets/css/live_view.css";
+@import "layout/app";
+@import "srs/flashcards";
+@import "adder/adder";
+@import "library/index";
+@import "ui/inputs";

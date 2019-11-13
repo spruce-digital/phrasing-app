@@ -1,0 +1,32 @@
+<%= if assigns[:button] do %>
+  <div class="ui--language-select">
+    <%= if assigns[:label] do %>
+      <%= label @f, @field do %>
+        <%= assigns[:label] %>
+      <% end %>
+    <% else %>
+      <%= label @f, @field %>
+    <% end %>
+    <div class="select-and-button">
+      <%= select_lang @f, @field, assigns %>
+      <button type="button"
+              phx-click="language_select"
+              phx-value-field="<%= @field %>">
+        <i class="<%= @button %>"></i>
+      </button>
+    </div>
+    <%= error_tag @f, @field %>
+  </div>
+<% else %>
+  <div class="ui--language-select">
+    <%= if assigns[:label] do %>
+      <%= label @f, @field do %>
+        <%= assigns[:label] %>
+      <% end %>
+    <% else %>
+      <%= label @f, @field %>
+    <% end %>
+    <%= select_lang @f, @field, assigns %>
+    <%= error_tag @f, @field %>
+  </div>
+<% end %>

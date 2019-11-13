@@ -1,0 +1,129 @@
+.adder--adder {
+  $padding: 24px;
+
+  position: relative;
+  height: 0;
+
+  section.drawer {
+    background: $white--;
+    // border-top: 1px solid $white----;
+    // box-shadow: 0 5px 9px 3px rgba($black----, 0.3);
+    box-sizing: border-box;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(0); /* this is set in Hooks.Adder#update */
+    transition: transform 200ms ease;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .left-column {
+    width: 50%;
+    box-sizing: border-box;
+    padding-right: $padding / 2;
+    padding-left: $padding;
+  }
+
+  .right-column {
+    width: 50%;
+    box-sizing: border-box;
+    padding-left: $padding / 2;
+    padding-right: $padding;
+  }
+}
+
+.adder--controls {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  background: $white---;
+
+  .title-bar {
+    @include flex-center;
+    align-self: stretch;
+    border-bottom: 1px solid $white----;
+    border-top: 1px solid $white----;
+    flex: 1;
+    text-align: center;
+  }
+
+  button {
+    @include flex-center;
+    border: none;
+    border-radius: 0;
+    font-size: 24px;
+  }
+
+  button:first-child {
+    @include dark-hover(background, $white----);
+    @include dark-hover(color, $black----);
+  }
+
+  button:last-child {
+    @include light-hover(background, $frost);
+    @include light-hover(color, $white);
+  }
+}
+
+.adder--phrase {
+  .language-bar {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .language-bar i {
+    @include dark-hover(color, $black----, 30%);
+    @include hoverable;
+    margin-bottom: 0.5rem;
+  }
+
+  .interpretations {
+    display: flex;
+  }
+
+  .interpretations label {
+    flex: 1;
+    font-weight: normal;
+    color: $black----;
+  }
+
+  .interpretations.english label[for=phrase_english] {
+    font-weight: bold;
+    color: $black;
+  }
+
+  .interpretations.literal label[for=phrase_literal] {
+    font-weight: bold;
+    color: $black;
+  }
+
+  .interpretations.translit label[for=phrase_translit] {
+    font-weight: bold;
+    color: $black;
+  }
+}
+
+.adder--language-select {
+  @include flex-column;
+  align-items: center;
+
+  .language {
+    @include dark-hover(color, $black----);
+    @include hoverable;
+
+    &:hover {
+      font-weight: bold;
+    }
+  }
+
+  .language-selected {
+    font-weight: bold;
+  }
+}

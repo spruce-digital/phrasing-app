@@ -1,0 +1,14 @@
+<section class="script--new">
+  <%= form_for @changeset, "#", [phx_submit: :create, phx_change: :change], fn f -> %>
+
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+
+    <%= multi_language_input f, %{lang: :lang, translations: :translations, body: :body}, assigns %>
+
+    <div>
+      <%= submit "Create" %>
+    </div>
+  <% end %>
+</section>

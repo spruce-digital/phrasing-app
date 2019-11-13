@@ -1,0 +1,11 @@
+<div class="right-column adder--card">
+  <%= inputs_for @form, :card, fn f -> %>
+    <%= label f, :hint %>
+    <%= textarea f, :hint %>
+    <%= error_tag f, :hint %>
+
+    <%= label f, :mnem %>
+    <%= textarea f, :mnem %>
+    <%= error_tag f, :mnem %>
+  <% end %>
+</div>

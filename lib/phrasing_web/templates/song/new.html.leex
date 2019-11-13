@@ -1,0 +1,18 @@
+<section class="song--new">
+  <%= form_for @changeset, "#", [phx_submit: :create, phx_change: :change], fn f -> %>
+
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+
+    <%= multi_language_input f, %{lang: :lang, translations: :translations, body: :body}, assigns %>
+
+    <%= label f, :url %>
+    <%= url_input f, :url %>
+    <%= error_tag f, :url %>
+
+    <div>
+      <%= submit "Create" %>
+    </div>
+  <% end %>
+</section>

@@ -11,9 +11,10 @@ defmodule Phrasing.Application do
       # Start the Ecto repository
       Phrasing.Repo,
       # Start the endpoint when the application starts
-      PhrasingWeb.Endpoint
+      PhrasingWeb.Endpoint,
       # Starts a worker by calling: Phrasing.Worker.start_link(arg)
       # {Phrasing.Worker, arg},
+      PhrasingWeb.Presence,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

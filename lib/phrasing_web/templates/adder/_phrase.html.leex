@@ -1,0 +1,26 @@
+<div class="left-column adder--phrase">
+  <div class="language-bar">
+    <%= label @form, :source do %>
+      <%= language_name(input_value @form, :lang) %>
+    <% end %>
+
+    <i class="fal fa-language" phx-click="select_language"></i>
+  </div>
+  <%= textarea @form, :source %>
+  <%= error_tag @form, :source %>
+
+  <div class="interpretations <%= @interpretation %>">
+    <%= for interp <- interpretations() do %>
+      <%= label @form, interp, [phx_click: :change_interpretation, phx_value_interpretation: interp] %>
+    <% end %>
+  </div>
+
+  <%= for interp <- interpretations() do %>
+    <%= if interp == @interpretation do %>
+      <%= textarea @form, interp %>
+      <%= error_tag @form, interp %>
+    <% else %>
+      <%= hidden_input @form, interp %>
+    <% end %>
+  <% end %>
+</div>

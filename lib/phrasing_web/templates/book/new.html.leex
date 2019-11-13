@@ -1,0 +1,27 @@
+<section class="book--new">
+  <%= form_for @changeset, "#", [phx_submit: :create, phx_change: :change], fn f -> %>
+
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+
+    <%= multi_language_input f, %{lang: :lang, translations: :translations}, assigns %>
+
+    <%= inputs_for f, :chapters, fn fch -> %>
+      <label for="book[chapters][<%= fch.index %>]_body_<%= hd(@languages) %>">Chapter <%= fch.index + 1 %></label>
+      <%= multi_language_input fch, %{body: :body}, assigns %>
+    <% end %>
+
+    <%= unless Enum.empty?(@languages) do %>
+      <button type="button" phx-click="add_chapter">Add Chapter</button>
+    <% end %>
+
+    <%= label f, :url %>
+    <%= url_input f, :url %>
+    <%= error_tag f, :url %>
+
+    <div>
+      <%= submit "Create" %>
+    </div>
+  <% end %>
+</section>

@@ -6,26 +6,43 @@
       <th>Source</th>
       <th>English</th>
       <th>Language</th>
-      <th>Dialect</th>
 
       <th></th>
     </tr>
   </thead>
   <tbody>
-<%= for phrase <- @phrases do %>
-    <tr>
-      <td><%= phrase.source %></td>
-      <td><%= phrase.english %></td>
-      <td><%= phrase.lang %></td>
-      <td><%= phrase.dialect %></td>
+    <%= if @changeset do %>
+      <tr style="color: #ccc;">
+        <td><%= get_field @changeset, :source %></td>
+        <td><%= get_field @changeset, :english %></td>
+        <td>
+          <%= get_field @changeset, :lang %>
+          <%= if get_field @changeset, :dialect do %>
+            /<%= get_field @changeset, :dialect %>
+          <% end %>
+        </td>
 
-      <td>
-        <span><%= link "Show", to: Routes.phrase_path(@socket, :show, phrase) %></span>
-        <span><%= link "Edit", to: Routes.phrase_path(@socket, :edit, phrase) %></span>
-        <span><a href="#" phx-click="delete:<%= phrase.id %>">Delete</a></span>
-      </td>
-    </tr>
-<% end %>
+        <td></td>
+    <% end %>
+
+    <%= for phrase <- @phrases do %>
+      <tr>
+        <td><%= phrase.source %></td>
+        <td><%= phrase.english %></td>
+        <td>
+          <%= phrase.lang %>
+          <%= if phrase.dialect do %>
+            /<%= phrase.dialect %>
+          <% end %>
+        </td>
+
+        <td>
+          <span><%= link "Show", to: Routes.phrase_path(@socket, :show, phrase) %></span>
+          <span><%= link "Edit", to: Routes.phrase_path(@socket, :edit, phrase) %></span>
+          <span><a href="#" phx-click="delete:<%= phrase.id %>">Delete</a></span>
+        </td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 

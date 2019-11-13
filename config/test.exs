@@ -11,8 +11,8 @@ config :logger, level: :warn
 
 # Configure your database
 config :phrasing, Phrasing.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "bendyorke",
+  password: "",
   database: "phrasing_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
