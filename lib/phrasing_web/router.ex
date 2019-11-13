@@ -20,7 +20,7 @@ defmodule PhrasingWeb.Router do
     get "/", LibraryController, :index
     get "/flashcards", SRSController, :flashcards
     get "/cards", SRSController, :cards
-    resources "/journals", JournalController, only: [:new]
+    resources "/scripts", ScriptController, only: [:new]
     resources "/songs", SongController, only: [:new]
     resources "/books", BookController, only: [:new]
     resources "/phrases", PhraseController

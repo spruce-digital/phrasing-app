@@ -1,25 +1,25 @@
-<section class="library--books">
+<section class="library--scripts">
   <div class="title-bar">
-    <h2 class="title">Books</h2>
-    <%= link to: Routes.book_path(@socket, :new) do %>
+    <h2 class="title">Scripts</h2>
+    <%= link to: Routes.script_path(@socket, :new) do %>
       <i class="fal fa-plus"></i>
     <% end %>
   </div>
 
-  <%= if Enum.empty? @books do %>
+  <%= if Enum.empty? @scripts do %>
     <div class="empty-message">
-      You don't have any books. <br/>
+      You don't have any scripts. <br/>
       Start by adding one by clicking the plus button in the upper right hand corner.
     </div>
   <% else %>
     <div class="library---slider">
-      <%= for book <- @books do %>
+      <%= for script <- @scripts do %>
         <div class="tile">
           <div class="image">
             <img src="https://via.placeholder.com/150" />
           </div>
           <h4 class="title">
-            <%= book.title %>
+            <%= script.title %>
           </h4>
         </div>
       <% end %>

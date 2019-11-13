@@ -5,6 +5,14 @@ defmodule PhrasingWeb.UIView do
 
   alias Phrasing.Dict
 
+  def multi_language_input(f, fields, assigns) do
+    args = assigns
+           |> Map.merge(fields)
+           |> Map.put(:f, f)
+
+    render "_multi_language_input.html", args
+  end
+
   def language_options(form, field) do
     value = get_field form.source, field
     prompt = [key: "Select language", value: "", selected: is_nil(value), disabled: true]

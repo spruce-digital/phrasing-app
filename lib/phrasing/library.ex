@@ -6,100 +6,100 @@ defmodule Phrasing.Library do
   import Ecto.Query, warn: false
   alias Phrasing.Repo
 
-  alias Phrasing.Library.Journal
+  alias Phrasing.Library.Script
 
   @doc """
-  Returns the list of journal.
+  Returns the list of scripts.
 
   ## Examples
 
-      iex> list_journal()
-      [%Journal{}, ...]
+      iex> list_scripts()
+      [%Script{}, ...]
 
   """
-  def list_journal do
-    Repo.all(Journal)
+  def list_scripts do
+    Repo.all(Script)
   end
 
   @doc """
-  Gets a single journal.
+  Gets a single script.
 
-  Raises `Ecto.NoResultsError` if the Journal does not exist.
+  Raises `Ecto.NoResultsError` if the Script does not exist.
 
   ## Examples
 
-      iex> get_journal!(123)
-      %Journal{}
+      iex> get_script!(123)
+      %Script{}
 
-      iex> get_journal!(456)
+      iex> get_script!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_journal!(id), do: Repo.get!(Journal, id)
+  def get_script!(id), do: Repo.get!(Script, id)
 
   @doc """
-  Creates a journal.
+  Creates a script.
 
   ## Examples
 
-      iex> create_journal(%{field: value})
-      {:ok, %Journal{}}
+      iex> create_script(%{field: value})
+      {:ok, %Script{}}
 
-      iex> create_journal(%{field: bad_value})
+      iex> create_script(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_journal(attrs \\ %{}) do
-    %Journal{}
-    |> Journal.changeset(attrs)
+  def create_script(attrs \\ %{}) do
+    %Script{}
+    |> Script.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a journal.
+  Updates a script.
 
   ## Examples
 
-      iex> update_journal(journal, %{field: new_value})
-      {:ok, %Journal{}}
+      iex> update_script(script, %{field: new_value})
+      {:ok, %Script{}}
 
-      iex> update_journal(journal, %{field: bad_value})
+      iex> update_script(script, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_journal(%Journal{} = journal, attrs) do
-    journal
-    |> Journal.changeset(attrs)
+  def update_script(%Script{} = script, attrs) do
+    script
+    |> Script.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a Journal.
+  Deletes a Script.
 
   ## Examples
 
-      iex> delete_journal(journal)
-      {:ok, %Journal{}}
+      iex> delete_script(script)
+      {:ok, %Script{}}
 
-      iex> delete_journal(journal)
+      iex> delete_script(script)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_journal(%Journal{} = journal) do
-    Repo.delete(journal)
+  def delete_script(%Script{} = script) do
+    Repo.delete(script)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking journal changes.
+  Returns an `%Ecto.Changeset{}` for tracking script changes.
 
   ## Examples
 
-      iex> change_journal(journal)
-      %Ecto.Changeset{source: %Journal{}}
+      iex> change_script(script)
+      %Ecto.Changeset{source: %Script{}}
 
   """
-  def change_journal(%Journal{} = journal) do
-    Journal.changeset(journal, %{})
+  def change_script(%Script{} = script, attrs \\ %{}) do
+    Script.changeset(script, attrs)
   end
 
   alias Phrasing.Library.Song

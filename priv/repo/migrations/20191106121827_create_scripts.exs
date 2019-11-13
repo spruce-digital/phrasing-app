@@ -1,10 +1,10 @@
-defmodule Phrasing.Repo.Migrations.CreateJournal do
+defmodule Phrasing.Repo.Migrations.CreateScripts do
   use Ecto.Migration
 
   def change do
-    create table(:journals) do
+    create table(:scripts) do
+      add :body, :map
       add :lang, :string
-      add :body, :string
       add :title, :string
 
       timestamps()

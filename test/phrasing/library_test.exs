@@ -3,64 +3,64 @@ defmodule Phrasing.LibraryTest do
 
   alias Phrasing.Library
 
-  describe "journal" do
-    alias Phrasing.Library.Journal
+  describe "script" do
+    alias Phrasing.Library.Script
 
     @valid_attrs %{body: "some body", lang: "some lang"}
     @update_attrs %{body: "some updated body", lang: "some updated lang"}
     @invalid_attrs %{body: nil, lang: nil}
 
-    def journal_fixture(attrs \\ %{}) do
-      {:ok, journal} =
+    def script_fixture(attrs \\ %{}) do
+      {:ok, script} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Library.create_journal()
+        |> Library.create_script()
 
-      journal
+      script
     end
 
-    test "list_journal/0 returns all journal" do
-      journal = journal_fixture()
-      assert Library.list_journal() == [journal]
+    test "list_script/0 returns all script" do
+      script = script_fixture()
+      assert Library.list_script() == [script]
     end
 
-    test "get_journal!/1 returns the journal with given id" do
-      journal = journal_fixture()
-      assert Library.get_journal!(journal.id) == journal
+    test "get_script!/1 returns the script with given id" do
+      script = script_fixture()
+      assert Library.get_script!(script.id) == script
     end
 
-    test "create_journal/1 with valid data creates a journal" do
-      assert {:ok, %Journal{} = journal} = Library.create_journal(@valid_attrs)
-      assert journal.body == "some body"
-      assert journal.lang == "some lang"
+    test "create_script/1 with valid data creates a script" do
+      assert {:ok, %Script{} = script} = Library.create_script(@valid_attrs)
+      assert script.body == "some body"
+      assert script.lang == "some lang"
     end
 
-    test "create_journal/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Library.create_journal(@invalid_attrs)
+    test "create_script/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Library.create_script(@invalid_attrs)
     end
 
-    test "update_journal/2 with valid data updates the journal" do
-      journal = journal_fixture()
-      assert {:ok, %Journal{} = journal} = Library.update_journal(journal, @update_attrs)
-      assert journal.body == "some updated body"
-      assert journal.lang == "some updated lang"
+    test "update_script/2 with valid data updates the script" do
+      script = script_fixture()
+      assert {:ok, %Script{} = script} = Library.update_script(script, @update_attrs)
+      assert script.body == "some updated body"
+      assert script.lang == "some updated lang"
     end
 
-    test "update_journal/2 with invalid data returns error changeset" do
-      journal = journal_fixture()
-      assert {:error, %Ecto.Changeset{}} = Library.update_journal(journal, @invalid_attrs)
-      assert journal == Library.get_journal!(journal.id)
+    test "update_script/2 with invalid data returns error changeset" do
+      script = script_fixture()
+      assert {:error, %Ecto.Changeset{}} = Library.update_script(script, @invalid_attrs)
+      assert script == Library.get_script!(script.id)
     end
 
-    test "delete_journal/1 deletes the journal" do
-      journal = journal_fixture()
-      assert {:ok, %Journal{}} = Library.delete_journal(journal)
-      assert_raise Ecto.NoResultsError, fn -> Library.get_journal!(journal.id) end
+    test "delete_script/1 deletes the script" do
+      script = script_fixture()
+      assert {:ok, %Script{}} = Library.delete_script(script)
+      assert_raise Ecto.NoResultsError, fn -> Library.get_script!(script.id) end
     end
 
-    test "change_journal/1 returns a journal changeset" do
-      journal = journal_fixture()
-      assert %Ecto.Changeset{} = Library.change_journal(journal)
+    test "change_script/1 returns a script changeset" do
+      script = script_fixture()
+      assert %Ecto.Changeset{} = Library.change_script(script)
     end
   end
 

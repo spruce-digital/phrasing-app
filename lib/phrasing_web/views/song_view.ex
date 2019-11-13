@@ -2,6 +2,7 @@ defmodule PhrasingWeb.SongView do
   use PhrasingWeb, :view
   import Ecto.Changeset, only: [get_field: 3]
   import Phrasing.Dict, only: [language_name: 1]
+  import PhrasingWeb.UIView, only: [multi_language_input: 3]
 
   def label_lang(form, field, lang) do
     id = "song_#{field}_#{lang}"

@@ -5,13 +5,11 @@
     <%= text_input f, :title %>
     <%= error_tag f, :title %>
 
-    <%= render PhrasingWeb.UIView, "_multi_language_input.html",
-               f: f, lang: :lang, translations: :translations,
-               languages: @languages, add_translation: @add_translation %>
+    <%= multi_language_input f, %{lang: :lang, translations: :translations}, assigns %>
 
     <%= inputs_for f, :chapters, fn fch -> %>
       <label for="book[chapters][<%= fch.index %>]_body_<%= hd(@languages) %>">Chapter <%= fch.index + 1 %></label>
-      <%= render PhrasingWeb.UIView, "_multi_language_input.html", f: fch, body: :body, languages: @languages %>
+      <%= multi_language_input fch, %{body: :body}, assigns %>
     <% end %>
 
     <%= unless Enum.empty?(@languages) do %>
