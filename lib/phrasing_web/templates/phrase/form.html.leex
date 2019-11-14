@@ -9,22 +9,14 @@
   <%= textarea f, :source %>
   <%= error_tag f, :source %>
 
-  <%= label f, :english %>
-  <%= textarea f, :english %>
-  <%= error_tag f, :english %>
+  <%= label f, :translation %>
+  <%= textarea f, :translation %>
+  <%= error_tag f, :translation %>
 
-  <div style="display: flex; align-items: center">
-    <div style="flex: 1">
-      <%= label f, :lang %>
-      <%= select f, :lang, @languages %>
-      <%= error_tag f, :lang %>
-    </div>
-
-    <div style="flex: 1">
-      <%= label f, :dialect %>
-      <%= select f, :dialect, @dialects, disabled: Enum.empty?(@dialects) %>
-      <%= error_tag f, :dialect %>
-    </div>
+  <div style="flex: 1">
+    <%= label f, :lang %>
+    <%= select f, :lang, @languages %>
+    <%= error_tag f, :lang %>
   </div>
 
   <%= label f, :literal %>

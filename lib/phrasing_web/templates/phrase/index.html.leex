@@ -14,12 +14,9 @@
     <%= if @changeset do %>
       <tr style="color: #ccc;">
         <td><%= get_field @changeset, :source %></td>
-        <td><%= get_field @changeset, :english %></td>
+        <td><%= get_field @changeset, :translation %></td>
         <td>
           <%= get_field @changeset, :lang %>
-          <%= if get_field @changeset, :dialect do %>
-            /<%= get_field @changeset, :dialect %>
-          <% end %>
         </td>
 
         <td></td>
@@ -28,12 +25,9 @@
     <%= for phrase <- @phrases do %>
       <tr>
         <td><%= phrase.source %></td>
-        <td><%= phrase.english %></td>
+        <td><%= phrase.translation %></td>
         <td>
           <%= phrase.lang %>
-          <%= if phrase.dialect do %>
-            /<%= phrase.dialect %>
-          <% end %>
         </td>
 
         <td>

@@ -1,5 +1,7 @@
+$adder--sidebar-width: 84px;
+
 .adder--adder {
-  $padding: 24px;
+  $padding: 12px;
 
   position: relative;
   height: 0;
@@ -22,17 +24,22 @@
     flex-wrap: wrap;
   }
 
+  main.adder-content {
+    flex: 1;
+    display: flex;
+  }
+
   .left-column {
     width: 50%;
     box-sizing: border-box;
-    padding-right: $padding / 2;
+    padding-right: $padding;
     padding-left: $padding;
   }
 
   .right-column {
     width: 50%;
     box-sizing: border-box;
-    padding-left: $padding / 2;
+    padding-left: $padding;
     padding-right: $padding;
   }
 }
@@ -55,6 +62,8 @@
 
   button {
     @include flex-center;
+    width: $adder--sidebar-width;
+    box-sizing: border-box;
     border: none;
     border-radius: 0;
     font-size: 24px;
@@ -94,16 +103,8 @@
     color: $black----;
   }
 
-  .interpretations.english label[for=phrase_english] {
-    font-weight: bold;
-    color: $black;
-  }
-
-  .interpretations.literal label[for=phrase_literal] {
-    font-weight: bold;
-    color: $black;
-  }
-
+  .interpretations.english label[for=phrase_english],
+  .interpretations.literal label[for=phrase_literal],
   .interpretations.translit label[for=phrase_translit] {
     font-weight: bold;
     color: $black;
@@ -126,4 +127,25 @@
   .language-selected {
     font-weight: bold;
   }
+}
+
+.adder--option {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: $adder--sidebar-width;
+
+  i {
+    @include hoverable;
+    @include dark-hover(color, $frost, 30%);
+  }
+}
+
+.adder--options-left {
+  @extend .adder--option;
+}
+
+.adder--options-right {
+  @extend .adder--option;
 }

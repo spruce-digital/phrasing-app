@@ -17,6 +17,6 @@ defmodule PhrasingWeb.AdderView do
   end
 
   def interpretations do
-    [:english, :literal, :translit]
+    [:translation, :literal, :translit]
   end
 end

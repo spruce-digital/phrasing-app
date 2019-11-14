@@ -9,7 +9,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
   alias PhrasingWeb.AdderView
 
   def new_changeset() do
-    %Phrase{lang: "nl"}
+    %Phrase{source_lang: "nl", translation_lang: "en"}
     |> Repo.preload(:card)
     |> Dict.change_phrase
   end
@@ -24,10 +24,10 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
   def mount(_session, socket) do
     changeset = new_changeset()
-    interpretation = :english
+    interpretation = :translation
     languages = Phrase.languages
 
-    {:ok, assign(socket, open: false, changeset: changeset,
+    {:ok, assign(socket, open: true, changeset: changeset,
       interpretation: interpretation, select_language: false,
       languages: languages)}
   end
@@ -42,7 +42,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
   def handle_event("close", _params, socket) do
     Dict.notify_dict_subscribers({:ok, nil}, :phrase_input)
-    {:noreply, assign(socket, open: false)}
+    {:noreply, assign(socket, open: false, select_language: false)}
   end
 
   def handle_event("select_language", %{"lang" => lang}, socket) do

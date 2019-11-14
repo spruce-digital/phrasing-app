@@ -5,6 +5,7 @@ defmodule Phrasing.Dict.Phrase do
   @languages [
     [key: "Croatian", value: "hr"],
     [key: "Dutch", value: "nl"],
+    [key: "English", value: "en"],
     [key: "French", value: "fr"],
     [key: "Greek", value: "el"],
     [key: "Hindi", value: "hi"],
@@ -14,20 +15,13 @@ defmodule Phrasing.Dict.Phrase do
     [key: "Spanish", value: "sp"],
   ]
 
-  @dialects %{
-    "nl" => [
-      [key: "nl", value: "Netherlands"],
-      [key: "be", value: "Belgium"],
-    ],
-  }
-
   schema "phrases" do
     field :active, :boolean
-    field :dialect, :string
-    field :english, :string
-    field :lang, :string
     field :literal, :string
     field :source, :string
+    field :source_lang, :string
+    field :translation, :string
+    field :translation_lang, :string
     field :translit, :string
     has_one :card, Phrasing.SRS.Card
 
@@ -38,12 +32,10 @@ defmodule Phrasing.Dict.Phrase do
   @doc false
   def changeset(phrase, attrs) do
     phrase
-    |> cast(attrs, [:source, :english, :lang, :dialect, :literal, :translit])
+    |> cast(attrs, [:source, :source_lang, :translation, :translation_lang, :literal, :translit])
     |> cast_assoc(:card)
-    |> validate_required([:source, :english, :lang])
+    |> validate_required([:source, :source_lang, :translation, :translation_lang])
   end
 
   def languages, do: @languages
-  def dialects, do: @dialects
-  def dialects(language), do: Access.get @dialects, to_string(language), []
 end
