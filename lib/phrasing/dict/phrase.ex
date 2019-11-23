@@ -17,12 +17,8 @@ defmodule Phrasing.Dict.Phrase do
 
   schema "phrases" do
     field :active, :boolean
-    field :literal, :string
-    field :source, :string
-    field :source_lang, :string
-    field :translation, :string
-    field :translation_lang, :string
-    field :translit, :string
+    field :translations, {:map, :string}
+    field :lang, :string
     has_one :card, Phrasing.SRS.Card
 
 
@@ -32,9 +28,9 @@ defmodule Phrasing.Dict.Phrase do
   @doc false
   def changeset(phrase, attrs) do
     phrase
-    |> cast(attrs, [:source, :source_lang, :translation, :translation_lang, :literal, :translit])
+    |> cast(attrs, [:translations, :lang, :active])
     |> cast_assoc(:card)
-    |> validate_required([:source, :source_lang, :translation, :translation_lang])
+    |> validate_required([:translations, :lang])
   end
 
   def languages, do: @languages

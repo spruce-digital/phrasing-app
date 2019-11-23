@@ -26,12 +26,16 @@ defmodule PhrasingWeb.UIView do
   end
 
   def label_lang(form, field, lang) do
+    label_lang form, field, lang do
+      language_name(lang)
+    end
+  end
+
+  def label_lang(form, field, lang, do: block) do
     id = "#{form.name}_#{field}_#{lang}"
     name = language_name(lang)
 
-    label form, field, for: id do
-      name
-    end
+    label form, field, block, [for: id]
   end
 
   def textarea_lang(form, field, lang) do
@@ -40,6 +44,22 @@ defmodule PhrasingWeb.UIView do
     value = get_field(form.source, field, %{})[lang]
 
     textarea form, field, id: id, name: name, value: value
+  end
+
+  def hidden_input_lang(form, field, lang) do
+    id = "#{form.name}_#{field}_#{lang}"
+    name = "#{form.name}[#{field}][#{lang}]"
+    value = get_field(form.source, field, %{})[lang]
+
+    hidden_input form, field, id: id, name: name, value: value
+  end
+
+  def text_input_lang(form, field, lang) do
+    id = "#{form.name}_#{field}_#{lang}"
+    name = "#{form.name}[#{field}][#{lang}]"
+    value = get_field(form.source, field, %{})[lang]
+
+    text_input form, field, id: id, name: name, value: value
   end
 
   def select_lang(form, field) do
