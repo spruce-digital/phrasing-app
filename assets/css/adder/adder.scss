@@ -136,9 +136,14 @@ $adder--sidebar-width: 84px;
   align-items: center;
   width: $adder--sidebar-width;
 
-  i {
-    @include hoverable;
+  i, span {
     @include dark-hover(color, $frost, 30%);
+    @include hoverable;
+    align-items: center;
+    display: flex;
+    height: 24px;
+    justify-content: center;
+    text-align: center;
   }
 }
 
@@ -148,4 +153,19 @@ $adder--sidebar-width: 84px;
 
 .adder--options-right {
   @extend .adder--option;
+}
+
+.adder--select {
+  @extend .adder--option;
+  align-items: flex-end;
+  flex: 1;
+
+  i {
+    margin: -2px 0 0 6px;
+  }
+
+  > span:hover, i:hover {
+    @include dark-hover(color, $frost, 0%);
+    cursor: default;
+  }
 }

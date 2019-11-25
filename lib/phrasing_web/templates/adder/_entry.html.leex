@@ -1,0 +1,11 @@
+<main class="right-column adder--entry">
+  <%= inputs_for @form, :entry, fn f -> %>
+    <%= label f, :root %>
+    <%= text_input f, :root %>
+    <%= error_tag f, :root %>
+
+    <%= label f, :tags %>
+    <%= text_input f, :tags %>
+    <%= error_tag f, :tags %>
+  <% end %>
+</main>

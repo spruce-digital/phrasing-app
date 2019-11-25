@@ -30,12 +30,14 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
     {:ok,
      assign(socket,
-       open: true,
        changeset: changeset,
-       select_language: false,
        languages: languages,
+       open: true,
+       select_language: false,
+       source_lang: source_lang,
        target_lang: "en",
-       source_lang: source_lang
+       left: "_phrase.html",
+       right: "_select.html",
      )}
   end
 
@@ -50,6 +52,14 @@ defmodule PhrasingWeb.AdderLive.Adder do
   def handle_event("close", _params, socket) do
     Dict.notify_dict_subscribers({:ok, nil}, :phrase_input)
     {:noreply, assign(socket, open: false, select_language: false)}
+  end
+
+  def handle_event("change_right", %{"partial" => partial}, socket) do
+    {:noreply, assign(socket, right: partial)}
+  end
+
+  def handle_event("change_left", %{"partial" => partial}, socket) do
+    {:noreply, assign(socket, left: partial)}
   end
 
   def handle_event("select_language", %{"lang" => lang}, socket) do

@@ -9,8 +9,8 @@
         <%= if @select_language do %>
           <%= render "_language_select.html", Map.put(assigns, :form, form) %>
         <% else %>
-          <%= render "_phrase.html", Map.put(assigns, :form, form) %>
-          <%= render "_card.html", Map.put(assigns, :form, form) %>
+          <%= render @left, Map.put(assigns, :form, form) %>
+          <%= render @right, Map.put(assigns, :form, form) %>
         <% end %>
       </main>
       <%= render "_options_right.html", Map.put(assigns, :form, form) %>

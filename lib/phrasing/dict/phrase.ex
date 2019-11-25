@@ -20,6 +20,7 @@ defmodule Phrasing.Dict.Phrase do
     field :translations, {:map, :string}
     field :lang, :string
     has_one :card, Phrasing.SRS.Card
+    has_one :entry, Phrasing.Dict.Entry
 
 
     timestamps()
