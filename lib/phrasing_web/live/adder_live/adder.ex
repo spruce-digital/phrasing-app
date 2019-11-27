@@ -18,7 +18,10 @@ defmodule PhrasingWeb.AdderLive.Adder do
     value = phrase[field]
     Changeset.put_change(changeset, String.to_atom(field), value)
   end
-
+  def update_changeset(changeset, [_phrase, "translations", lang], phrase) do
+    value = phrase["translations"]
+    Changeset.put_change(changeset, :translations, value)
+  end
   def update_changeset(changeset, _target, _phrase) do
     changeset
   end
@@ -55,6 +58,8 @@ defmodule PhrasingWeb.AdderLive.Adder do
   end
 
   def handle_event("change_right", %{"partial" => partial}, socket) do
+    IO.puts "change_right"
+    IO.inspect socket.assigns.changeset
     {:noreply, assign(socket, right: partial)}
   end
 
@@ -82,6 +87,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
   def handle_event("update", %{"_target" => target, "phrase" => phrase}, socket) do
     changeset = update_changeset(socket.assigns.changeset, target, phrase)
+
     Dict.notify_dict_subscribers({:ok, changeset}, :phrase_input)
     {:noreply, assign(socket, changeset: changeset)}
   end

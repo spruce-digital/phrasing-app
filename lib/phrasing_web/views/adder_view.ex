@@ -20,4 +20,13 @@ defmodule PhrasingWeb.AdderView do
   def interpretations do
     [:translation, :literal, :translit]
   end
+
+  def entry_placeholder changeset do
+    translations = Changeset.get_field(changeset, :translations)
+    lang = Changeset.get_field(changeset, :lang)
+
+    IO.inspect(changeset)
+
+    translations[lang]
+  end
 end

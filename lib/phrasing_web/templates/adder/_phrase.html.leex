@@ -21,7 +21,9 @@
       <%= text_input_lang @form, :translations, lang[:value] %>
       <%# <%= error_tag @form, :translations, lang[:value] %1> %>
     <% else %>
-      <%= hidden_input_lang @form, :translations, lang[:value] %>
+      <%= unless lang[:value] == @source_lang do %>
+        <%= hidden_input_lang @form, :translations, lang[:value] %>
+      <% end %>
     <% end %>
   <% end %>
 </div>

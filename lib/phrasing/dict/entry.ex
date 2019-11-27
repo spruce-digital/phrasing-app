@@ -4,6 +4,7 @@ defmodule Phrasing.Dict.Entry do
 
   schema "entries" do
     field :root, :string
+    field :lang, :string
     field :tags, {:map, {:array, :string}}
     belongs_to :phrase, Phrasing.Dict.Phrase
 
