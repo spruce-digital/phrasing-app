@@ -2,7 +2,7 @@
   <ul class="phrase-container">
     <li class="phrase-attr-source">
       <i class="fad fa-signal-alt-3"></i>
-      <h2><%= @card.phrase.source %></h2>
+      <h2><%= Card.source(@card) %></h2>
     </li>
 
     <%= unless @flipped do %>
@@ -15,22 +15,8 @@
     <% else %>
       <li class="phrase-attr-english">
         <i class="fal fa-flag-usa"></i>
-        <h3><%= @card.phrase.english %></h3>
+        <h3><%= Card.target(@card) %></h3>
       </li>
-
-      <%= if @card.phrase.literal do %>
-        <li class="phrase-attr-literal">
-          <i class="fal fa-exchange"></i>
-          <h4><%= @card.phrase.literal %></h4>
-        </li>
-      <% end %>
-
-      <%= if @card.phrase.translit do %>
-        <li class="phrase-attr-translit">
-          <i class="fal fa-language"></i>
-          <h4><%= @card.phrase.translit %></h4>
-        </li>
-      <% end %>
 
       <%= if @card.mnem do %>
         <li class="phrase-attr-mnem">

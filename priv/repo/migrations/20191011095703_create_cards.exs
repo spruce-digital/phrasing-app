@@ -4,8 +4,10 @@ defmodule Phrasing.Repo.Migrations.CreateCards do
   def change do
     create table(:cards) do
       add :hint, :text
+      add :lang, :text
       add :mnem, :text
       add :phrase_id, references(:phrases, on_delete: :nothing)
+      add :translation, :text
 
       timestamps()
     end

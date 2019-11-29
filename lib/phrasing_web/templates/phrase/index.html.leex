@@ -4,36 +4,41 @@
   <thead>
     <tr>
       <th>Source</th>
-      <th>English</th>
-      <th>Language</th>
-
-      <th></th>
+      <th>Translations</th>
     </tr>
   </thead>
   <tbody>
-    <%= if @changeset do %>
-      <tr style="color: #ccc;">
-        <td><%= get_field @changeset, :source %></td>
-        <td><%= get_field @changeset, :translation %></td>
-        <td>
-          <%= get_field @changeset, :lang %>
-        </td>
+    <%# <%= if @changeset do %1> %>
+    <%#   <tr style="color: #ccc;"> %>
+    <%#     <td><%= get_field @changeset, :lang %1>: <%= get_field(@changeset, :translations)[get_field(@changeset, :lang)] %1></td> %>
+    <%#     <td><%= get_field @changeset, :translation %1></td> %>
+    <%#     <td> %>
+    <%#       <%= get_field @changeset, :lang %1> %>
+    <%#     </td> %>
 
-        <td></td>
-    <% end %>
+    <%#     <td></td> %>
+    <%# <% end %1> %>
 
     <%= for phrase <- @phrases do %>
       <tr>
-        <td><%= phrase.source %></td>
-        <td><%= phrase.translation %></td>
+        <td><%= Phrase.print_translation(phrase) %></td>
         <td>
-          <%= phrase.lang %>
-        </td>
-
-        <td>
-          <span><%= link "Show", to: Routes.phrase_path(@socket, :show, phrase) %></span>
-          <span><%= link "Edit", to: Routes.phrase_path(@socket, :edit, phrase) %></span>
-          <span><a href="#" phx-click="delete:<%= phrase.id %>">Delete</a></span>
+          <%= for {lang, body} <- phrase.translations do %>
+            <%= unless lang == phrase.lang do %>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 12px;">
+                <%= Phrase.print_translation(phrase, lang) %>
+                <%= if Enum.find(phrase.cards, fn c -> c.translation == lang end) do %>
+                  <i class="fas fa-clipboard-list-check"></i>
+                <% else %>
+                  <i class="far fa-clipboard-list-check"
+                     phx-click="create_card"
+                     phx-value-translation="<%= lang %>"
+                     phx-value-id="<%= phrase.id %>">
+                  </i>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
         </td>
       </tr>
     <% end %>

@@ -1,11 +1,11 @@
 <%= if @hidden do %>
-  <%= inputs_for @form, :card, fn f -> %>
+  <%= inputs_for @form, :cards, fn f -> %>
     <%= hidden_input f, :hint %>
     <%= hidden_input f, :mnem %>
   <% end %>
 <% else %>
   <main class="right-column adder--card">
-    <%= inputs_for @form, :card, fn f -> %>
+    <%= inputs_for @form, :cards, fn f -> %>
       <%= label f, :hint %>
       <%= text_input f, :hint %>
       <%= error_tag f, :hint %>

@@ -32,7 +32,8 @@ defmodule Phrasing.Dict do
   def list_phrases do
     Repo.all from p in Phrase,
       where: p.active == true,
-      order_by: [desc: p.updated_at]
+      order_by: [desc: p.updated_at],
+      preload: :cards
   end
 
   @doc """

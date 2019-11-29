@@ -19,7 +19,7 @@ defmodule Phrasing.Dict.Phrase do
     field :active, :boolean
     field :translations, {:map, :string}
     field :lang, :string
-    has_one :card, Phrasing.SRS.Card
+    has_many :cards, Phrasing.SRS.Card
     has_one :entry, Phrasing.Dict.Entry
 
 
@@ -30,15 +30,17 @@ defmodule Phrasing.Dict.Phrase do
   def changeset(phrase, attrs) do
     phrase
     |> cast(attrs, [:translations, :lang, :active])
-    |> cast_assoc(:card)
+    |> cast_assoc(:cards)
     |> validate_required([:translations, :lang])
   end
 
   @doc false
   def adder_changeset(phrase, attrs) do
+    attrs = filter_empty_translations(attrs)
+
     changeset = phrase
     |> cast(attrs, [:translations, :lang])
-    |> cast_assoc_when_present(:card, attrs["card"])
+    |> cast_assoc_when_present(:cards, attrs["card"])
     |> cast_assoc_when_present(:entry, attrs["entry"])
     |> validate_required([:translations, :lang])
 
@@ -57,6 +59,19 @@ defmodule Phrasing.Dict.Phrase do
     |> String.strip()
 
     string == ""
+  end
+
+  def filter_empty_translations(attrs) do
+    Map.put(attrs, "translations", Enum.reduce(attrs["translations"], %{}, fn {lang, body}, acc ->
+      if body == "", do: acc, else: Map.put(acc, lang, body)
+    end))
+  end
+
+  def print_translation(phrase) do
+    "#{phrase.lang}: #{phrase.translations[phrase.lang]}"
+  end
+  def print_translation(phrase, lang) do
+    "#{lang}: #{phrase.translations[lang]}"
   end
 
   def languages, do: @languages

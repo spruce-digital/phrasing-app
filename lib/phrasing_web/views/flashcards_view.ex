@@ -1,6 +1,8 @@
 defmodule PhrasingWeb.FlashcardsView do
   use PhrasingWeb, :view
 
+  alias Phrasing.SRS.Card
+
   @icons_for_score [
     "fal fa-exclamation-square",
     "fal fa-tired",

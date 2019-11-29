@@ -10,7 +10,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
   def new_changeset() do
     %Phrase{lang: "nl"}
-    |> Repo.preload(:card)
+    |> Repo.preload(:cards)
     |> Dict.change_phrase()
   end
 
@@ -22,11 +22,11 @@ defmodule PhrasingWeb.AdderLive.Adder do
     value = phrase["translations"]
     Changeset.put_change(changeset, :translations, value)
   end
-  def update_changeset(changeset, [_phrase, "card", _field], phrase) do
-    card_params = phrase["card"]
+  def update_changeset(changeset, [_phrase, "cards", _field], phrase) do
+    card_params = phrase["cards"]
                   |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
 
-    Changeset.put_assoc(changeset, :card, card_params)
+    Changeset.put_assoc(changeset, :cards, card_params)
   end
   def update_changeset(changeset, [_phrase, "entry", _field], phrase) do
     entry_params = phrase["entry"]
@@ -48,7 +48,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
      assign(socket,
        changeset: changeset,
        languages: languages,
-       open: true,
+       open: false,
        select_language: false,
        source_lang: source_lang,
        target_lang: "en",

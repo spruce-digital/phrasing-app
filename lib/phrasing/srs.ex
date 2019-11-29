@@ -34,9 +34,14 @@ defmodule Phrasing.SRS do
       preload: [:prev_rep, :phrase]
   end
 
-  def create_card(%{phrase: phrase}) do
+  def create_card(attrs \\ %{}) do
+    {phrase, attrs} = Map.pop(attrs, :phrase)
+
+    IO.inspect attrs
+
     phrase
-    |> Ecto.build_assoc(:card)
+    |> Ecto.build_assoc(:cards)
+    |> Card.changeset(attrs)
     |> Repo.insert
     |> score_card
   end

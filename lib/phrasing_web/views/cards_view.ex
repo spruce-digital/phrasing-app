@@ -2,6 +2,7 @@ defmodule PhrasingWeb.CardsView do
   use PhrasingWeb, :view
 
   alias Elixir.Timex.Format.DateTime.Formatters.Relative
+  alias Phrasing.SRS.Card
 
   def relative_time date do
     Relative.format(date, "{relative}")
