@@ -70,6 +70,13 @@ defmodule Phrasing.Dict do
     |> notify_dict_subscribers(:phrase_update)
   end
 
+  def create_phrase_from_adder(attrs \\ %{}) do
+    %Phrase{}
+    |> Phrase.adder_changeset(attrs)
+    |> Repo.insert()
+    |> notify_dict_subscribers(:phrase_update)
+  end
+
   def notify_dict_subscribers({:ok, payload}, event) do
     Phoenix.PubSub.broadcast(Phrasing.PubSub, @topic, {event, payload})
     {:ok, payload}

@@ -10,7 +10,9 @@
           <%= render "_language_select.html", Map.put(assigns, :form, form) %>
         <% else %>
           <%= render @left, Map.put(assigns, :form, form) %>
-          <%= render @right, Map.put(assigns, :form, form) %>
+          <%= render "_card.html", Map.merge(assigns, %{form: form, hidden: @right != "_card.html"}) %>
+          <%= render "_entry.html", Map.merge(assigns, %{form: form, hidden: @right != "_entry.html"}) %>
+          <%= render "_links.html", Map.merge(assigns, %{form: form, hidden: @right != "_links.html"}) %>
         <% end %>
       </main>
       <%= render "_options_right.html", Map.put(assigns, :form, form) %>

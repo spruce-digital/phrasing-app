@@ -1,11 +1,18 @@
-<div class="right-column adder--card">
+<%= if @hidden do %>
   <%= inputs_for @form, :card, fn f -> %>
-    <%= label f, :hint %>
-    <%= text_input f, :hint %>
-    <%= error_tag f, :hint %>
-
-    <%= label f, :mnem %>
-    <%= text_input f, :mnem %>
-    <%= error_tag f, :mnem %>
+    <%= hidden_input f, :hint %>
+    <%= hidden_input f, :mnem %>
   <% end %>
-</div>
+<% else %>
+  <main class="right-column adder--card">
+    <%= inputs_for @form, :card, fn f -> %>
+      <%= label f, :hint %>
+      <%= text_input f, :hint %>
+      <%= error_tag f, :hint %>
+
+      <%= label f, :mnem %>
+      <%= text_input f, :mnem %>
+      <%= error_tag f, :mnem %>
+    <% end %>
+  </main>
+<% end %>

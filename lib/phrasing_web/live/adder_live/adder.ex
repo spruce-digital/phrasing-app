@@ -22,7 +22,20 @@ defmodule PhrasingWeb.AdderLive.Adder do
     value = phrase["translations"]
     Changeset.put_change(changeset, :translations, value)
   end
-  def update_changeset(changeset, _target, _phrase) do
+  def update_changeset(changeset, [_phrase, "card", _field], phrase) do
+    card_params = phrase["card"]
+                  |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
+
+    Changeset.put_assoc(changeset, :card, card_params)
+  end
+  def update_changeset(changeset, [_phrase, "entry", _field], phrase) do
+    entry_params = phrase["entry"]
+                  |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
+
+    Changeset.put_assoc(changeset, :entry, entry_params)
+  end
+  def update_changeset(changeset, target, _phrase) do
+    IO.puts "Did not capture target: #{Enum.join(target, ", ")}"
     changeset
   end
 
@@ -58,8 +71,6 @@ defmodule PhrasingWeb.AdderLive.Adder do
   end
 
   def handle_event("change_right", %{"partial" => partial}, socket) do
-    IO.puts "change_right"
-    IO.inspect socket.assigns.changeset
     {:noreply, assign(socket, right: partial)}
   end
 
@@ -93,10 +104,12 @@ defmodule PhrasingWeb.AdderLive.Adder do
   end
 
   def handle_event("submit", %{"phrase" => phrase_params}, socket) do
-    with {:ok, phrase} <- Dict.create_phrase(phrase_params),
-         {:ok, card} <- SRS.score_card({:ok, phrase.card}) do
-      Dict.notify_dict_subscribers({:ok, nil}, :phrase_input)
-      {:noreply, assign(socket, open: false, changeset: new_changeset())}
+    case Dict.create_phrase_from_adder(phrase_params) do
+      {:ok, _phrase} ->
+        Dict.notify_dict_subscribers({:ok, nil}, :phrase_input)
+        {:noreply, assign(socket, open: false, changeset: new_changeset())}
+      {:error, changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 end
