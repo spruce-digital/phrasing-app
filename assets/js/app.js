@@ -13,12 +13,12 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import LiveSocket from "phoenix_live_view"
 
-let pushAdderEvent
+window.__phrasing__ = {}
 const Hooks = {}
 
 Hooks.Adder = {
   mounted() {
-    pushAdderEvent = this.pushEvent.bind(this)
+    window.__phrasing__.pushAdderEvent = this.pushEvent.bind(this)
     const height = this.el.offsetHeight
     this.el.style.transform = `translateY(-${height}px)`
   },
@@ -30,7 +30,7 @@ Hooks.Adder = {
 
 window.Add = {
   navbar() {
-    pushAdderEvent('open', {})
+    window.__phrasing__.pushAdderEvent('open', {})
   }
 }
 
