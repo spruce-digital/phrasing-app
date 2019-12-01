@@ -11,7 +11,13 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
     [current|queue] = deconstruct_queue SRS.queued_cards(user_id)
     history = []
 
-    {:ok, assign(socket, queue: queue, current: current, history: history, flipped: false)}
+    {:ok, assign(socket,
+      current: current,
+      flipped: false,
+      history: history,
+      queue: queue,
+      user_id: user_id,
+    )}
   end
 
   def render(assigns) do
@@ -26,7 +32,7 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
     case SRS.score_card socket.assigns.current, String.to_integer(score) do
       {:ok, card} ->
         history = [card|socket.assigns.history]
-        [current|queue] = deconstruct_queue SRS.queued_cards()
+        [current|queue] = deconstruct_queue SRS.queued_cards(socket.assigns.user_id)
 
         {:noreply, assign(socket, history: history, current: current, queue: queue, flipped: false)}
 
