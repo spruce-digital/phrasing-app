@@ -26,11 +26,13 @@ defmodule Phrasing.SRS do
       preload: [:prev_rep, :phrase]
   end
 
-  def queued_cards() do
+  def queued_cards(user_id) do
     Repo.all from c in Card,
       distinct: c.phrase_id,
       join: r in assoc(c, :prev_rep),
+      join: p in assoc(c, :phrase),
       where: r.due_date <= ^Timex.today(),
+      where: p.user_id == ^user_id,
       preload: [:prev_rep, :phrase]
   end
 

@@ -39,7 +39,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
     changeset
   end
 
-  def mount(_session, socket) do
+  def mount(session, socket) do
     changeset = new_changeset()
     languages = Phrase.languages()
     source_lang = Changeset.get_field(changeset, :lang)
@@ -48,12 +48,13 @@ defmodule PhrasingWeb.AdderLive.Adder do
      assign(socket,
        changeset: changeset,
        languages: languages,
+       left: "_phrase.html",
        open: false,
+       right: "_select.html",
        select_language: false,
        source_lang: source_lang,
        target_lang: "en",
-       left: "_phrase.html",
-       right: "_select.html",
+       user_id: session["current_user_id"],
      )}
   end
 
@@ -104,7 +105,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
   end
 
   def handle_event("submit", %{"phrase" => phrase_params}, socket) do
-    case Dict.create_phrase_from_adder(phrase_params) do
+    case Dict.create_phrase_from_adder(Map.put(phrase_params, "user_id", socket.assigns.user_id)) do
       {:ok, _phrase} ->
         Dict.notify_dict_subscribers({:ok, nil}, :phrase_input)
         {:noreply, assign(socket, open: false, changeset: new_changeset())}

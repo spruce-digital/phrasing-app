@@ -35,6 +35,13 @@ defmodule Phrasing.Dict do
       order_by: [desc: p.updated_at],
       preload: :cards
   end
+  def list_phrases(user_id) do
+    Repo.all from p in Phrase,
+      where: p.active == true,
+      where: p.user_id == ^user_id,
+      order_by: [desc: p.updated_at],
+      preload: :cards
+  end
 
   @doc """
   Gets a single phrase.

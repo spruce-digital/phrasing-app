@@ -17,17 +17,15 @@
 
         <nav role="navigation">
           <ul>
-            <li><a href="#" onclick="javascript:Add.navbar()">Add</a></li>
-            <li><a href="/phrases">Phrases</a></li>
-            <li><a href="/cards">Cards</a></li>
-            <li><a href="/flashcards">Flashcards</a></li>
-            <li>
-              <%= if signed_in?(@conn) do %>
-                <%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete, style: "display: inline-block" %>
-              <% else %>
-                <%= link "Sign In", to: Routes.session_path(@conn, :new), style: "display: inline-block" %>
-                |
-                <%= link "Sign Up", to: Routes.user_path(@conn, :new), style: "display: inline-block" %>
+            <%= if signed_in?(@conn) do %>
+              <li><a href="#" onclick="javascript:Add.navbar()">Add</a></li>
+              <li><a href="/phrases">Phrases</a></li>
+              <li><a href="/cards">Cards</a></li>
+              <li><a href="/flashcards">Flashcards</a></li>
+              <%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete %>
+            <% else %>
+              <li><%= link "Sign In", to: Routes.session_path(@conn, :new) %></li>
+              <li><%= link "Sign Up", to: Routes.user_path(@conn, :new) %></li>
               <% end %>
             </li>
           </ul>
@@ -40,7 +38,7 @@
         <%= render @view_module, @view_template, assigns %>
       </main>
 
-      <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: %{}, container:
+      <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: Plug.Conn.get_session(@conn), container:
           {:aside, class: "adder--adder"}) %>
     </section>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>

@@ -7,8 +7,8 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
   def deconstruct_queue([]), do: [nil]
   def deconstruct_queue(queue), do: queue
 
-  def mount(_session, socket) do
-    [current|queue] = deconstruct_queue SRS.queued_cards()
+  def mount(%{user_id: user_id}, socket) do
+    [current|queue] = deconstruct_queue SRS.queued_cards(user_id)
     history = []
 
     {:ok, assign(socket, queue: queue, current: current, history: history, flipped: false)}

@@ -19,9 +19,9 @@ defmodule Phrasing.Dict.Phrase do
     field :active, :boolean
     field :translations, {:map, :string}
     field :lang, :string
+    belongs_to :user, Phrasing.Accounts.User
     has_many :cards, Phrasing.SRS.Card
     has_one :entry, Phrasing.Dict.Entry
-
 
     timestamps()
   end
@@ -39,7 +39,7 @@ defmodule Phrasing.Dict.Phrase do
     attrs = filter_empty_translations(attrs)
 
     changeset = phrase
-    |> cast(attrs, [:translations, :lang])
+    |> cast(attrs, [:translations, :lang, :user_id])
     |> cast_assoc_when_present(:cards, attrs["card"])
     |> cast_assoc_when_present(:entry, attrs["entry"])
     |> validate_required([:translations, :lang])

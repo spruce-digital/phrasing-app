@@ -8,7 +8,9 @@ defmodule PhrasingWeb.PhraseController do
     # phrases = Dict.list_phrases()
     # render(conn, "index.html", phrases: phrases)
 
-    live_render(conn, Index, session: %{})
+    live_render(conn, Index, session: %{
+      user_id: get_session(conn, "current_user_id"),
+    })
   end
 
   def new(conn, _params) do
