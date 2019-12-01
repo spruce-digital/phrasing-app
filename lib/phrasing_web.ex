@@ -24,6 +24,7 @@ defmodule PhrasingWeb do
       import Plug.Conn
       import PhrasingWeb.Gettext
       import Phoenix.LiveView.Controller
+      import PhrasingWeb.Helpers.Auth, only: [check_auth: 2]
       alias PhrasingWeb.Router.Helpers, as: Routes
     end
   end
@@ -43,6 +44,7 @@ defmodule PhrasingWeb do
       import PhrasingWeb.ErrorHelpers
       import PhrasingWeb.Gettext
       import Phoenix.LiveView, only: [live_render: 2, live_render: 3, live_link: 1, live_link: 2]
+      import PhrasingWeb.Helpers.Auth, only: [signed_in?: 1]
       alias PhrasingWeb.Router.Helpers, as: Routes
     end
   end

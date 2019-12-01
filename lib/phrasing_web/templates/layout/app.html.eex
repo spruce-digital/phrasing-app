@@ -21,6 +21,15 @@
             <li><a href="/phrases">Phrases</a></li>
             <li><a href="/cards">Cards</a></li>
             <li><a href="/flashcards">Flashcards</a></li>
+            <li>
+              <%= if signed_in?(@conn) do %>
+                <%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete, style: "display: inline-block" %>
+              <% else %>
+                <%= link "Sign In", to: Routes.session_path(@conn, :new), style: "display: inline-block" %>
+                |
+                <%= link "Sign Up", to: Routes.user_path(@conn, :new), style: "display: inline-block" %>
+              <% end %>
+            </li>
           </ul>
         </nav>
       </header>

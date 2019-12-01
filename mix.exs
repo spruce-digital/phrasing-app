@@ -33,6 +33,8 @@ defmodule Phrasing.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bcrypt_elixir, "~> 2.0"},
+      {:comeonin, "~> 5.1.3"},
       {:ecto_sql, "~> 3.0"},
       {:excheck, "~> 0.6", only: :test},
       {:floki, ">= 0.0.0", only: :test},

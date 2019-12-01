@@ -1,5 +1,6 @@
 defmodule PhrasingWeb.Router do
   use PhrasingWeb, :router
+  import PhrasingWeb.Helpers.Auth, only: [check_auth: 2]
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -10,12 +11,23 @@ defmodule PhrasingWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :auth do
+    plug :check_auth
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
   scope "/", PhrasingWeb do
     pipe_through :browser
+
+    resources "/register", UserController, only: [:create, :new]
+    get "/signin", SessionController, :new
+    post "/signin", SessionController, :create
+    delete "/signout", SessionController, :delete
+
+    pipe_through :check_auth
 
     get "/", LibraryController, :index
     get "/flashcards", SRSController, :flashcards
