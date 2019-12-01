@@ -18,6 +18,7 @@ const Hooks = {}
 
 Hooks.Adder = {
   mounted() {
+    console.log("mounted")
     window.__phrasing__.pushAdderEvent = this.pushEvent.bind(this)
     const height = this.el.offsetHeight
     this.el.style.transform = `translateY(-${height}px)`
