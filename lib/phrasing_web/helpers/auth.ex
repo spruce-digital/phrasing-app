@@ -8,7 +8,7 @@ defmodule PhrasingWeb.Helpers.Auth do
 
   def check_auth(conn, _args) do
     if user_id = Plug.Conn.get_session(conn, :current_user_id) do
-      current_user = Phrasing.Accounts.get_user!(user_id)
+      current_user = Phrasing.Repo.get(Phrasing.Accounts.User, user_id)
 
       conn
       |> Plug.Conn.assign(:current_user, current_user)
