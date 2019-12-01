@@ -6,7 +6,8 @@
     "cp:fa": "cp -r node_modules/@fortawesome/fontawesome-pro/ static/fa",
     "cp:fa-scss": "cp -r node_modules/@fortawesome/fontawesome-pro/scss css/fontawesome",
     "cp:fa-font": "cp -r node_modules/@fortawesome/fontawesome-pro/webfonts static/webfonts",
-    "deploy": "webpack --mode production",
+    "deploy": "webpack",
+    "deploy_": "webpack --mode production",
     "watch": "webpack --mode development --watch &> /dev/null"
   },
   "dependencies": {
