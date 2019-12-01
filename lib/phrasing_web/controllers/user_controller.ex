@@ -15,7 +15,7 @@ defmodule PhrasingWeb.UserController do
         conn
         |> put_session(:current_user_id, user.id)
         |> put_flash(:info, "Welcome to phrasing.app!")
-        |> redirect(to: Routes.library_path(conn, :index, user))
+        |> redirect(to: Routes.library_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
