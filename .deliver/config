@@ -52,6 +52,6 @@ post_upgrade_release() {
 symlink_static(){
   status "Symlinking static files"
   __remote "
-    ln -sfn $DELIVER_TO$APP/lib/$APP$RELEASE-$VERSION/priv/static $DELIVER_TO$APP/static
+    ln -sfn $DELIVER_TO$APP/lib/$APP$RELEASE-$VERSION/priv/static $DELIVER_TO/$APP/static
   "
 }
