@@ -53,8 +53,8 @@ defmodule Phrasing.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:timex, "~> 3.6"},
       {:triq, "~> 1.3", only: [:dev, :test]},
-      {:edeliver, "~> 1.7.0"},
-      {:distillery, "~> 2.1"},
+      {:edeliver, ">= 1.6.0"},
+      {:distillery, "~> 2.0", warn_missing: false},
     ]
   end
 

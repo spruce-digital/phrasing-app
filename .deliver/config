@@ -9,12 +9,12 @@ RELEASE_DIR="/tmp/edeliver/$APP/builds/_build/prod/rel/$APP"
 # prevent re-installing node modules; this defaults to "."
 GIT_CLEAN_PATHS="_build rel priv/static"
 
-# STAGING_HOSTS="188.166.182.170"
-# STAGING_USER="deploy"
-# TEST_AT="/home/deploy/staging"
+STAGING_HOSTS="188.166.182.170"
+STAGING_USER="deploy"
+TEST_AT="/home/deploy/staging"
 
-BUILD_HOST="104.248.93.78"
-BUILD_USER="deploy"
+PRODUCTION_HOSTS="104.248.93.78"
+PRODUCTION_USER="deploy"
 DELIVER_TO="/home/deploy"
 
 # For *Phoenix* projects, symlink prod.secret.exs to our tmp source
