@@ -54,7 +54,7 @@ defmodule Phrasing.MixProject do
       {:timex, "~> 3.6"},
       {:triq, "~> 1.3", only: [:dev, :test]},
       {:edeliver, "~> 1.7.0"},
-      {:distillery, "~> 2.1.1"},
+      {:distillery, "~> 2.1"},
     ]
   end
 
