@@ -7,7 +7,7 @@ defmodule PhrasingWeb.Endpoint do
     signing_salt: "MgQ0zgyN"
   ]
 
-  @origins ["https://phrasing.app", "https://www.phrasing.app"]
+  @origins ["//phrasing.app", "//www.phrasing.app"]
 
   socket "/socket", PhrasingWeb.UserSocket,
     websocket: true,
