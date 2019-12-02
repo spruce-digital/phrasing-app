@@ -73,13 +73,12 @@ config :phoenix, :serve_endpoints, true
 # Note you can't rely on `System.get_env/1` when using releases.
 # See the releases documentation accordingly.
 
-# Finally import the config/prod.secret.exs which should be versioned
-# separately.
-
 # config :phrasing, Phrasing.Repo,
 #   adapter: Ecto.Adapters.Postgres,
 #   url: System.get_env("DATABASE_URL"),
 #   ssl: true,
 #   pool_size: 2 # Free tier db only allows 4 connections. Rolling deploys need pool_size*(n+1) connections where n is the number of app replicas.
 
+# Finally import the config/prod.secret.exs which should be versioned
+# separately.
 import_config "prod.secret.exs"

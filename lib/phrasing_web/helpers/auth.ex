@@ -16,7 +16,6 @@ defmodule PhrasingWeb.Helpers.Auth do
       conn
       |> Phoenix.Controller.put_flash(:error, "Please sign in")
       |> Phoenix.Controller.redirect(to: Routes.session_path(conn, :new))
-      |> System.halt()
     end
   end
 end
