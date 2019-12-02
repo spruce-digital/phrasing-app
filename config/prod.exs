@@ -17,7 +17,7 @@ use Mix.Config
 
 config :phrasing, PhrasingWeb.Endpoint,
   http: [port: 8888],
-  url: [host: "phrasing.app", port: 80],
+  url: [scheme: "https", host: "phrasing.app", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
