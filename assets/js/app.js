@@ -18,6 +18,7 @@ const Hooks = {}
 
 Hooks.Adder = {
   mounted() {
+    console.log("mounted")
     window.__phrasing__.pushAdderEvent = this.pushEvent.bind(this)
     const height = this.el.offsetHeight
     this.el.style.transform = `translateY(-${height}px)`
@@ -34,7 +35,9 @@ window.Add = {
   }
 }
 
-let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks})
+
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}});
 liveSocket.connect()
 
 // Import local files
