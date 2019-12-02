@@ -7,12 +7,16 @@ defmodule PhrasingWeb.Endpoint do
     signing_salt: "MgQ0zgyN"
   ]
 
+  @origins ["https://phrasing.app", "https://www.phrasing.app"]
+
   socket "/socket", PhrasingWeb.UserSocket,
     websocket: true,
-    longpoll: false
+    longpoll: false,
+    check_origin: false
 
   socket "/live", Phoenix.LiveView.Socket,
-    websocket: [connect_info: [session: @session_options]]
+    websocket: [connect_info: [session: @session_options]],
+    check_origin: false
 
   # Serve at "/" the static files from "priv/static" directory.
   #

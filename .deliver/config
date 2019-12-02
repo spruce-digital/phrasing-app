@@ -29,7 +29,23 @@ pre_erlang_get_and_update_deps() {
 }
 
 pre_erlang_clean_compile() {
-  status "Running phx.digest" # log output prepended with "----->"
+  status "Running npm install"
+    __sync_remote "
+      [ -f ~/.profile ] && source ~/.profile
+      set -e
+      cd '$BUILD_AT'/assets
+      npm install $SILENCE
+    "
+
+  status "Compiling assets"
+    __sync_remote "
+      [ -f ~/.profile ] && source ~/.profile
+      set -e
+      cd '$BUILD_AT'/assets
+      npm run deploy $SILENCE
+    "
+
+  status "Running phx.digest"
   __sync_remote " # runs the commands on the build host
     [ -f ~/.profile ] && source ~/.profile # load profile (optional)
     set -e # fail if any command fails (recommended)
@@ -52,6 +68,6 @@ post_upgrade_release() {
 symlink_static(){
   status "Symlinking static files"
   __remote "
-    ln -sfn $DELIVER_TO$APP/lib/$APP$RELEASE-$VERSION/priv/static $DELIVER_TO/$APP/static
+    ln -nsf $DELIVER_TO/$APP/lib/$APP$RELEASE-$VERSION/priv/static $DELIVER_TO/$APP/static
   "
 }
