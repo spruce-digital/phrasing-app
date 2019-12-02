@@ -40,3 +40,18 @@ pre_erlang_clean_compile() {
     APP='$APP' MIX_ENV='$TARGET_MIX_ENV' SECRET_KEY_BASE='$SECRET_KEY_BASE' $MIX_CMD phx.digest $SILENCE
   "
 }
+
+post_erlang_update() {
+  symlink_static
+}
+
+post_upgrade_release() {
+  symlink_static
+}
+
+symlink_static(){
+  status "Symlinking static files"
+  __remote "
+    ln -sfn $DELIVER_TO$APP/lib/$APP$RELEASE-$VERSION/priv/static $DELIVER_TO$APP/static
+  "
+}
