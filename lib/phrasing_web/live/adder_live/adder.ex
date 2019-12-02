@@ -9,7 +9,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
   alias PhrasingWeb.AdderView
 
   def new_changeset() do
-    %Phrase{lang: "nl"}
+    %Phrase{lang: "hi"}
     |> Repo.preload(:cards)
     |> Dict.change_phrase()
   end
