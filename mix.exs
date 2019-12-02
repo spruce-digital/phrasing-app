@@ -20,8 +20,8 @@ defmodule Phrasing.MixProject do
   def application do
     [
       mod: {Phrasing.Application, []},
-      extra_applications: [:logger, :runtime_tools],
-      applications: [:edeliver],
+      extra_applications: [:logger, :runtime_tools, :edeliver],
+      # applications: [:edeliver],
     ]
   end
 
