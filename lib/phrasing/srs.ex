@@ -5,7 +5,6 @@ defmodule Phrasing.SRS do
   """
 
   import Ecto.Query, warn: false
-  alias Ecto.Changeset
   alias Phrasing.Repo
   alias Phrasing.SRS.{Card,Rep}
 

@@ -4,9 +4,9 @@ defmodule Phrasing.Library.Script do
 
   schema "scripts" do
     field :body, {:map, :string}
-    field :lang, :string
     field :title, :string
     field :translations, {:array, :string}, virtual: true
+    belongs_to :language, Phrasing.Dict.Language
 
     timestamps()
   end

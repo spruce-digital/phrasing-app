@@ -5,11 +5,10 @@ defmodule PhrasingWeb.AdderLive.Adder do
   alias Phrasing.Dict
   alias Phrasing.Dict.Phrase
   alias Phrasing.Repo
-  alias Phrasing.SRS
   alias PhrasingWeb.AdderView
 
   def new_changeset() do
-    %Phrase{lang: "hi"}
+    %Phrase{}
     |> Repo.preload(:cards)
     |> Dict.change_phrase()
   end
@@ -18,7 +17,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
     value = phrase[field]
     Changeset.put_change(changeset, String.to_atom(field), value)
   end
-  def update_changeset(changeset, [_phrase, "translations", lang], phrase) do
+  def update_changeset(changeset, [_phrase, "translations", _lang], phrase) do
     value = phrase["translations"]
     Changeset.put_change(changeset, :translations, value)
   end
@@ -41,7 +40,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
   def mount(session, socket) do
     changeset = new_changeset()
-    languages = Phrase.languages()
+    languages = Dict.list_languages()
     source_lang = Changeset.get_field(changeset, :lang)
 
     {:ok,
@@ -54,7 +53,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
        select_language: false,
        source_lang: source_lang,
        target_lang: "en",
-       user_id: session["current_user_id"],
+       user_id: session["current_user_id"]
      )}
   end
 

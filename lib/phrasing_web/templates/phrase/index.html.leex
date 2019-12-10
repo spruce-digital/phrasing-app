@@ -23,7 +23,7 @@
       <tr>
         <td><%= Phrase.print_translation(phrase) %></td>
         <td>
-          <%= for {lang, body} <- phrase.translations do %>
+          <%= for {lang, _body} <- phrase.translations do %>
             <%= unless lang == phrase.lang do %>
               <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 12px;">
                 <%= Phrase.print_translation(phrase, lang) %>

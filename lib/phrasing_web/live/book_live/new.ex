@@ -1,8 +1,7 @@
 defmodule PhrasingWeb.BookLive.New do
   use Phoenix.LiveView
 
-  import Ecto.Changeset, only: [get_field: 3, get_field: 2, put_change: 3]
-  alias Phrasing.Dict
+  import Ecto.Changeset, only: [get_field: 2]
   alias Phrasing.Library
   alias Phrasing.Library.Chapter
   alias PhrasingWeb.BookView
@@ -21,7 +20,7 @@ defmodule PhrasingWeb.BookLive.New do
     BookView.render("new.html", assigns)
   end
 
-  def handle_event("language_select", %{"field" => field}, socket) do
+  def handle_event("language_select", %{"field" => _field}, socket) do
     languages = socket.assigns.languages ++ [socket.assigns.add_translation]
     changeset = Map.put(socket.assigns.changeset, :action, :ignore)
 
@@ -54,8 +53,8 @@ defmodule PhrasingWeb.BookLive.New do
 
   def handle_event("create", %{"book" => book_params}, socket) do
     {chapters_params, just_book_params} = Map.pop(book_params, "chapters")
-    with {:ok, book} <- Library.create_book(just_book_params),
-         {:ok, book} <- Library.create_chapters_for_book(book, Map.values(chapters_params)) do
+    with {:ok, book}  <- Library.create_book(just_book_params),
+         {:ok, _book} <- Library.create_chapters_for_book(book, Map.values(chapters_params)) do
       {:stop,
         socket
         |> put_flash(:info, "Book created successfully.")

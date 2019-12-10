@@ -1,8 +1,6 @@
 defmodule PhrasingWeb.SongLive.New do
   use Phoenix.LiveView
 
-  import Ecto.Changeset, only: [get_field: 3, get_field: 2]
-  alias Phrasing.Dict
   alias Phrasing.Library
   alias PhrasingWeb.SongView
   alias PhrasingWeb.Router.Helpers, as: Routes
@@ -18,7 +16,7 @@ defmodule PhrasingWeb.SongLive.New do
     SongView.render("new.html", assigns)
   end
 
-  def handle_event("language_select", %{"field" => field}, socket) do
+  def handle_event("language_select", %{"field" => _field}, socket) do
     languages = socket.assigns.languages ++ [socket.assigns.add_translation]
     changeset = Map.put(socket.assigns.changeset, :action, :ignore)
 
@@ -40,7 +38,7 @@ defmodule PhrasingWeb.SongLive.New do
 
   def handle_event("create", %{"song" => song_params}, socket) do
     case Library.create_song(song_params) do
-      {:ok, song} ->
+      {:ok, _song} ->
         {:stop,
           socket
           |> put_flash(:info, "Song created successfully.")

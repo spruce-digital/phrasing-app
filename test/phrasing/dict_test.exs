@@ -125,4 +125,67 @@ defmodule Phrasing.DictTest do
       assert %Ecto.Changeset{} = Dict.change_entry(entry)
     end
   end
+
+  describe "languages" do
+    alias Phrasing.Dict.Language
+
+    @valid_attrs %{code: "some code", name: "some name", script: "some script"}
+    @update_attrs %{code: "some updated code", name: "some updated name", script: "some updated script"}
+    @invalid_attrs %{code: nil, name: nil, script: nil}
+
+    def language_fixture(attrs \\ %{}) do
+      {:ok, language} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Dict.create_language()
+
+      language
+    end
+
+    test "list_languages/0 returns all languages" do
+      language = language_fixture()
+      assert Dict.list_languages() == [language]
+    end
+
+    test "get_language!/1 returns the language with given id" do
+      language = language_fixture()
+      assert Dict.get_language!(language.id) == language
+    end
+
+    test "create_language/1 with valid data creates a language" do
+      assert {:ok, %Language{} = language} = Dict.create_language(@valid_attrs)
+      assert language.code == "some code"
+      assert language.name == "some name"
+      assert language.script == "some script"
+    end
+
+    test "create_language/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Dict.create_language(@invalid_attrs)
+    end
+
+    test "update_language/2 with valid data updates the language" do
+      language = language_fixture()
+      assert {:ok, %Language{} = language} = Dict.update_language(language, @update_attrs)
+      assert language.code == "some updated code"
+      assert language.name == "some updated name"
+      assert language.script == "some updated script"
+    end
+
+    test "update_language/2 with invalid data returns error changeset" do
+      language = language_fixture()
+      assert {:error, %Ecto.Changeset{}} = Dict.update_language(language, @invalid_attrs)
+      assert language == Dict.get_language!(language.id)
+    end
+
+    test "delete_language/1 deletes the language" do
+      language = language_fixture()
+      assert {:ok, %Language{}} = Dict.delete_language(language)
+      assert_raise Ecto.NoResultsError, fn -> Dict.get_language!(language.id) end
+    end
+
+    test "change_language/1 returns a language changeset" do
+      language = language_fixture()
+      assert %Ecto.Changeset{} = Dict.change_language(language)
+    end
+  end
 end

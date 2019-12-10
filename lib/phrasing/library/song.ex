@@ -4,10 +4,10 @@ defmodule Phrasing.Library.Song do
 
   schema "songs" do
     field :body, {:map, :string}
-    field :lang, :string
     field :title, :string
     field :url, :string
     field :translations, {:array, :string}, virtual: true
+    belongs_to :language, Phrasing.Dict.Language
 
     timestamps()
   end
