@@ -319,7 +319,7 @@ defmodule Phrasing.Dict do
       %Ecto.Changeset{source: %Language{}}
 
   """
-  def change_language(%Language{} = language) do
+  def change_language(%Language{} = language, attrs \\ %{}) do
     Language.changeset(language, %{})
   end
 end
