@@ -16,14 +16,14 @@
 
     <i class="fal fa-language" phx-click="select_language:target"></i>
   </div>
-  <%= for lang <- @languages do %>
-    <%= if lang[:value] == @target_lang do %>
-      <%= text_input_lang @form, :translations, lang[:value] %>
-      <%# <%= error_tag @form, :translations, lang[:value] %1> %>
-    <% else %>
-      <%= unless lang[:value] == @source_lang do %>
-        <%= hidden_input_lang @form, :translations, lang[:value] %>
-      <% end %>
-    <% end %>
-  <% end %>
+  <%# <%= for lang <- @languages do %1> %>
+  <%#   <%= if lang[:value] == @target_lang do %1> %>
+  <%#     <%= text_input_lang @form, :translations, lang[:value] %1> %>
+  <%#     <1%# <%= error_tag @form, :translations, lang[:value] %2> %1> %>
+  <%#   <% else %1> %>
+  <%#     <%= unless lang[:value] == @source_lang do %1> %>
+  <%#       <%= hidden_input_lang @form, :translations, lang[:value] %1> %>
+  <%#     <% end %1> %>
+  <%#   <% end %1> %>
+  <%# <% end %1> %>
 </div>
