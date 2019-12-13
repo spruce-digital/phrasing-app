@@ -7,8 +7,23 @@ defmodule PhrasingWeb.AdderLive.Adder do
   alias Phrasing.Repo
   alias PhrasingWeb.AdderView
 
-  def new_changeset() do
-    %Phrase{}
+  @defaults %{
+    left: "_phrase.html",
+    open: true,
+    right: "_select.html",
+    select_language: false,
+    target_lang: "en",
+  }
+
+  def new_changeset(user_id) do
+    last_phrase = Dict.get_last_phrase_for_user(user_id)
+    language_id = Access.get(last_phrase, :language_id)
+    translation_id = Access.get(last_phrase, :translations, %{})
+      |> Map.keys
+      |> Enum.filter(fn x -> x != language_id end)
+      |> random_or_nil
+
+    %Phrase{language_id: language_id, translation_id: translation_id}
     |> Repo.preload(:cards)
     |> Dict.change_phrase()
   end
@@ -39,22 +54,17 @@ defmodule PhrasingWeb.AdderLive.Adder do
   end
 
   def mount(session, socket) do
-    changeset = new_changeset()
+    changeset = new_changeset(session["current_user_id"])
     languages = Dict.list_languages()
     source_lang = Changeset.get_field(changeset, :lang)
 
     {:ok,
-     assign(socket,
+     assign(socket, Map.merge(@defaults, %{
        changeset: changeset,
        languages: languages,
-       left: "_phrase.html",
-       open: false,
-       right: "_select.html",
-       select_language: false,
        source_lang: source_lang,
-       target_lang: "en",
        user_id: session["current_user_id"]
-     )}
+     }))}
   end
 
   def render(assigns) do
@@ -62,7 +72,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
   end
 
   def handle_event("open", _params, socket) do
-    {:noreply, assign(socket, open: true, changeset: new_changeset())}
+    {:noreply, assign(socket, open: true, changeset: new_changeset(socket.assigns.user_id))}
   end
 
   def handle_event("close", _params, socket) do
@@ -107,9 +117,17 @@ defmodule PhrasingWeb.AdderLive.Adder do
     case Dict.create_phrase_from_adder(Map.put(phrase_params, "user_id", socket.assigns.user_id)) do
       {:ok, _phrase} ->
         Dict.notify_dict_subscribers({:ok, nil}, :phrase_input)
-        {:noreply, assign(socket, open: false, changeset: new_changeset())}
+        {:noreply, assign(socket, open: false, changeset: new_changeset(socket.assigns.user_id))}
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  defp random_or_nil(list) do
+    try do
+      Enum.empty(list)
+    rescue
+      _ -> nil
     end
   end
 end

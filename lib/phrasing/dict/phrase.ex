@@ -5,6 +5,7 @@ defmodule Phrasing.Dict.Phrase do
   schema "phrases" do
     field :active, :boolean
     field :translations, {:map, :string}
+    field :translation_id, :id, virtual: true
     belongs_to :user, Phrasing.Accounts.User
     belongs_to :language, Phrasing.Dict.Language
     has_many :cards, Phrasing.SRS.Card

@@ -53,6 +53,13 @@ defmodule Phrasing.Dict do
   """
   def get_phrase!(id), do: Repo.get!(Phrase, id)
 
+  def get_last_phrase_for_user(user_id) do
+    query = from p in Phrase,
+            where: p.user_id == ^user_id
+
+    Repo.one(query)
+  end
+
   @doc """
   Creates a phrase.
 
@@ -69,7 +76,7 @@ defmodule Phrasing.Dict do
     %Phrase{}
     |> Phrase.changeset(attrs)
     |> Repo.insert()
-    |> notify_dict_subscribers(:phrase_update)
+    # |> notify_dict_subscribers(:phrase_update)
   end
 
   def create_phrase_from_adder(attrs \\ %{}) do

@@ -1,21 +1,29 @@
 <div class="left-column adder--phrase">
-  <div class="language-bar">
-    <%= label_lang @form, :translations, @source_lang do %>
-      Native language: <%= "language_name(@source_lang)" %>
-    <% end %>
+  <%# <div class="language-bar"> %>
+  <%#   <%= label_lang @form, :translations, @source_lang do %1> %>
+  <%#     Native language: <%= "language_name(@source_lang)" %1> %>
+  <%#   <% end %1> %>
 
-    <i class="fal fa-language" phx-click="select_language:source"></i>
-  </div>
-  <%= text_input_lang @form, :translations, @source_lang %>
+  <%#   <%= live_component @socket, UILive.LanguageSelect, id: :adder_source %1> %>
+  <%# </div> %>
+  <%# <%= text_input_lang @form, :translations, @source_lang %1> %>
   <%# <%= error_tag @form, :translations, @source_lang %1> %>
 
-  <div class="language-bar">
-    <%= label_lang @form, :translations, @target_lang do %>
-      Tranlsation to: <%= "language_name(@target_lang)" %>
-    <% end %>
+  <%= live_component(@socket, UILive.TranslationField,
+        form: @form,
+        id: :adder_phrase_source,
+        label_prefix: "Source: ",
+        source: true,
+      )
+    %>
 
-    <i class="fal fa-language" phx-click="select_language:target"></i>
-  </div>
+  <%= live_component(@socket, UILive.TranslationField,
+        form: @form,
+        id: :adder_phrase_translation,
+        label_prefix: "Translation: ",
+      )
+    %>
+
   <%# <%= for lang <- @languages do %1> %>
   <%#   <%= if lang[:value] == @target_lang do %1> %>
   <%#     <%= text_input_lang @form, :translations, lang[:value] %1> %>

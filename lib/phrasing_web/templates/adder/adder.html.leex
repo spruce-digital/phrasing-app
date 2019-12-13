@@ -1,7 +1,7 @@
 <!-- This is rendered within an <aside class="aside\-\-aside" /> element -->
 <section class="drawer" phx-hook="Adder">
   <%= if @open do %>
-    <%= form_for @changeset, "#", [phx_change: :update, phx_submit: :submit], fn form -> %>
+    <%= form = form_for @changeset, "#", [phx_change: :update, phx_submit: :submit] %>
       <%= render "_controls.html", Map.put(assigns, :form, form) %>
       <%= hidden_input form, :lang %>
       <%= render "_options_left.html", Map.put(assigns, :form, form) %>
@@ -16,6 +16,6 @@
         <% end %>
       </main>
       <%= render "_options_right.html", Map.put(assigns, :form, form) %>
-    <% end %>
+    </form>
   <% end %>
 </section>
