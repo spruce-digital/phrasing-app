@@ -4,7 +4,7 @@ defmodule Phrasing.Dict.Phrase do
 
   schema "phrases" do
     field :active, :boolean
-    field :translations, {:map, :string}
+    field :translations, {:map, :string}, default: %{}
     field :translation_id, :id, virtual: true
     belongs_to :user, Phrasing.Accounts.User
     belongs_to :language, Phrasing.Dict.Language
@@ -17,9 +17,9 @@ defmodule Phrasing.Dict.Phrase do
   @doc false
   def changeset(phrase, attrs) do
     phrase
-    |> cast(attrs, [:translations, :language_id, :active])
+    |> cast(attrs, [:translations, :language_id, :user_id])
     |> cast_assoc(:cards)
-    |> validate_required([:translations, :language_id])
+    |> validate_required([:translations, :language_id, :user_id])
   end
 
   @doc false
@@ -27,10 +27,10 @@ defmodule Phrasing.Dict.Phrase do
     attrs = filter_empty_translations(attrs)
 
     changeset = phrase
-    |> cast(attrs, [:translations, :lang, :user_id])
+    |> cast(attrs, [:translations, :language_id, :user_id])
     |> cast_assoc_when_present(:cards, attrs["card"])
     |> cast_assoc_when_present(:entry, attrs["entry"])
-    |> validate_required([:translations, :lang])
+    |> validate_required([:translations, :language_id, :user_id])
 
     changeset
   end

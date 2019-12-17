@@ -19,11 +19,12 @@
         <nav role="navigation">
           <ul>
             <%= if signed_in?(@conn) do %>
-              <li><a href="#" onclick="javascript:Add.navbar()">Add</a></li>
+              <%# <li><a href="#" onclick="javascript:Add.navbar()">Add</a></li> %>
+              <li><a href="/library">Library</a></li>
               <li><a href="/phrases">Phrases</a></li>
               <li><a href="/cards">Cards</a></li>
               <li><a href="/flashcards">Flashcards</a></li>
-              <%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete %>
+              <li><%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete %></li>
             <% else %>
               <li><%= link "Sign In", to: Routes.session_path(@conn, :new) %></li>
               <li><%= link "Sign Up", to: Routes.user_path(@conn, :new) %></li>

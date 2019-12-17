@@ -1,4 +1,4 @@
-defmodule PhrasingWeb.UILive.TranslationField do
+defmodule PhrasingWeb.UILive.Field.Translation do
   use Phoenix.LiveComponent
 
   alias Ecto.Changeset

@@ -14,6 +14,23 @@ defmodule Phrasing.Dict do
     Phoenix.PubSub.subscribe(Phrasing.PubSub, @topic)
   end
 
+  def get_last_translations(user_id: user_id, language_id: language_id) do
+    query = from p in Phrase,
+      where: p.user_id == ^user_id,
+      where: p.language_id == ^language_id,
+      select: {p.translations},
+      limit: 1
+
+    case Repo.all(query) do
+      [] -> []
+      [{translations}] ->
+        Map.keys(translations)
+        |> Enum.map(&to_string/1)
+        |> Enum.filter(fn id -> to_string(language_id) != id end)
+        |> Enum.map(&String.to_integer/1)
+    end
+  end
+
   @doc """
   Returns the list of phrases.
 
@@ -55,9 +72,11 @@ defmodule Phrasing.Dict do
 
   def get_last_phrase_for_user(user_id) do
     query = from p in Phrase,
-            where: p.user_id == ^user_id
+      where: p.user_id == ^user_id,
+      limit: 1
 
-    Repo.one(query)
+    [res] = Repo.all(query)
+    res
   end
 
   @doc """

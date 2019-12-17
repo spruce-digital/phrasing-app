@@ -9,16 +9,17 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
   @defaults %{
     left: "_phrase.html",
-    open: true,
+    open: false,
     right: "_select.html",
     select_language: false,
     target_lang: "en",
   }
 
+  def new_changeset(nil), do: Dict.change_phrase(%Phrase{})
   def new_changeset(user_id) do
     last_phrase = Dict.get_last_phrase_for_user(user_id)
-    language_id = Access.get(last_phrase, :language_id)
-    translation_id = Access.get(last_phrase, :translations, %{})
+    language_id = last_phrase.language_id
+    translation_id = last_phrase.translations
       |> Map.keys
       |> Enum.filter(fn x -> x != language_id end)
       |> random_or_nil

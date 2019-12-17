@@ -13,7 +13,7 @@ defmodule PhrasingWeb do
   on imports, uses and aliases.
 
   Do NOT define functions inside the quoted expressions
-  below. Instead, define any helper function in modules
+. Instead, define any helper function in modules
   and import those modules here.
   """
 
@@ -33,7 +33,8 @@ defmodule PhrasingWeb do
     quote do
       use Phoenix.View,
         root: "lib/phrasing_web/templates",
-        namespace: PhrasingWeb
+        namespace: PhrasingWeb,
+        pattern: "**/*"
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]

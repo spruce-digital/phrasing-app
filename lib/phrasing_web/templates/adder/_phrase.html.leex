@@ -9,7 +9,7 @@
   <%# <%= text_input_lang @form, :translations, @source_lang %1> %>
   <%# <%= error_tag @form, :translations, @source_lang %1> %>
 
-  <%= live_component(@socket, UILive.TranslationField,
+  <%= live_component(@socket, UILive.Field.Translation,
         form: @form,
         id: :adder_phrase_source,
         label_prefix: "Source: ",
@@ -17,7 +17,7 @@
       )
     %>
 
-  <%= live_component(@socket, UILive.TranslationField,
+  <%= live_component(@socket, UILive.Field.Translation,
         form: @form,
         id: :adder_phrase_translation,
         label_prefix: "Translation: ",
