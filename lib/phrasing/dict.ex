@@ -10,14 +10,25 @@ defmodule Phrasing.Dict do
 
   @topic "phrases"
 
-  def language_name language_code do
-    Phrase.languages
-    |> Enum.find(fn x -> x[:value] == language_code end)
-    |> Access.get(:key)
-  end
-
   def subscribe do
     Phoenix.PubSub.subscribe(Phrasing.PubSub, @topic)
+  end
+
+  def get_last_translations(user_id: user_id, language_id: language_id) do
+    query = from p in Phrase,
+      where: p.user_id == ^user_id,
+      where: p.language_id == ^language_id,
+      select: {p.translations},
+      limit: 1
+
+    case Repo.all(query) do
+      [] -> []
+      [{translations}] ->
+        Map.keys(translations)
+        |> Enum.map(&to_string/1)
+        |> Enum.filter(fn id -> to_string(language_id) != id end)
+        |> Enum.map(&String.to_integer/1)
+    end
   end
 
   @doc """
@@ -59,6 +70,15 @@ defmodule Phrasing.Dict do
   """
   def get_phrase!(id), do: Repo.get!(Phrase, id)
 
+  def get_last_phrase_for_user(user_id) do
+    query = from p in Phrase,
+      where: p.user_id == ^user_id,
+      limit: 1
+
+    [res] = Repo.all(query)
+    res
+  end
+
   @doc """
   Creates a phrase.
 
@@ -75,7 +95,7 @@ defmodule Phrasing.Dict do
     %Phrase{}
     |> Phrase.changeset(attrs)
     |> Repo.insert()
-    |> notify_dict_subscribers(:phrase_update)
+    # |> notify_dict_subscribers(:phrase_update)
   end
 
   def create_phrase_from_adder(attrs \\ %{}) do
@@ -231,5 +251,101 @@ defmodule Phrasing.Dict do
   """
   def change_entry(%Entry{} = entry) do
     Entry.changeset(entry, %{})
+  end
+
+  alias Phrasing.Dict.Language
+
+  @doc """
+  Returns the list of languages.
+
+  ## Examples
+
+      iex> list_languages()
+      [%Language{}, ...]
+
+  """
+  def list_languages do
+    Repo.all(Language)
+  end
+
+  @doc """
+  Gets a single language.
+
+  Raises `Ecto.NoResultsError` if the Language does not exist.
+
+  ## Examples
+
+      iex> get_language!(123)
+      %Language{}
+
+      iex> get_language!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_language!(id), do: Repo.get!(Language, id)
+
+  @doc """
+  Creates a language.
+
+  ## Examples
+
+      iex> create_language(%{field: value})
+      {:ok, %Language{}}
+
+      iex> create_language(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_language(attrs \\ %{}) do
+    %Language{}
+    |> Language.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a language.
+
+  ## Examples
+
+      iex> update_language(language, %{field: new_value})
+      {:ok, %Language{}}
+
+      iex> update_language(language, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_language(%Language{} = language, attrs) do
+    language
+    |> Language.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Language.
+
+  ## Examples
+
+      iex> delete_language(language)
+      {:ok, %Language{}}
+
+      iex> delete_language(language)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_language(%Language{} = language) do
+    Repo.delete(language)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking language changes.
+
+  ## Examples
+
+      iex> change_language(language)
+      %Ecto.Changeset{source: %Language{}}
+
+  """
+  def change_language(%Language{} = language, attrs \\ %{}) do
+    Language.changeset(language, %{})
   end
 end

@@ -2,24 +2,12 @@ defmodule Phrasing.Dict.Phrase do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @languages [
-    [key: "Croatian", value: "hr"],
-    [key: "Dutch", value: "nl"],
-    [key: "English", value: "en"],
-    [key: "French", value: "fr"],
-    [key: "Greek", value: "el"],
-    [key: "Hindi", value: "hi"],
-    [key: "Italian", value: "it"],
-    [key: "Japanese", value: "jp"],
-    [key: "Russian", value: "ru"],
-    [key: "Spanish", value: "sp"],
-  ]
-
   schema "phrases" do
     field :active, :boolean
-    field :translations, {:map, :string}
-    field :lang, :string
+    field :translations, {:map, :string}, default: %{}
+    field :translation_id, :id, virtual: true
     belongs_to :user, Phrasing.Accounts.User
+    belongs_to :language, Phrasing.Dict.Language
     has_many :cards, Phrasing.SRS.Card
     has_one :entry, Phrasing.Dict.Entry
 
@@ -29,9 +17,9 @@ defmodule Phrasing.Dict.Phrase do
   @doc false
   def changeset(phrase, attrs) do
     phrase
-    |> cast(attrs, [:translations, :lang, :active])
+    |> cast(attrs, [:translations, :language_id, :user_id])
     |> cast_assoc(:cards)
-    |> validate_required([:translations, :lang])
+    |> validate_required([:translations, :language_id, :user_id])
   end
 
   @doc false
@@ -39,10 +27,10 @@ defmodule Phrasing.Dict.Phrase do
     attrs = filter_empty_translations(attrs)
 
     changeset = phrase
-    |> cast(attrs, [:translations, :lang, :user_id])
+    |> cast(attrs, [:translations, :language_id, :user_id])
     |> cast_assoc_when_present(:cards, attrs["card"])
     |> cast_assoc_when_present(:entry, attrs["entry"])
-    |> validate_required([:translations, :lang])
+    |> validate_required([:translations, :language_id, :user_id])
 
     changeset
   end
@@ -56,7 +44,7 @@ defmodule Phrasing.Dict.Phrase do
     string = map
     |> Map.values()
     |> Enum.join()
-    |> String.strip()
+    |> String.trim()
 
     string == ""
   end
@@ -73,6 +61,4 @@ defmodule Phrasing.Dict.Phrase do
   def print_translation(phrase, lang) do
     "#{lang}: #{phrase.translations[lang]}"
   end
-
-  def languages, do: @languages
 end

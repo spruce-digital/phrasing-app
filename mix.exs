@@ -4,7 +4,7 @@ defmodule Phrasing.MixProject do
   def project do
     [
       app: :phrasing,
-      version: "0.1.0",
+      version: "1.0.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -20,7 +20,8 @@ defmodule Phrasing.MixProject do
   def application do
     [
       mod: {Phrasing.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools],
+      # applications: [:edeliver],
     ]
   end
 
@@ -40,6 +41,7 @@ defmodule Phrasing.MixProject do
       {:floki, ">= 0.0.0", only: :test},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:paasaa, "~> 0.5.0"},
       {:phoenix, "~> 1.4.0"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.11"},
@@ -52,6 +54,8 @@ defmodule Phrasing.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:timex, "~> 3.6"},
       {:triq, "~> 1.3", only: [:dev, :test]},
+      {:edeliver, "~> 1.7.0"},
+      {:distillery, "~> 2.0", warn_missing: false},
     ]
   end
 

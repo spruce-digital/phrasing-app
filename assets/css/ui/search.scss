@@ -1,0 +1,14 @@
+.ui--search--language-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 12px;
+
+  select {
+    margin: 0;
+  }
+
+  i {
+    margin: 0 12px;
+  }
+}

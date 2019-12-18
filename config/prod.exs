@@ -13,8 +13,14 @@ use Mix.Config
 #   http: [:inet6, port: System.get_env("PORT") || 4000],
 #   url: [scheme: "https", host: "www.phrasing.app", port: 443],
 #   force_ssl: [rewrite_on: [:x_forwarded_proto]],
-#   secret_key_base: System.get_env("SECRET_KEY_BASE"),
 #   cache_static_manifest: "priv/static/cache_manifest.json"
+
+config :phrasing, PhrasingWeb.Endpoint,
+  http: [port: 8888],
+  url: [scheme: "https", host: "phrasing.app", port: 80],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  check_origin: ["https://phrasing.app", "https://www.phrasing.app"]
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -57,8 +63,8 @@ config :logger, level: :info
 #
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start the server for all endpoints:
-#
-#     config :phoenix, :serve_endpoints, true
+
+config :phoenix, :serve_endpoints, true
 #
 # Alternatively, you can configure exactly which server to
 # start per endpoint:
@@ -68,20 +74,12 @@ config :logger, level: :info
 # Note you can't rely on `System.get_env/1` when using releases.
 # See the releases documentation accordingly.
 
+# config :phrasing, Phrasing.Repo,
+#   adapter: Ecto.Adapters.Postgres,
+#   url: System.get_env("DATABASE_URL"),
+#   ssl: true,
+#   pool_size: 2 # Free tier db only allows 4 connections. Rolling deploys need pool_size*(n+1) connections where n is the number of app replicas.
+
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
-# import_config "prod.secret.exs"
-
-config :phrasing, PhrasingWeb.Endpoint,
-  http: [port: {:system, "PORT"}], # Possibly not needed, but doesn't hurt
-  # url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 80],
-  url: [host: "www.phrasing.app", port: 80],
-  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
-  server: true
-
-config :phrasing, Phrasing.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  url: System.get_env("DATABASE_URL"),
-  ssl: true,
-  pool_size: 2 # Free tier db only allows 4 connections. Rolling deploys need pool_size*(n+1) connections where n is the number of app replicas.
-
+import_config "prod.secret.exs"

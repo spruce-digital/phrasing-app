@@ -1,8 +1,6 @@
 defmodule PhrasingWeb.ScriptLive.New do
   use Phoenix.LiveView
 
-  import Ecto.Changeset, only: [get_field: 3, get_field: 2]
-  alias Phrasing.Dict
   alias Phrasing.Library
   alias PhrasingWeb.ScriptView
   alias PhrasingWeb.Router.Helpers, as: Routes
@@ -18,7 +16,7 @@ defmodule PhrasingWeb.ScriptLive.New do
     ScriptView.render("new.html", assigns)
   end
 
-  def handle_event("language_select", %{"field" => field}, socket) do
+  def handle_event("language_select", %{"field" => _field}, socket) do
     languages = socket.assigns.languages ++ [socket.assigns.add_translation]
     changeset = Map.put(socket.assigns.changeset, :action, :ignore)
 
@@ -41,7 +39,7 @@ defmodule PhrasingWeb.ScriptLive.New do
   def handle_event("create", %{"script" => script_params}, socket) do
     IO.inspect script_params
     case Library.create_script(script_params) do
-      {:ok, script} ->
+      {:ok, _script} ->
         {:stop,
           socket
           |> put_flash(:info, "Script created successfully.")

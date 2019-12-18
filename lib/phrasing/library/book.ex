@@ -4,9 +4,9 @@ defmodule Phrasing.Library.Book do
   alias Phrasing.Library.Chapter
 
   schema "books" do
-    field :lang, :string
     field :title, :string
     field :translations, {:array, :string}, virtual: true
+    belongs_to :language, Phrasing.Dict.Language
     has_many :chapters, Phrasing.Library.Chapter
 
     timestamps()

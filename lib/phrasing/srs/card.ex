@@ -4,12 +4,12 @@ defmodule Phrasing.SRS.Card do
 
   schema "cards" do
     field :hint, :string
-    field :lang, :string
     field :mnem, :string
-    field :translation, :string
 
     belongs_to :phrase, Phrasing.Dict.Phrase
     belongs_to :prev_rep, Phrasing.SRS.Rep
+    belongs_to :language, Phrasing.Dict.Language
+    belongs_to :translation, Phrasing.Dict.Language
     has_many :reps, Phrasing.SRS.Rep
 
     timestamps()

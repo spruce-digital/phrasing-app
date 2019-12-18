@@ -1,7 +1,6 @@
 defmodule PhrasingWeb.UIView do
   use PhrasingWeb, :view
   import Ecto.Changeset, only: [get_field: 3, get_field: 2]
-  import Phrasing.Dict, only: [language_name: 1]
 
   alias Phrasing.Dict
 
@@ -19,7 +18,7 @@ defmodule PhrasingWeb.UIView do
     [prompt | Dict.Phrase.languages]
   end
 
-  def language_options(form, field, language) do
+  def language_options(_form, _field, language) do
     prompt = [key: "Select Language", value: "", disabled: true]
     [prompt | Dict.Phrase.languages]
     |> Enum.map(&select_language_option(&1, language))
@@ -27,13 +26,13 @@ defmodule PhrasingWeb.UIView do
 
   def label_lang(form, field, lang) do
     label_lang form, field, lang do
-      language_name(lang)
+      "language_name(lang)"
     end
   end
 
   def label_lang(form, field, lang, do: block) do
     id = "#{form.name}_#{field}_#{lang}"
-    name = language_name(lang)
+    _name = "language_name(lang)"
 
     label form, field, block, [for: id]
   end

@@ -29,9 +29,11 @@ defmodule PhrasingWeb.Router do
 
     pipe_through :check_auth
 
-    get "/", LibraryController, :index
+    get "/", SearchController, :index
+    get "/library", LibraryController, :index
     get "/flashcards", SRSController, :flashcards
     get "/cards", SRSController, :cards
+    get "/admin", AdminController, :index
     resources "/scripts", ScriptController, only: [:new]
     resources "/songs", SongController, only: [:new]
     resources "/books", BookController, only: [:new]
