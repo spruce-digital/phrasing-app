@@ -75,8 +75,9 @@ defmodule Phrasing.Dict do
       where: p.user_id == ^user_id,
       limit: 1
 
-    [res] = Repo.all(query)
-    res
+    query
+    |> Repo.all()
+    |> List.first()
   end
 
   @doc """
@@ -103,6 +104,12 @@ defmodule Phrasing.Dict do
     |> Phrase.adder_changeset(attrs)
     |> Repo.insert()
     |> notify_dict_subscribers(:phrase_update)
+  end
+
+  def create_phrase_from_search(attrs \\ %{}) do
+    %Phrase{}
+    |> Phrase.search_changeset(attrs)
+    |> Repo.insert()
   end
 
   def notify_dict_subscribers({:ok, payload}, event) do

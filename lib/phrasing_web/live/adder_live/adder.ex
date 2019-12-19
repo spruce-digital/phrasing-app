@@ -17,7 +17,7 @@ defmodule PhrasingWeb.AdderLive.Adder do
 
   def new_changeset(nil), do: Dict.change_phrase(%Phrase{})
   def new_changeset(user_id) do
-    last_phrase = Dict.get_last_phrase_for_user(user_id)
+    last_phrase = Dict.get_last_phrase_for_user(user_id) || %Phrase{}
     language_id = last_phrase.language_id
     translation_id = last_phrase.translations
       |> Map.keys

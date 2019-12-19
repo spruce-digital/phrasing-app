@@ -4,7 +4,7 @@ defmodule Phrasing.Dict.Phrase do
 
   schema "phrases" do
     field :active, :boolean
-    field :translations, {:map, :string}, default: %{}
+    field :translations, {:map, {:array, :string}}, default: %{}
     field :translation_id, :id, virtual: true
     belongs_to :user, Phrasing.Accounts.User
     belongs_to :language, Phrasing.Dict.Language
@@ -35,6 +35,34 @@ defmodule Phrasing.Dict.Phrase do
     changeset
   end
 
+  @doc false
+  def search_changeset(phrase, attrs) do
+    attrs = attrs
+          |> Map.put("translations", build_translations_from_search(attrs))
+          |> Map.put("language_id", attrs["source_language"])
+          |> filter_empty_translations()
+
+    phrase
+    |> cast(attrs, [:translations, :language_id, :user_id])
+    |> validate_required([:translations, :language_id, :user_id])
+  end
+
+  def build_translations_from_search(attrs) do
+    languages = [attrs["source_language"]] ++ attrs["translation_languages"]
+    translation_strings = [attrs["source"]] ++ attrs["translations"]
+
+    Enum.reduce(Enum.with_index(languages), %{}, fn ({language, index}, acc) ->
+      next_translation = Enum.at translation_strings, index
+
+      translation_list = case acc[language] do
+        nil      -> [next_translation]
+        existing -> existing ++ [next_translation]
+      end
+
+      Map.put acc, language, translation_list
+    end)
+  end
+
   def cast_assoc_when_present(changeset, field, value) do
     if is_empty_map(value), do: changeset, else: cast_assoc(changeset, field)
   end
@@ -51,7 +79,7 @@ defmodule Phrasing.Dict.Phrase do
 
   def filter_empty_translations(attrs) do
     Map.put(attrs, "translations", Enum.reduce(attrs["translations"], %{}, fn {lang, body}, acc ->
-      if body == "", do: acc, else: Map.put(acc, lang, body)
+      Map.put(acc, lang, Enum.filter(body, fn t -> t != "" end))
     end))
   end
 
