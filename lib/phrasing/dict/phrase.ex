@@ -84,9 +84,30 @@ defmodule Phrasing.Dict.Phrase do
   end
 
   def print_translation(phrase) do
-    "#{phrase.lang}: #{phrase.translations[phrase.lang]}"
+    "#{phrase.lang}: #{List.first(phrase.translations[phrase.lang])}"
   end
   def print_translation(phrase, lang) do
-    "#{lang}: #{phrase.translations[lang]}"
+    "#{lang}: #{List.first(phrase.translations[lang])}"
+  end
+
+  def source(phrase) do
+    {
+      phrase.language_id,
+      List.first(phrase.translations[to_string(phrase.language_id)]),
+    }
+  end
+
+  def translation_list(phrase) do
+    translation_data = Map.to_list(phrase.translations)
+
+    Enum.reduce(translation_data, [], fn {language_id, t_list}, acc ->
+      Enum.reduce(Enum.with_index(t_list), acc, fn {t, i}, acc ->
+        if language_id == to_string(phrase.language_id) and i == 0 do
+          acc
+        else
+          acc ++ [{language_id, t}]
+        end
+      end)
+    end)
   end
 end

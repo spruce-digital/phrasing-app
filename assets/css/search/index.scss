@@ -30,3 +30,21 @@
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+.search--index--recent-phrase {
+  border: 1px solid $white---;
+  margin: 12px 0;
+
+  .source {
+    padding: 12px;
+    background: $white---;
+  }
+
+  .translation {
+    padding: 6px 12px;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $white--;
+    }
+  }
+}

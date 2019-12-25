@@ -4,6 +4,7 @@ defmodule PhrasingWeb.SearchLive.Index do
   alias PhrasingWeb.UILive
   alias Phoenix.HTML.Form
   alias Phrasing.Dict
+  alias Phrasing.Dict.Phrase
   alias Paasaa
 
   @default_search %{
@@ -15,15 +16,20 @@ defmodule PhrasingWeb.SearchLive.Index do
 
   @defaults %{
     detect: true,
-    search: @default_search,
-    last_paired_languages: [],
     error: nil,
+    last_paired_languages: [],
     message: nil,
+    search: @default_search,
   }
 
   def mount(%{user_id: user_id}, socket) do
     languages = Dict.list_languages()
-    {:ok, assign(socket, Map.merge(@defaults, %{user_id: user_id, languages: languages}))}
+    recent_phrases = Dict.list_phrases(user_id)
+    {:ok, assign(socket, Map.merge(@defaults, %{
+      user_id: user_id,
+      languages: languages,
+      recent_phrases: recent_phrases,
+    }))}
   end
 
   def render(assigns) do
@@ -46,10 +52,17 @@ defmodule PhrasingWeb.SearchLive.Index do
         <% end %>
       </form>
       <ul>
-        <li>Existing phrases</li>
-        <li>Other phrases</li>
-        <li>Library</li>
-        <li>Look up</li>
+        <%= if assigns.search.source == "" do %>
+          <h2>Recent Phrases</h2>
+          <%= for phrase <- @recent_phrases do %>
+            <%= render_recent_phrase assigns, phrase %>
+          <% end %>
+        <% else %>
+          <li>Your existing translations</li>
+          <li>Other existing translations</li>
+          <li>Appearences of phrase in your Library (books, songs, scripts, etc)</li>
+          <li>Options to look up on Google Translate, WordReference, etc</li>
+        <% end %>
       </ul>
     </div>
     """
@@ -110,6 +123,20 @@ defmodule PhrasingWeb.SearchLive.Index do
     language = Enum.find(assigns.languages, fn l -> l.id == language_id end)
 
     language.code
+  end
+
+  def render_recent_phrase(assigns, phrase) do
+    {language_id, source} = Phrase.source(phrase)
+    translation_list = Phrase.translation_list(phrase)
+
+    ~L"""
+      <div class="search--index--recent-phrase">
+        <div class="source"><%= source %></div>
+        <%= for {l, t} <- translation_list do %>
+          <div class="translation"><%= t %></div>
+        <% end %>
+      </div>
+    """
   end
 
   def handle_event("add_translation", _params, socket) do
