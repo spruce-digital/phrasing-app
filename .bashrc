@@ -7,6 +7,7 @@ alias start="mix edeliver start production"
 alias update="mix edeliver update production --start-deploy"
 alias migrate="mix edeliver migrate production"
 alias deploy_branch="mix edeliver build release production --verbose --branch=$(git rev-parse --abbrev-ref HEAD)"
+alias pgpid="cat /usr/local/var/postgres/postmaster.pid | head -n1"
 
 # ph_dump -U deploy phrasing_prod -f phrasing_prod.sql
 alias retrieve="scp deploy@phrasing.app:/home/deploy/phrasing_prod.sql phrasing_prod.sql"

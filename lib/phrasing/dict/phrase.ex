@@ -4,12 +4,17 @@ defmodule Phrasing.Dict.Phrase do
 
   schema "phrases" do
     field :active, :boolean
-    field :translations, {:map, {:array, :string}}, default: %{}
     field :translation_id, :id, virtual: true
     belongs_to :user, Phrasing.Accounts.User
     belongs_to :language, Phrasing.Dict.Language
     has_many :cards, Phrasing.SRS.Card
     has_one :entry, Phrasing.Dict.Entry
+
+    embeds_many :translations, Translation do
+      belongs_to :language, Phrasing.Dict.Language
+      field :source, :boolean, default: false
+      field :text, :string
+    end
 
     timestamps()
   end
@@ -17,7 +22,7 @@ defmodule Phrasing.Dict.Phrase do
   @doc false
   def changeset(phrase, attrs) do
     phrase
-    |> cast(attrs, [:translations, :language_id, :user_id])
+    |> cast(attrs, [:language_id, :user_id])
     |> cast_assoc(:cards)
     |> validate_required([:translations, :language_id, :user_id])
   end
@@ -27,7 +32,7 @@ defmodule Phrasing.Dict.Phrase do
     attrs = filter_empty_translations(attrs)
 
     changeset = phrase
-    |> cast(attrs, [:translations, :language_id, :user_id])
+    |> cast(attrs, [:language_id, :user_id])
     |> cast_assoc_when_present(:cards, attrs["card"])
     |> cast_assoc_when_present(:entry, attrs["entry"])
     |> validate_required([:translations, :language_id, :user_id])
@@ -40,26 +45,26 @@ defmodule Phrasing.Dict.Phrase do
     attrs = attrs
           |> Map.put("translations", build_translations_from_search(attrs))
           |> Map.put("language_id", attrs["source_language"])
-          |> filter_empty_translations()
 
     phrase
-    |> cast(attrs, [:translations, :language_id, :user_id])
+    |> cast(attrs, [:language_id, :user_id])
+    |> cast_embed(:translations, with: &translation_changeset/2)
     |> validate_required([:translations, :language_id, :user_id])
+  end
+
+  def translation_changeset(schema, params) do
+    schema
+    |> cast(params, [:text, :language_id, :source])
   end
 
   def build_translations_from_search(attrs) do
     languages = [attrs["source_language"]] ++ attrs["translation_languages"]
     translation_strings = [attrs["source"]] ++ attrs["translations"]
 
-    Enum.reduce(Enum.with_index(languages), %{}, fn ({language, index}, acc) ->
-      next_translation = Enum.at translation_strings, index
+    Enum.reduce(Enum.with_index(languages), [], fn ({language, index}, acc) ->
+      text = Enum.at translation_strings, index
 
-      translation_list = case acc[language] do
-        nil      -> [next_translation]
-        existing -> existing ++ [next_translation]
-      end
-
-      Map.put acc, language, translation_list
+      acc ++ [%{"text" => text, "language_id" => language, "source" => index == 0}]
     end)
   end
 
@@ -90,24 +95,9 @@ defmodule Phrasing.Dict.Phrase do
     "#{lang}: #{List.first(phrase.translations[lang])}"
   end
 
-  def source(phrase) do
-    {
-      phrase.language_id,
-      List.first(phrase.translations[to_string(phrase.language_id)]),
-    }
-  end
-
   def translation_list(phrase) do
-    translation_data = Map.to_list(phrase.translations)
-
-    Enum.reduce(translation_data, [], fn {language_id, t_list}, acc ->
-      Enum.reduce(Enum.with_index(t_list), acc, fn {t, i}, acc ->
-        if language_id == to_string(phrase.language_id) and i == 0 do
-          acc
-        else
-          acc ++ [{language_id, t}]
-        end
-      end)
-    end)
+    phrase.translations
+    |> Enum.sort_by(&(&1.source))
+    |> Enum.reverse()
   end
 end

@@ -40,8 +40,8 @@
         <%= render @view_module, @view_template, assigns %>
       </main>
 
-      <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: Plug.Conn.get_session(@conn), container:
-          {:aside, class: "adder--adder"}) %>
+      <%# <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: Plug.Conn.get_session(@conn), container: %>
+      <%#     {:aside, class: "adder--adder"}) %1> %>
     </section>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>

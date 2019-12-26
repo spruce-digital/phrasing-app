@@ -126,14 +126,13 @@ defmodule PhrasingWeb.SearchLive.Index do
   end
 
   def render_recent_phrase(assigns, phrase) do
-    {language_id, source} = Phrase.source(phrase)
-    translation_list = Phrase.translation_list(phrase)
+    [source | translation_list] = Phrase.translation_list(phrase)
 
     ~L"""
       <div class="search--index--recent-phrase">
-        <div class="source"><%= source %></div>
-        <%= for {l, t} <- translation_list do %>
-          <div class="translation"><%= t %></div>
+        <div class="source"><%= source.text %></div>
+        <%= for trans <- translation_list do %>
+          <div class="translation"><%= trans.text %></div>
         <% end %>
       </div>
     """
