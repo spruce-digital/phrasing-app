@@ -18,13 +18,11 @@ defmodule PhrasingWeb.AdderLive.Adder do
   def new_changeset(nil), do: Dict.change_phrase(%Phrase{})
   def new_changeset(user_id) do
     last_phrase = Dict.get_last_phrase_for_user(user_id) || %Phrase{}
-    language_id = last_phrase.language_id
     translation_id = last_phrase.translations
       |> Map.keys
-      |> Enum.filter(fn x -> x != language_id end)
       |> random_or_nil
 
-    %Phrase{language_id: language_id, translation_id: translation_id}
+    %Phrase{translation_id: translation_id}
     |> Repo.preload(:cards)
     |> Dict.change_phrase()
   end

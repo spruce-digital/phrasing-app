@@ -5,7 +5,7 @@
 <h2>Languages</h2>
 
 <%= for l <- @languages do %>
-  <%= l.code %>: <%= l.name %> (<%= l.script %>)
+  <%= l.code %>: <%= l.name %>
 <% end %>
 
 <%= f = form_for @language_changeset, "#", [phx_submit: :create_language] %>
@@ -16,10 +16,6 @@
   <%= label f, :code %>
   <%= text_input f, :code %>
   <%= error_tag f, :code %>
-
-  <%= label f, :script %>
-  <%= text_input f, :script %>
-  <%= error_tag f, :script %>
 
   <%= submit "Save" %>
 </form>

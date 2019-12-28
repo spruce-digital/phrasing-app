@@ -8,13 +8,13 @@
 
   input {
     flex: 1;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 
   button {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
 
@@ -27,24 +27,126 @@
   font-size: 16px;
   text-align: center;
   width: 96px;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.search--index--recent-phrase {
+.search--phrase {
+  $translation-height: 48px;
+
   border: 1px solid $white---;
   margin: 12px 0;
+
+  main {
+    position: relative;
+  }
+
+  main aside {
+    display: none;
+  }
+
+  main:hover aside,
+  main aside:hover,
+  form aside {
+    @include flex-center;
+    height: $translation-height;
+    left: 100%;
+    padding-left: 12px;
+    position: absolute;
+    top: 0;
+  }
+
+  main aside:hover,
+  form aside:hover {
+    @include hoverable;
+  }
+
+  form {
+    position: relative;
+    margin: 0;
+  }
 
   .source {
     padding: 12px;
     background: $white---;
   }
 
-  .translation {
-    padding: 6px 12px;
+  form .translation {
+    display: flex;
+    align-items: stretch;
+    height: $translation-height;
+    align-items: center;
+    margin: 0;
 
-    &:not(:last-child) {
-      border-bottom: 1px solid $white--;
+    &:not(:first-child) {
+      border-top: 1px solid $white--;
     }
+  }
+
+  form .translation .remove {
+    @include flex-center;
+    @include hoverable;
+    padding: 0 12px;
+  }
+
+  form input[id$=text] {
+    border: none;
+    padding: 12px;
+    margin: 0;
+    flex: 1;
+  }
+
+  form select[id$=language_id] {
+    margin: 0;
+    border: none;
+
+  }
+
+  form button {
+    @include dark-hover(color, $black----);
+    background: none;
+    border: none;
+    margin: 0;
+  }
+}
+
+.search--search-field {
+  display: flex;
+
+  input {
+    flex: 1;
+    padding: 6px 12px;
+  }
+}
+
+.search--results {
+  .filters {
+    display: flex;
+    list-style: none;
+  }
+
+  .filters li {
+    $color: $black----;
+    $height: 24px;
+    @include flex-center;
+    @include hover(border-color, $color);
+    @include hoverable;
+    @include invert-hover(background, transparent, $color);
+    @include invert-hover(color, $color, $white);
+    border-radius: $height / 2;
+    border: 1px solid $color;
+    font-size: 12px;
+    height: $height;
+    margin-right: 12px;
+    padding: 0 12px;
+    text-align: center;
+  }
+
+  .filters li:last-child {
+    margin-right: 0;
+  }
+
+  spacer {
+    flex: 1;
   }
 }

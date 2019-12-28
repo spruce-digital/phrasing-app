@@ -1,17 +1,16 @@
 defmodule PhrasingWeb.SearchLive.Index do
   use Phoenix.LiveView
 
-  alias PhrasingWeb.UILive
+  alias Paasaa
   alias Phoenix.HTML.Form
   alias Phrasing.Dict
   alias Phrasing.Dict.Phrase
-  alias Paasaa
+  alias PhrasingWeb.SearchLive
+  alias PhrasingWeb.UILive
 
   @default_search %{
-    source: "",
-    source_language: "detect",
-    translation_languages: [],
-    translations: %{},
+    text: "hello",
+    language_id: 1,
   }
 
   @defaults %{
@@ -19,7 +18,10 @@ defmodule PhrasingWeb.SearchLive.Index do
     error: nil,
     last_paired_languages: [],
     message: nil,
+    results: [],
     search: @default_search,
+    state: :results,
+    suggestions: [],
   }
 
   def mount(%{user_id: user_id}, socket) do
@@ -41,102 +43,51 @@ defmodule PhrasingWeb.SearchLive.Index do
       <%= if @message do %>
         <h4><%= @message %></h4>
       <% end %>
-      <form phx-submit="create" phx-change="change">
-        <%= render_source assigns %>
-        <%= for {l, i} <- Enum.with_index(assigns.search.translation_languages) do %>
-          <%= render_translation assigns, l, i %>
-        <% end %>
-        <a phx-click="add_translation">Add Translation</a>
-        <%= unless Enum.empty?(assigns.search.translation_languages) do %>
-          <button type="submit">Create Phrase</button>
-        <% end %>
-      </form>
-      <ul>
-        <%= if assigns.search.source == "" do %>
-          <h2>Recent Phrases</h2>
-          <%= for phrase <- @recent_phrases do %>
-            <%= render_recent_phrase assigns, phrase %>
-          <% end %>
-        <% else %>
-          <li>Your existing translations</li>
-          <li>Other existing translations</li>
-          <li>Appearences of phrase in your Library (books, songs, scripts, etc)</li>
-          <li>Options to look up on Google Translate, WordReference, etc</li>
-        <% end %>
-      </ul>
+
+      <%= live_component @socket, SearchLive.SearchField, search: assigns.search %>
+
+      <%= render_body assigns %>
     </div>
     """
   end
 
-  def render_source(assigns) do
-    ~L"""
-    <div class="search--index--source">
-      <input type="text" name="search[source]" value="<%= assigns.search.source %>" />
-      <%= render_language_dropdown(assigns, key: :source_language, detect: true, index: nil) %>
-    </div>
-    """
-  end
-
-  def render_translation(assigns, language_id, index) do
-    name = "search[translations][]"
-    value = Enum.at assigns.search.translations, index
-
-    ~L"""
-    <div class="search--index--translation">
-      <input type="text" name="<%= name %>" value="<%= value %>" />
-      <%= render_language_dropdown(assigns, key: :translation_languages, detect: false, index: index) %>
-    </div>
-    """
-  end
-
-  def render_language_dropdown(assigns, key: key, detect: detect, index: index) do
-    name = "search[#{key}]" <> if index, do: "[]", else: ""
-    selected = if index do
-      assigns.search[key] |> Enum.at(index)
-    else
-      assigns.search[key]
+  def render_body(a) do
+    case a.state do
+      :pristine -> live_component a.socket,
+                                  SearchLive.RecentPhrases,
+                                  recent_phrases: a.recent_phrases
+      :searching -> live_component a.socket,
+                                   SearchLive.Suggestions,
+                                   suggestions: a.suggestions
+      :results -> live_component a.socket,
+                                 SearchLive.Results,
+                                 id: :results,
+                                 results: a.results,
+                                 search: a.search,
+                                 user_id: a.user_id
     end
-
-    ~L"""
-    <select class="search--index--language-dropdown" name="<%= name %>">
-      <%= if detect do %>
-        <option value="detect" <%= html_selected "detect", selected %>>
-          ✎
-        </option>
-      <% else %>
-        <option value="" disabled <%= html_selected selected, nil %>>
-          v
-        </option>
-      <% end %>
-
-      <%= for l <- assigns.languages do %>
-        <option value="<%= l.id %>" <%= html_selected l.id, selected %>>
-          <%= l.code %>
-        </option>
-      <% end %>
-    </select>
-    """
   end
 
-  def render_language(assigns, :source), do: render_language(assigns, assigns.search.source_language)
-  def render_language(assigns, language_id) do
-    language = Enum.find(assigns.languages, fn l -> l.id == language_id end)
+  def handle_event("query", %{"_target" => ["search", field], "search" => search_params}, socket) do
+    search = Map.put socket.assigns.search, String.to_atom(field), search_params[field]
+    suggestions = Dict.search_translations(search.text, search.language_id)
 
-    language.code
+    {:noreply, assign(socket, suggestions: suggestions, search: search, state: :searching)}
   end
 
-  def render_recent_phrase(assigns, phrase) do
-    [source | translation_list] = Phrase.translation_list(phrase)
-
-    ~L"""
-      <div class="search--index--recent-phrase">
-        <div class="source"><%= source.text %></div>
-        <%= for trans <- translation_list do %>
-          <div class="translation"><%= trans.text %></div>
-        <% end %>
-      </div>
-    """
+  def handle_event("search", _params, socket) do
+    {:noreply, assign(socket, state: :results)}
   end
+
+
+
+  ###############################################
+  ### PREVIOUS ##################################
+  ###############################################
+
+
+
+
 
   def handle_event("add_translation", _params, socket) do
     translation_languages = socket.assigns.search.translation_languages
@@ -161,12 +112,16 @@ defmodule PhrasingWeb.SearchLive.Index do
     |> Map.put(:source, search_params["source"])
     |> Map.put(:source_language, source_language)
 
-    {:noreply, assign(socket, search: search)}
+
+    matching_phrases = get_matching_phrases(search)
+
+    {:noreply, assign(socket, search: search, matching_phrases: matching_phrases)}
   end
 
   def handle_event("change", %{"_target" => ["search", "translations"], "search" => search_params}, socket) do
     search = Map.put socket.assigns.search, :translations, search_params["translations"]
-    {:noreply, assign(socket, search: search)}
+    matching_phrases = get_matching_phrases(search)
+    {:noreply, assign(socket, search: search, matching_phrases: matching_phrases)}
   end
 
   def handle_event("change", %{"_target" => ["search", "translation_languages"], "search" => search_params}, socket) do
@@ -242,5 +197,9 @@ defmodule PhrasingWeb.SearchLive.Index do
 
   defp html_selected(a, b) do
     if to_string(a) == to_string(b), do: "selected", else: ""
+  end
+
+  defp get_matching_phrases(search) do
+    Dict.search_translations search.source
   end
 end

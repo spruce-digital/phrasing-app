@@ -4,6 +4,7 @@ defmodule Phrasing.Dict do
   """
 
   import Ecto.Query, warn: false
+  import Ecto.Changeset
   alias Phrasing.Repo
 
   alias Phrasing.Dict.Phrase
@@ -24,11 +25,31 @@ defmodule Phrasing.Dict do
     case Repo.all(query) do
       [] -> []
       [{translations}] ->
-        Map.keys(translations)
-        |> Enum.map(&to_string/1)
-        |> Enum.filter(fn id -> to_string(language_id) != id end)
+        translations
+        |> Enum.map(fn t -> to_string(t.language_id) end)
+        |> Enum.filter(fn id -> id != language_id end)
         |> Enum.map(&String.to_integer/1)
     end
+  end
+
+  def search_translations_query(query) do
+    ilike_query = "%#{query}%"
+
+    from p in Phrase,
+    join: t in assoc(p, :translations),
+    where: ilike(t.text, ^ilike_query),
+    order_by: fragment("length(?)", t.text),
+    preload: [:translations]
+  end
+  def search_translations(query) do
+    Repo.all search_translations_query(query)
+  end
+  def search_translations(query, nil) do
+    search_translations(query)
+  end
+  def search_translations(query, language_id) do
+    Repo.all from [p, t] in search_translations_query(query),
+    where: t.language_id == ^language_id
   end
 
   @doc """
@@ -40,18 +61,18 @@ defmodule Phrasing.Dict do
       [%Phrase{}, ...]
 
   """
+  def list_phrases_query do
+    from p in Phrase,
+    where: p.active == true,
+    order_by: [desc: p.updated_at],
+    preload: [:cards, :translations]
+  end
   def list_phrases do
-    Repo.all from p in Phrase,
-      where: p.active == true,
-      order_by: [desc: p.updated_at],
-      preload: :cards
+    Repo.all list_phrases_query
   end
   def list_phrases(user_id) do
-    Repo.all from p in Phrase,
-      where: p.active == true,
-      where: p.user_id == ^user_id,
-      order_by: [desc: p.updated_at],
-      preload: :cards
+    Repo.all from p in list_phrases_query,
+      where: p.user_id == ^user_id
   end
 
   @doc """
@@ -130,9 +151,18 @@ defmodule Phrasing.Dict do
 
   """
   def update_phrase(%Phrase{} = phrase, attrs) do
+    IO.inspect(attrs)
     phrase
     |> Phrase.changeset(attrs)
     |> Repo.update()
+  end
+
+  def create_or_update_phrase(%Ecto.Changeset{} = changeset) do
+    if get_field(changeset, :id) == nil do
+      Repo.insert(changeset)
+    else
+      Repo.update(changeset)
+    end
   end
 
   @doc """
@@ -160,8 +190,8 @@ defmodule Phrasing.Dict do
       %Ecto.Changeset{source: %Phrase{}}
 
   """
-  def change_phrase(%Phrase{} = phrase) do
-    Phrase.changeset(phrase, %{})
+  def change_phrase(%Phrase{} = phrase, attrs \\ %{}) do
+    Phrase.changeset(phrase, attrs)
   end
 
   alias Phrasing.Dict.Entry
@@ -354,5 +384,101 @@ defmodule Phrasing.Dict do
   """
   def change_language(%Language{} = language, attrs \\ %{}) do
     Language.changeset(language, %{})
+  end
+
+  alias Phrasing.Dict.Translation
+
+  @doc """
+  Returns the list of translations.
+
+  ## Examples
+
+      iex> list_translations()
+      [%Translation{}, ...]
+
+  """
+  def list_translations do
+    Repo.all(Translation)
+  end
+
+  @doc """
+  Gets a single translation.
+
+  Raises `Ecto.NoResultsError` if the Translation does not exist.
+
+  ## Examples
+
+      iex> get_translation!(123)
+      %Translation{}
+
+      iex> get_translation!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_translation!(id), do: Repo.get!(Translation, id)
+
+  @doc """
+  Creates a translation.
+
+  ## Examples
+
+      iex> create_translation(%{field: value})
+      {:ok, %Translation{}}
+
+      iex> create_translation(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_translation(attrs \\ %{}) do
+    %Translation{}
+    |> Translation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a translation.
+
+  ## Examples
+
+      iex> update_translation(translation, %{field: new_value})
+      {:ok, %Translation{}}
+
+      iex> update_translation(translation, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_translation(%Translation{} = translation, attrs) do
+    translation
+    |> Translation.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Translation.
+
+  ## Examples
+
+      iex> delete_translation(translation)
+      {:ok, %Translation{}}
+
+      iex> delete_translation(translation)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_translation(%Translation{} = translation) do
+    Repo.delete(translation)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking translation changes.
+
+  ## Examples
+
+      iex> change_translation(translation)
+      %Ecto.Changeset{source: %Translation{}}
+
+  """
+  def change_translation(%Translation{} = translation) do
+    Translation.changeset(translation, %{})
   end
 end

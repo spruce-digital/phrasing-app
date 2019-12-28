@@ -5,7 +5,6 @@ defmodule Phrasing.Dict.Language do
   schema "languages" do
     field :code, :string
     field :name, :string
-    field :script, :string
     has_many :entries, Phrasing.Dict.Entry
     has_many :cards, Phrasing.SRS.Card
     has_many :card_translations, Phrasing.SRS.Card, foreign_key: :translation_id
@@ -19,7 +18,7 @@ defmodule Phrasing.Dict.Language do
   @doc false
   def changeset(language, attrs) do
     language
-    |> cast(attrs, [:name, :code, :script])
-    |> validate_required([:name, :code, :script])
+    |> cast(attrs, [:name, :code])
+    |> validate_required([:name, :code])
   end
 end
