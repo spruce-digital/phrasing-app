@@ -159,6 +159,9 @@ defmodule Phrasing.Dict do
 
   def create_or_update_phrase(%Ecto.Changeset{} = changeset) do
     if get_field(changeset, :id) == nil do
+      changeset.data
+      |> IO.inspect
+
       Repo.insert(changeset)
     else
       Repo.update(changeset)

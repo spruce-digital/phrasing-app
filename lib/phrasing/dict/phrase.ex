@@ -17,15 +17,12 @@ defmodule Phrasing.Dict.Phrase do
 
   @doc false
   def changeset(phrase, attrs) do
-    IO.inspect attrs, label: "before"
     attrs = filter_empty_translations(attrs)
-    IO.inspect attrs, label: "after"
-
 
     phrase
     |> cast(attrs, [:user_id])
     |> cast_assoc(:cards)
-    |> cast_assoc(:translations)
+    |> cast_assoc(:translations, required: true)
     |> validate_required([:user_id])
   end
 
@@ -75,7 +72,6 @@ defmodule Phrasing.Dict.Phrase do
       translations = attrs
       |> Access.get("translations", %{})
       |> Map.values()
-      |> IO.inspect(label: :map_values)
       |> Enum.reject(fn t ->
            Access.get(t, "language_id", "") == "" && Access.get(t, "text", "") == ""
          end)

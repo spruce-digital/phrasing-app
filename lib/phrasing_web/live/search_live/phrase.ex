@@ -47,6 +47,7 @@ defmodule PhrasingWeb.SearchLive.Phrase do
       <%= if @editing? do %>
 
         <%= f = form_for @changeset, "#", [phx_change: :change, phx_submit: :save] %>
+          <%= hidden_input f, :id %>
           <%= hidden_input f, :user_id, value: @user_id %>
           <%= hidden_input f, :source %>
           <%= ff = inputs_for f, :translations, fn ff -> %>
@@ -59,8 +60,10 @@ defmodule PhrasingWeb.SearchLive.Phrase do
             </fieldset>
           <% end %>
 
-          <aside class="action" phx-click="save" phx-value-close="true">
-            <i class="far fa-check"></i>
+          <aside class="action">
+            <%= submit do %>
+              <i class="far fa-check"></i>
+            <% end %>
           </aside>
         </form>
 
@@ -107,17 +110,8 @@ defmodule PhrasingWeb.SearchLive.Phrase do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("save", %{"close" => close}, socket) do
-    case Dict.create_or_update_phrase(socket.assigns.changeset) do
-      {:ok, phrase} ->
-        IO.inspect phrase, label: :ok
-        changeset = Dict.change_phrase(phrase)
-        editing? = close == "true"
-        {:noreply, assign(socket, changeset: changeset, editiing?: editing?)}
-      {:error, changeset} ->
-        IO.inspect changeset, label: :error
-        {:noreply, assign(socket, changeset: changeset)}
-    end
+  def handle_event("save", %{"phrase" => phrase_params}, socket) do
+    {:noreply, socket}
   end
 
   defp ensure_extra_translation(changeset) do
