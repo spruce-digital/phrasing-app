@@ -75,8 +75,9 @@ defmodule Phrasing.Dict.Phrase do
       translations = attrs
       |> Access.get("translations", %{})
       |> Map.values()
+      |> IO.inspect(label: :map_values)
       |> Enum.reject(fn t ->
-           Access.get(t, "langauge_id", "") == "" && Access.get(t, "text", "") == ""
+           Access.get(t, "language_id", "") == "" && Access.get(t, "text", "") == ""
          end)
       |> Enum.with_index()
       |> Enum.reduce(%{}, fn {translation, index}, acc ->
