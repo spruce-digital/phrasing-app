@@ -102,6 +102,34 @@ defmodule Phrasing.Dict do
   end
 
   @doc """
+  Create a phrase if none exists. Update the phrase othersie.
+  If translations are passed in, subsequently create or update those
+  """
+  def create_or_update_phrase(attrs \\ %{}) do
+    {id, attrs} = attrs
+    |> Map.new(fn {k, v} -> {to_string(k), v} end)
+    |> Map.pop("id")
+
+    if id do
+      id
+      |> get_phrase!()
+      |> update_phrase(attrs)
+    else
+      create_phrase(attrs)
+    end
+  end
+
+  def create_or_update_phrase(attrs, translations) do
+    case create_or_update_phrase(attrs) do
+      {:ok, phrase} ->
+        phrase
+        |> Repo.preload(:translations)
+        |> Phrase.translations_changeset(%{"translations" => translations})
+        |> Repo.update()
+    end
+  end
+
+  @doc """
   Creates a phrase.
 
   ## Examples
@@ -151,21 +179,9 @@ defmodule Phrasing.Dict do
 
   """
   def update_phrase(%Phrase{} = phrase, attrs) do
-    IO.inspect(attrs)
     phrase
     |> Phrase.changeset(attrs)
     |> Repo.update()
-  end
-
-  def create_or_update_phrase(%Ecto.Changeset{} = changeset) do
-    if get_field(changeset, :id) == nil do
-      changeset.data
-      |> IO.inspect
-
-      Repo.insert(changeset)
-    else
-      Repo.update(changeset)
-    end
   end
 
   @doc """
@@ -181,7 +197,7 @@ defmodule Phrasing.Dict do
 
   """
   def delete_phrase(%Phrase{} = phrase) do
-    update_phrase(phrase, %{active: false})
+    Repo.delete(phrase)
   end
 
   @doc """

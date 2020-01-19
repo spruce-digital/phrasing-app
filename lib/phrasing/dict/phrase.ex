@@ -5,7 +5,7 @@ defmodule Phrasing.Dict.Phrase do
   alias Phrasing.Dict.Translation
 
   schema "phrases" do
-    field :active, :boolean
+    field :active, :boolean, default: true
     field :translation_id, :id, virtual: true
     belongs_to :user, Phrasing.Accounts.User
     has_many :cards, Phrasing.SRS.Card
@@ -22,8 +22,19 @@ defmodule Phrasing.Dict.Phrase do
     phrase
     |> cast(attrs, [:user_id])
     |> cast_assoc(:cards)
-    |> cast_assoc(:translations, required: true)
+    |> cast_assoc(:translations)
     |> validate_required([:user_id])
+  end
+
+  @doc false
+  def translations_changeset(phrase, attrs) do
+    attrs = attrs
+    |> filter_empty_translations()
+    |> add_phrase_id(phrase.id)
+
+    changeset = phrase
+    |> cast(attrs, [])
+    |> cast_assoc(:translations)
   end
 
   @doc false
@@ -70,15 +81,22 @@ defmodule Phrasing.Dict.Phrase do
   def filter_empty_translations(attrs) do
     if attrs["translations"] do
       translations = attrs
-      |> Access.get("translations", %{})
-      |> Map.values()
+      |> Access.get("translations", [])
       |> Enum.reject(fn t ->
-           Access.get(t, "language_id", "") == "" && Access.get(t, "text", "") == ""
+           Access.get(t, "langauge_id", "") == "" && Access.get(t, "text", "") == ""
          end)
-      |> Enum.with_index()
-      |> Enum.reduce(%{}, fn {translation, index}, acc ->
-           Map.put(acc, to_string(index), translation)
-         end)
+
+      Map.put(attrs, "translations", translations)
+    else
+      attrs
+    end
+  end
+
+  def add_phrase_id(attrs, phrase_id) do
+    if attrs["translations"] do
+      translations = attrs
+      |> Access.get("translations", [])
+      |> Enum.map(&(Map.put(&1, "phrase_id", phrase_id)))
 
       Map.put(attrs, "translations", translations)
     else

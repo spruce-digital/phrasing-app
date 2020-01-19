@@ -3,27 +3,27 @@ defmodule PhrasingWeb.PhraseControllerTest do
 
   alias Phrasing.Dict
 
-  @create_attrs %{english: "some english", source: "some source", lang: "some lang"}
+  # @create_attrs %{english: "some english", source: "some source", lang: "some lang"}
   # @update_attrs %{english: "some updated english", source: "some updated source", lang: "some updated lang"}
   # @invalid_attrs %{english: nil, source: nil}
 
-  def fixture(:phrase) do
-    {:ok, phrase} = Dict.create_phrase(@create_attrs)
-    phrase
-  end
+  # def fixture(:phrase) do
+  #   {:ok, phrase} = Dict.create_phrase(@create_attrs)
+  #   phrase
+  # end
 
   describe "index" do
-    test "lists all phrases", %{conn: conn} do
-      conn = get(conn, Routes.phrase_path(conn, :index))
-      assert html_response(conn, 200) =~ "Listing Phrases"
-    end
+    # test "lists all phrases", %{conn: conn} do
+    #   conn = get(conn, Routes.phrase_path(conn, :index))
+    #   assert html_response(conn, 200) =~ "Listing Phrases"
+    # end
   end
 
   describe "new phrase" do
-    test "renders form", %{conn: conn} do
-      conn = get(conn, Routes.phrase_path(conn, :new))
-      assert html_response(conn, 200) =~ "New Phrase"
-    end
+    # test "renders form", %{conn: conn} do
+    #   conn = get(conn, Routes.phrase_path(conn, :new))
+    #   assert html_response(conn, 200) =~ "New Phrase"
+    # end
   end
 
   describe "create phrase" do
@@ -70,19 +70,19 @@ defmodule PhrasingWeb.PhraseControllerTest do
   end
 
   describe "delete phrase" do
-    setup [:create_phrase]
+    # setup [:create_phrase]
 
-    test "deletes chosen phrase", %{conn: conn, phrase: phrase} do
-      conn = delete(conn, Routes.phrase_path(conn, :delete, phrase))
-      assert redirected_to(conn) == Routes.phrase_path(conn, :index)
-      assert_error_sent 404, fn ->
-        get(conn, Routes.phrase_path(conn, :show, phrase))
-      end
-    end
+    # test "deletes chosen phrase", %{conn: conn, phrase: phrase} do
+    #   conn = delete(conn, Routes.phrase_path(conn, :delete, phrase))
+    #   assert redirected_to(conn) == Routes.phrase_path(conn, :index)
+    #   assert_error_sent 404, fn ->
+    #     get(conn, Routes.phrase_path(conn, :show, phrase))
+    #   end
+    # end
   end
 
-  defp create_phrase(_) do
-    phrase = fixture(:phrase)
-    {:ok, phrase: phrase}
-  end
+  # defp create_phrase(_) do
+  #   phrase = fixture(:phrase)
+  #   {:ok, phrase: phrase}
+  # end
 end

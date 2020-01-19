@@ -1,38 +1,45 @@
 defmodule Phrasing.DictTest do
   use Phrasing.DataCase
 
+  import Phrasing.Factory
+
   alias Phrasing.Dict
 
   describe "phrases" do
     alias Phrasing.Dict.Phrase
 
-    @valid_attrs %{english: "some english", source: "some source", lang: "some lang"}
-    @update_attrs %{english: "some updated english", source: "some updated source", lang: "some updated lang"}
-    @invalid_attrs %{english: nil, source: nil, lang: nil}
+    @valid_attrs %{}
+    @update_attrs %{}
+    @invalid_attrs %{user_id: nil}
 
     def phrase_fixture(attrs \\ %{}) do
+      user = insert(:user)
+
       {:ok, phrase} =
         attrs
         |> Enum.into(@valid_attrs)
+        |> Enum.into(%{user_id: user.id})
         |> Dict.create_phrase()
 
       phrase
     end
 
     test "list_phrases/0 returns all phrases" do
-      phrase = phrase_fixture()
-      assert Dict.list_phrases() == [phrase]
+      phrase = insert(:phrase)
+      assert Dict.list_phrases() |> Enum.map(&(&1.id)) == [phrase.id]
     end
 
     test "get_phrase!/1 returns the phrase with given id" do
-      phrase = phrase_fixture()
-      assert Dict.get_phrase!(phrase.id) == phrase
+      phrase = insert(:phrase)
+      assert Dict.get_phrase!(phrase.id).id == phrase.id
     end
 
     test "create_phrase/1 with valid data creates a phrase" do
-      assert {:ok, %Phrase{} = phrase} = Dict.create_phrase(@valid_attrs)
-      assert phrase.english == "some english"
-      assert phrase.source == "some source"
+      user = insert(:user)
+
+      assert {:ok, %Phrase{} = phrase} = @valid_attrs
+        |> Enum.into(%{user_id: user.id})
+        |> Dict.create_phrase()
     end
 
     test "create_phrase/1 with invalid data returns error changeset" do
@@ -42,9 +49,6 @@ defmodule Phrasing.DictTest do
     test "update_phrase/2 with valid data updates the phrase" do
       phrase = phrase_fixture()
       assert {:ok, %Phrase{} = phrase} = Dict.update_phrase(phrase, @update_attrs)
-      assert phrase.english == "some updated english"
-      assert phrase.source == "some updated source"
-      assert phrase.lang == "some updated lang"
     end
 
     test "update_phrase/2 with invalid data returns error changeset" do
@@ -62,6 +66,28 @@ defmodule Phrasing.DictTest do
     test "change_phrase/1 returns a phrase changeset" do
       phrase = phrase_fixture()
       assert %Ecto.Changeset{} = Dict.change_phrase(phrase)
+    end
+
+    test "create_or_update_phrase/1 creates a phrase" do
+      user = insert(:user)
+      assert {:ok, %Phrase{} = phrase} = Dict.create_or_update_phrase(%{user_id: user.id})
+    end
+
+    test "create_or_update_phrase/1 updates a phrase" do
+      user = insert(:user)
+      phrase = insert(:empty_phrase)
+      params = %{id: phrase.id, user_id: user.id}
+
+      assert {:ok, %Phrase{} = phrase} = Dict.create_or_update_phrase(params)
+      assert phrase.user_id == user.id
+    end
+
+    test "create_or_update_phrase/2 will associate translations" do
+      phrase = insert(:empty_phrase)
+      language = insert(:language)
+      translations = [%{"text" => "text", "source" => true, "language_id" => language.id, "script" => "latin"}]
+
+      assert {:ok, %Phrase{} = phrase} = Dict.create_or_update_phrase(%{id: phrase.id}, translations)
     end
   end
 
@@ -129,9 +155,9 @@ defmodule Phrasing.DictTest do
   describe "languages" do
     alias Phrasing.Dict.Language
 
-    @valid_attrs %{code: "some code", name: "some name", script: "some script"}
-    @update_attrs %{code: "some updated code", name: "some updated name", script: "some updated script"}
-    @invalid_attrs %{code: nil, name: nil, script: nil}
+    @valid_attrs %{code: "some code", name: "some name"}
+    @update_attrs %{code: "some updated code", name: "some updated name"}
+    @invalid_attrs %{code: nil, name: nil}
 
     def language_fixture(attrs \\ %{}) do
       {:ok, language} =
@@ -156,7 +182,6 @@ defmodule Phrasing.DictTest do
       assert {:ok, %Language{} = language} = Dict.create_language(@valid_attrs)
       assert language.code == "some code"
       assert language.name == "some name"
-      assert language.script == "some script"
     end
 
     test "create_language/1 with invalid data returns error changeset" do
@@ -168,7 +193,6 @@ defmodule Phrasing.DictTest do
       assert {:ok, %Language{} = language} = Dict.update_language(language, @update_attrs)
       assert language.code == "some updated code"
       assert language.name == "some updated name"
-      assert language.script == "some updated script"
     end
 
     test "update_language/2 with invalid data returns error changeset" do
@@ -197,17 +221,21 @@ defmodule Phrasing.DictTest do
     @invalid_attrs %{source: nil, text: nil}
 
     def translation_fixture(attrs \\ %{}) do
+      language = insert(:language)
+      phrase = insert(:phrase)
+
       {:ok, translation} =
         attrs
         |> Enum.into(@valid_attrs)
+        |> Enum.into(%{language_id: language.id, phrase_id: phrase.id})
         |> Dict.create_translation()
 
       translation
     end
 
     test "list_translations/0 returns all translations" do
-      translation = translation_fixture()
-      assert Dict.list_translations() == [translation]
+      phrase = insert(:phrase)
+      assert Dict.list_translations() |> Repo.preload(:language) == phrase.translations
     end
 
     test "get_translation!/1 returns the translation with given id" do
@@ -216,7 +244,14 @@ defmodule Phrasing.DictTest do
     end
 
     test "create_translation/1 with valid data creates a translation" do
-      assert {:ok, %Translation{} = translation} = Dict.create_translation(@valid_attrs)
+      language = insert(:language)
+      phrase = insert(:phrase)
+
+      assert {:ok, %Translation{} = translation} =
+        @valid_attrs
+        |> Enum.into(%{language_id: language.id, phrase_id: phrase.id})
+        |> Dict.create_translation()
+
       assert translation.source == true
       assert translation.text == "some text"
     end

@@ -32,7 +32,7 @@ defmodule Phrasing.AccountsTest do
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
-      assert user.encrypted_password == "some encrypted_password"
+      assert user.encrypted_password != "some encrypted_password"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -43,7 +43,7 @@ defmodule Phrasing.AccountsTest do
       user = user_fixture()
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user.email == "some updated email"
-      assert user.encrypted_password == "some updated encrypted_password"
+      assert user.encrypted_password != "some updated encrypted_password"
     end
 
     test "update_user/2 with invalid data returns error changeset" do

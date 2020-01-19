@@ -37,6 +37,7 @@ defmodule Phrasing.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:comeonin, "~> 5.1.3"},
       {:ecto_sql, "~> 3.0"},
+      {:ex_machina, "~> 2.3", only: :test},
       {:excheck, "~> 0.6", only: :test},
       {:floki, ">= 0.0.0", only: :test},
       {:gettext, "~> 0.11"},
