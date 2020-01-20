@@ -8,17 +8,17 @@ defmodule Phrasing.Factory do
     }
   end
 
-  def language_factory do
+  def english_language_factory do
     %Phrasing.Dict.Language{
       code: "en",
       name: "english",
     }
   end
 
-  def foreign_language_factory do
+  def language_factory do
     %Phrasing.Dict.Language{
-      code: "fr",
-      name: "french",
+      code: sequence(:code, &"ln #{&1}"),
+      name: sequence(:name, &"Language #{&1}"),
     }
   end
 
@@ -27,7 +27,7 @@ defmodule Phrasing.Factory do
       source: true,
       text: sequence(:text, &"source translation #{&1}"),
       script: "latin",
-      language: build(:language),
+      language: build(:english_language),
     }
   end
 
@@ -36,7 +36,7 @@ defmodule Phrasing.Factory do
       source: false,
       text: sequence(:text, &"foreign translation #{&1}"),
       script: "latin",
-      language: build(:foreign_language),
+      language: build(:language),
     }
   end
 

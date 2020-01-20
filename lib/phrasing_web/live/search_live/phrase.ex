@@ -4,14 +4,14 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   import Ecto.Changeset
 
   alias Phrasing.Dict
-  alias Phrasing.Dict.{Phrase,Translation}
+  alias Phrasing.Dict.{Phrase, Translation}
   alias PhrasingWeb.UILive
 
   @select_prompt [
     key: "Select",
     value: "",
     selected: true,
-    disabled: true,
+    disabled: true
   ]
 
   def mount(socket) do
@@ -19,18 +19,21 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   end
 
   def update(a, socket) do
-    changeset = a.phrase
-    |> Dict.change_phrase()
-    |> ensure_extra_translation()
+    changeset =
+      a.phrase
+      |> Dict.change_phrase()
+      |> ensure_extra_translation()
 
     {:ok, assign(socket, Map.put(a, :changeset, changeset))}
   end
 
   def preload(list_of_assigns) do
     languages = Dict.list_languages()
-    language_options = languages
-    |> Enum.map(&([key: &1.name, value: &1.id]))
-    |> List.insert_at(0, @select_prompt)
+
+    language_options =
+      languages
+      |> Enum.map(&[key: &1.name, value: &1.id])
+      |> List.insert_at(0, @select_prompt)
 
     Enum.map(list_of_assigns, fn assigns ->
       assigns
@@ -90,41 +93,65 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   end
 
   def handle_event("change", %{"phrase" => phrase_params}, socket) do
-    IO.inspect phrase_params, label: :phrase_params
-
-    changeset = %Phrase{}
-    |> Dict.change_phrase(phrase_params)
-    |> ensure_extra_translation
+    changeset =
+      socket.assigns.changeset.data
+      |> Dict.change_phrase(phrase_params)
+      |> ensure_extra_translation()
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("remove", %{"index" => index}, socket) do
-    translations = get_field(socket.assigns.changeset, :translations)
-    |> List.delete_at(String.to_integer(index))
+    IO.puts "index: #{index}"
 
-    changeset = socket.assigns.changeset
-    |> put_change(:translations, translations)
-    |> Map.put(:action, :ignore)
+    translations =
+      get_field(socket.assigns.changeset, :translations)
+      |> List.delete_at(String.to_integer(index))
+
+    changeset =
+      socket.assigns.changeset
+      |> put_assoc(:translations, [])
+      |> IO.inspect(label: :during)
+      |> put_assoc(:translations, translations)
+      |> Map.put(:action, :ignore)
+
+    IO.inspect(translations, label: :translations_real)
+
+    IO.inspect(get_field(socket.assigns.changeset, :translations), label: :translations_before)
+    IO.inspect(get_field(changeset, :translations), label: :translations_after)
+
+    IO.inspect(socket.assigns.changeset.data, label: :data_before)
+    IO.inspect(changeset.data, label: :data_after)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("save", %{"phrase" => phrase_params}, socket) do
-    {:noreply, socket}
+    case Dict.save_phrase(phrase_params) do
+      {:ok, phrase} ->
+        {:noreply, assign(socket, editing?: false)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
   end
 
   defp ensure_extra_translation(changeset) do
-    translations = get_field changeset, :translations
-    with_extra_translation = if Enum.any?(translations, &is_blank_translation?/1) do
-      translations
-    else
-      translations ++ [%Translation{}]
-    end
+    translations = get_field(changeset, :translations)
+
+    with_extra_translation =
+      if Enum.any?(translations, &is_blank_translation?/1) do
+        translations
+      else
+        translations ++ [%Translation{}]
+      end
 
     changeset
-# |> put_assoc(:translations, with_extra_translation)
-    |> put_assoc(:translations, with_extra_translation |> Enum.map(fn x -> Map.put(x, :action, :ignore) end))
+    # |> put_assoc(:translations, with_extra_translation)
+    |> put_assoc(
+      :translations,
+      with_extra_translation |> Enum.map(fn x -> Map.put(x, :action, :ignore) end)
+    )
     |> Map.put(:action, :ignore)
   end
 

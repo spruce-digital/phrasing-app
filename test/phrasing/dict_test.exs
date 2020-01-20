@@ -24,6 +24,54 @@ defmodule Phrasing.DictTest do
       phrase
     end
 
+    def phrase_attrs(opts \\ %{}) do
+      user = insert(:user)
+      [en, fr] = insert_pair(:language)
+
+      attrs = %{
+        "id" => "",
+        "translations" => %{
+          "0" => %{"language_id" => to_string(en.id), "text" => "hello"},
+          "1" => %{"language_id" => to_string(fr.id), "text" => "Bonjour"},
+          "2" => %{"language_id" => to_string(en.id), "text" => "Hi"},
+          "3" => %{"text" => ""}
+        },
+        "user_id" => to_string(user.id),
+      }
+
+      Map.merge(attrs, opts)
+    end
+
+    test "save_phrase/1 creates an empty phrase" do
+      # TODO: once removing translations is built out
+    end
+
+    test "save_phrase/1 creates a phrase with it's translations excluding emtpy text" do
+      attrs = phrase_attrs()
+
+      assert {:ok, %Phrase{} = phrase} = Dict.save_phrase(attrs)
+      assert Enum.all? phrase.translations, fn t -> t.phrase_id == phrase.id end
+      assert Enum.all? phrase.translations, fn t -> t.id end
+      assert Enum.all? phrase.translations, fn t -> t.text != "" end
+    end
+
+    test "save_phrase/1 updates an empty phrase" do
+    end
+
+    test "save_phrase/1 updates a phrase with it's translations" do
+      phrase = insert(:phrase)
+      attrs  = phrase_attrs(%{"id" => to_string(phrase.id)})
+
+      assert {:ok, %Phrase{} = p} = Dict.save_phrase(attrs)
+      assert Enum.all? p.translations, fn t -> t.phrase_id == p.id end
+      assert Enum.all? p.translations, fn t -> t.id end
+      assert Enum.all? p.translations, fn t -> t.text != "" end
+      assert Enum.count(p.translations) == 3
+      assert p.user_id != phrase.user_id
+    end
+
+    # GENERATED
+
     test "list_phrases/0 returns all phrases" do
       phrase = insert(:phrase)
       assert Dict.list_phrases() |> Enum.map(&(&1.id)) == [phrase.id]

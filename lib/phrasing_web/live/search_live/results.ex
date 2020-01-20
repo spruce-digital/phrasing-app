@@ -69,6 +69,15 @@ defmodule PhrasingWeb.SearchLive.Results do
     match = %Phrase{
       user_id: socket.assigns.user_id,
       translations: [translation]
+      # |> Enum.concat([%Translation{
+      #   language_id: 2,
+      #   source: false,
+      #   text: "Bonjour"
+      # }, %Translation{
+      #   language_id: 1,
+      #   source: false,
+      #   text: "Hi",
+      # }])
     }
 
     {:noreply, assign(socket, match: match, editing_match?: editing_match?)}

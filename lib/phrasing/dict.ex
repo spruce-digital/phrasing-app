@@ -16,14 +16,17 @@ defmodule Phrasing.Dict do
   end
 
   def get_last_translations(user_id: user_id, language_id: language_id) do
-    query = from p in Phrase,
-      where: p.user_id == ^user_id,
-      where: p.language_id == ^language_id,
-      select: {p.translations},
-      limit: 1
+    query =
+      from p in Phrase,
+        where: p.user_id == ^user_id,
+        where: p.language_id == ^language_id,
+        select: {p.translations},
+        limit: 1
 
     case Repo.all(query) do
-      [] -> []
+      [] ->
+        []
+
       [{translations}] ->
         translations
         |> Enum.map(fn t -> to_string(t.language_id) end)
@@ -36,20 +39,25 @@ defmodule Phrasing.Dict do
     ilike_query = "%#{query}%"
 
     from p in Phrase,
-    join: t in assoc(p, :translations),
-    where: ilike(t.text, ^ilike_query),
-    order_by: fragment("length(?)", t.text),
-    preload: [:translations]
+      join: t in assoc(p, :translations),
+      where: ilike(t.text, ^ilike_query),
+      order_by: fragment("length(?)", t.text),
+      preload: [:translations]
   end
+
   def search_translations(query) do
-    Repo.all search_translations_query(query)
+    Repo.all(search_translations_query(query))
   end
+
   def search_translations(query, nil) do
     search_translations(query)
   end
+
   def search_translations(query, language_id) do
-    Repo.all from [p, t] in search_translations_query(query),
-    where: t.language_id == ^language_id
+    Repo.all(
+      from [p, t] in search_translations_query(query),
+        where: t.language_id == ^language_id
+    )
   end
 
   @doc """
@@ -63,16 +71,20 @@ defmodule Phrasing.Dict do
   """
   def list_phrases_query do
     from p in Phrase,
-    where: p.active == true,
-    order_by: [desc: p.updated_at],
-    preload: [:cards, :translations]
+      where: p.active == true,
+      order_by: [desc: p.updated_at],
+      preload: [:cards, :translations]
   end
+
   def list_phrases do
-    Repo.all list_phrases_query
+    Repo.all(list_phrases_query)
   end
+
   def list_phrases(user_id) do
-    Repo.all from p in list_phrases_query,
-      where: p.user_id == ^user_id
+    Repo.all(
+      from p in list_phrases_query,
+        where: p.user_id == ^user_id
+    )
   end
 
   @doc """
@@ -92,9 +104,10 @@ defmodule Phrasing.Dict do
   def get_phrase!(id), do: Repo.get!(Phrase, id)
 
   def get_last_phrase_for_user(user_id) do
-    query = from p in Phrase,
-      where: p.user_id == ^user_id,
-      limit: 1
+    query =
+      from p in Phrase,
+        where: p.user_id == ^user_id,
+        limit: 1
 
     query
     |> Repo.all()
@@ -106,9 +119,10 @@ defmodule Phrasing.Dict do
   If translations are passed in, subsequently create or update those
   """
   def create_or_update_phrase(attrs \\ %{}) do
-    {id, attrs} = attrs
-    |> Map.new(fn {k, v} -> {to_string(k), v} end)
-    |> Map.pop("id")
+    {id, attrs} =
+      attrs
+      |> Map.new(fn {k, v} -> {to_string(k), v} end)
+      |> Map.pop("id")
 
     if id do
       id
@@ -142,9 +156,15 @@ defmodule Phrasing.Dict do
 
   """
   def create_phrase(attrs \\ %{}) do
-    %Phrase{}
+    phrase_changeset = %Phrase{}
     |> Phrase.changeset(attrs)
-    |> Repo.insert()
+
+    with {:ok, %Phrase{} = phrase_raw} <- Repo.insert(phrase_changeset),
+         translation_changeset         <- Phrase.translations_changeset(phrase_raw, attrs),
+         {:ok, %Phrase{} = phrase}     <- Repo.update(translation_changeset) do
+      {:ok, phrase}
+    end
+
     # |> notify_dict_subscribers(:phrase_update)
   end
 
@@ -179,9 +199,23 @@ defmodule Phrasing.Dict do
 
   """
   def update_phrase(%Phrase{} = phrase, attrs) do
-    phrase
-    |> Phrase.changeset(attrs)
-    |> Repo.update()
+    with phrase_changeset              <- Phrase.changeset(phrase, attrs),
+         {:ok, %Phrase{} = phrase_raw} <- Repo.update(phrase_changeset),
+         translation_changeset         <- Phrase.translations_changeset(phrase_raw, attrs),
+         {:ok, %Phrase{} = phrase}     <- Repo.update(translation_changeset) do
+      {:ok, phrase}
+    end
+  end
+
+  @doc """
+  Updates or creates a phrase.
+  """
+  def save_phrase(attrs) do
+    if attrs["id"] == "" do
+      create_phrase(attrs)
+    else
+      update_phrase(get_phrase!(attrs["id"]), attrs)
+    end
   end
 
   @doc """
