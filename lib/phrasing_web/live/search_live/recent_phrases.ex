@@ -7,7 +7,7 @@ defmodule PhrasingWeb.SearchLive.RecentPhrases do
     <div class="search--recent-phrases">
       <h2>Recent Phrases</h2>
       <%= for phrase <- @recent_phrases do %>
-        <%= live_component @socket, SearchLive.Phrase, phrase: phrase %>
+        <%= live_component @socket, SearchLive.Phrase, phrase: phrase, id: "recent_#{phrase.id}" %>
       <% end %>
     </div>
     """

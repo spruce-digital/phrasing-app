@@ -36,7 +36,7 @@ defmodule Phrasing.DictTest do
           "2" => %{"language_id" => to_string(en.id), "text" => "Hi"},
           "3" => %{"text" => ""}
         },
-        "user_id" => to_string(user.id),
+        "user_id" => to_string(user.id)
       }
 
       Map.merge(attrs, opts)
@@ -50,9 +50,9 @@ defmodule Phrasing.DictTest do
       attrs = phrase_attrs()
 
       assert {:ok, %Phrase{} = phrase} = Dict.save_phrase(attrs)
-      assert Enum.all? phrase.translations, fn t -> t.phrase_id == phrase.id end
-      assert Enum.all? phrase.translations, fn t -> t.id end
-      assert Enum.all? phrase.translations, fn t -> t.text != "" end
+      assert Enum.all?(phrase.translations, fn t -> t.phrase_id == phrase.id end)
+      assert Enum.all?(phrase.translations, fn t -> t.id end)
+      assert Enum.all?(phrase.translations, fn t -> t.text != "" end)
     end
 
     test "save_phrase/1 updates an empty phrase" do
@@ -60,21 +60,38 @@ defmodule Phrasing.DictTest do
 
     test "save_phrase/1 updates a phrase with it's translations" do
       phrase = insert(:phrase)
-      attrs  = phrase_attrs(%{"id" => to_string(phrase.id)})
+      attrs = phrase_attrs(%{"id" => to_string(phrase.id)})
 
       assert {:ok, %Phrase{} = p} = Dict.save_phrase(attrs)
-      assert Enum.all? p.translations, fn t -> t.phrase_id == p.id end
-      assert Enum.all? p.translations, fn t -> t.id end
-      assert Enum.all? p.translations, fn t -> t.text != "" end
+      assert Enum.all?(p.translations, fn t -> t.phrase_id == p.id end)
+      assert Enum.all?(p.translations, fn t -> t.id end)
+      assert Enum.all?(p.translations, fn t -> t.text != "" end)
       assert Enum.count(p.translations) == 3
       assert p.user_id != phrase.user_id
+    end
+
+    test "save_phrase/1 returns a changeset when there is an invalid translation" do
+      phrase = insert(:phrase)
+
+      attrs =
+        phrase_attrs()
+        |> put_in(["translations", "0", "language_id"], "")
+        |> put_in(["user_id"], "")
+
+      assert {:error, %Ecto.Changeset{} = ch} = Dict.save_phrase(attrs)
+
+      # TODO: test view error helper
+
+      last_phrase = Dict.list_phrases() |> List.first()
+
+      assert last_phrase.id == phrase.id
     end
 
     # GENERATED
 
     test "list_phrases/0 returns all phrases" do
       phrase = insert(:phrase)
-      assert Dict.list_phrases() |> Enum.map(&(&1.id)) == [phrase.id]
+      assert Dict.list_phrases() |> Enum.map(& &1.id) == [phrase.id]
     end
 
     test "get_phrase!/1 returns the phrase with given id" do
@@ -85,9 +102,10 @@ defmodule Phrasing.DictTest do
     test "create_phrase/1 with valid data creates a phrase" do
       user = insert(:user)
 
-      assert {:ok, %Phrase{} = phrase} = @valid_attrs
-        |> Enum.into(%{user_id: user.id})
-        |> Dict.create_phrase()
+      assert {:ok, %Phrase{} = phrase} =
+               @valid_attrs
+               |> Enum.into(%{user_id: user.id})
+               |> Dict.create_phrase()
     end
 
     test "create_phrase/1 with invalid data returns error changeset" do
@@ -133,9 +151,13 @@ defmodule Phrasing.DictTest do
     test "create_or_update_phrase/2 will associate translations" do
       phrase = insert(:empty_phrase)
       language = insert(:language)
-      translations = [%{"text" => "text", "source" => true, "language_id" => language.id, "script" => "latin"}]
 
-      assert {:ok, %Phrase{} = phrase} = Dict.create_or_update_phrase(%{id: phrase.id}, translations)
+      translations = [
+        %{"text" => "text", "source" => true, "language_id" => language.id, "script" => "latin"}
+      ]
+
+      assert {:ok, %Phrase{} = phrase} =
+               Dict.create_or_update_phrase(%{id: phrase.id}, translations)
     end
   end
 
@@ -296,9 +318,9 @@ defmodule Phrasing.DictTest do
       phrase = insert(:phrase)
 
       assert {:ok, %Translation{} = translation} =
-        @valid_attrs
-        |> Enum.into(%{language_id: language.id, phrase_id: phrase.id})
-        |> Dict.create_translation()
+               @valid_attrs
+               |> Enum.into(%{language_id: language.id, phrase_id: phrase.id})
+               |> Dict.create_translation()
 
       assert translation.source == true
       assert translation.text == "some text"
@@ -310,7 +332,10 @@ defmodule Phrasing.DictTest do
 
     test "update_translation/2 with valid data updates the translation" do
       translation = translation_fixture()
-      assert {:ok, %Translation{} = translation} = Dict.update_translation(translation, @update_attrs)
+
+      assert {:ok, %Translation{} = translation} =
+               Dict.update_translation(translation, @update_attrs)
+
       assert translation.source == false
       assert translation.text == "some updated text"
     end

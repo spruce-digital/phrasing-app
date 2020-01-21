@@ -5,6 +5,7 @@ defmodule PhrasingWeb.SearchLive.Phrase do
 
   alias Phrasing.Dict
   alias Phrasing.Dict.{Phrase, Translation}
+  alias PhrasingWeb.PhraseView
   alias PhrasingWeb.UILive
 
   @select_prompt [
@@ -15,7 +16,7 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   ]
 
   def mount(socket) do
-    {:ok, assign(socket, editing?: true)}
+    {:ok, assign(socket, editing?: false, error_list: [])}
   end
 
   def update(a, socket) do
@@ -43,11 +44,14 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   end
 
   def render(assigns) do
-    [source | translation_list] = Phrase.translation_list(assigns.phrase)
-
     ~L"""
     <div class="search--phrase">
       <%= if @editing? do %>
+        <%= unless Enum.empty?(@error_list) do %>
+          <%= for error <- @error_list do %>
+            <%= error %>
+          <% end %>
+        <% end %>
 
         <%= f = form_for @changeset, "#", [phx_change: :change, phx_submit: :save] %>
           <%= hidden_input f, :id %>
@@ -73,9 +77,8 @@ defmodule PhrasingWeb.SearchLive.Phrase do
       <% else %>
 
         <main>
-          <div class="source"><%= source.text %></div>
-          <%= for trans <- translation_list do %>
-            <div class="translation"><%= trans.text %></div>
+          <%= for tr <- @phrase.translations do %>
+            <div class="translation"><%= tr.text %></div>
           <% end %>
 
           <aside class="action" phx-click="edit">
@@ -93,6 +96,8 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   end
 
   def handle_event("change", %{"phrase" => phrase_params}, socket) do
+    IO.inspect phrase_params
+
     changeset =
       socket.assigns.changeset.data
       |> Dict.change_phrase(phrase_params)
@@ -102,8 +107,6 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   end
 
   def handle_event("remove", %{"index" => index}, socket) do
-    IO.puts "index: #{index}"
-
     translations =
       get_field(socket.assigns.changeset, :translations)
       |> List.delete_at(String.to_integer(index))
@@ -111,17 +114,8 @@ defmodule PhrasingWeb.SearchLive.Phrase do
     changeset =
       socket.assigns.changeset
       |> put_assoc(:translations, [])
-      |> IO.inspect(label: :during)
       |> put_assoc(:translations, translations)
       |> Map.put(:action, :ignore)
-
-    IO.inspect(translations, label: :translations_real)
-
-    IO.inspect(get_field(socket.assigns.changeset, :translations), label: :translations_before)
-    IO.inspect(get_field(changeset, :translations), label: :translations_after)
-
-    IO.inspect(socket.assigns.changeset.data, label: :data_before)
-    IO.inspect(changeset.data, label: :data_after)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -129,10 +123,11 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   def handle_event("save", %{"phrase" => phrase_params}, socket) do
     case Dict.save_phrase(phrase_params) do
       {:ok, phrase} ->
-        {:noreply, assign(socket, editing?: false)}
+        {:noreply, assign(socket, editing?: false, phrase: phrase)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        error_list = PhraseView.get_all_errors(changeset)
+        {:noreply, assign(socket, changeset: ensure_extra_translation(changeset), error_list: error_list)}
     end
   end
 
@@ -147,7 +142,6 @@ defmodule PhrasingWeb.SearchLive.Phrase do
       end
 
     changeset
-    # |> put_assoc(:translations, with_extra_translation)
     |> put_assoc(
       :translations,
       with_extra_translation |> Enum.map(fn x -> Map.put(x, :action, :ignore) end)

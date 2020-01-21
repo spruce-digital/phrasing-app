@@ -11,16 +11,7 @@ defmodule PhrasingWeb.SearchLive.Results do
   end
 
   def update(a, socket) do
-    query_lang = a.search.language_id
-    query = a.search.text
-
-    match = Enum.find a.results, fn p ->
-      Enum.any? p.translations, fn t ->
-        t.language_id == query_lang && t.text == query
-      end
-    end
-
-    {:ok, assign(socket, Map.put(a, :match, match))}
+    {:ok, assign(socket, a)}
   end
 
   def render(assigns) do
@@ -28,32 +19,50 @@ defmodule PhrasingWeb.SearchLive.Results do
     <main class="search--results">
       <ul class="filters">
         <%= if @filter == nil do %>
+          <li phx-click="add_phrase"><i class="far fa-plus"></i>&nbsp;&nbsp;Create Phrase</li>
           <li>Languages</li>
+          <li>Search Library</li>
           <li>Look up</li>
-
-          <%= unless @match do %>
-            <spacer></spacer>
-            <li phx-click="add_phrase"><i class="far fa-plus"></i></li>
-          <% end %>
         <% end %>
       </ul>
 
-      <%= if @match do %>
+      <h3>Your phrases</h3>
+
+      <%= if assigns[:add_phrase] do %>
         <%= live_component @socket,
                            SearchLive.Phrase,
-                           id: :result,
-                           phrase: @match,
+                           id: :add_phrase,
+                           phrase: @add_phrase,
                            user_id: @user_id,
-                           editing?: @editing_match?
+                           editing?: true
         %>
       <% end %>
 
-      <ul>
-        <li>Your existing translations</li>
-        <li>Other existing translations</li>
-        <li>Appearences of phrase in your Library (books, songs, scripts, etc)</li>
-        <li>Options to look up on Google Translate, WordReference, etc</li>
-      </ul>
+      <%= for phrase <- @results do %>
+        <%= if phrase.user_id == @user_id do %>
+          <%= live_component @socket,
+                             SearchLive.Phrase,
+                             id: "result_#{phrase.id}",
+                             phrase: phrase,
+                             user_id: @user_id,
+                             editing?: false
+          %>
+        <% end %>
+      <% end %>
+
+      <h3>All Phrases</h3>
+
+      <%= for phrase <- @results do %>
+        <%= if phrase.user_id != @user_id do %>
+          <%= live_component @socket,
+                             SearchLive.Phrase,
+                             id: "result_#{phrase.id}",
+                             phrase: phrase,
+                             user_id: @user_id,
+                             editing?: false
+          %>
+        <% end %>
+      <% end %>
     </main>
     """
   end
@@ -61,12 +70,11 @@ defmodule PhrasingWeb.SearchLive.Results do
   def handle_event("add_phrase", _params, socket) do
     translation = %Translation{
       language_id: socket.assigns.search.language_id,
-      source: true,
+      source: false,
       text: socket.assigns.search.text,
     }
 
-    editing_match? = true
-    match = %Phrase{
+    phrase = %Phrase{
       user_id: socket.assigns.user_id,
       translations: [translation]
       # |> Enum.concat([%Translation{
@@ -80,6 +88,6 @@ defmodule PhrasingWeb.SearchLive.Results do
       # }])
     }
 
-    {:noreply, assign(socket, match: match, editing_match?: editing_match?)}
+    {:noreply, assign(socket, add_phrase: phrase)}
   end
 end

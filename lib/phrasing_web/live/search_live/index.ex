@@ -9,8 +9,8 @@ defmodule PhrasingWeb.SearchLive.Index do
   alias PhrasingWeb.UILive
 
   @default_search %{
-    text: "hello",
-    language_id: 1,
+    text: "",
+    language_id: "",
   }
 
   @defaults %{
@@ -20,11 +20,11 @@ defmodule PhrasingWeb.SearchLive.Index do
     message: nil,
     results: [],
     search: @default_search,
-    state: :results,
+    state: :pristine,
     suggestions: [],
   }
 
-  def mount(%{user_id: user_id}, socket) do
+  def mount(%{"user_id" => user_id}, socket) do
     languages = Dict.list_languages()
     recent_phrases = Dict.list_phrases(user_id)
     {:ok, assign(socket, Map.merge(@defaults, %{
@@ -72,11 +72,19 @@ defmodule PhrasingWeb.SearchLive.Index do
     search = Map.put socket.assigns.search, String.to_atom(field), search_params[field]
     suggestions = Dict.search_translations(search.text, search.language_id)
 
+    IO.inspect search
+
+    suggestions
+    |> Enum.map(&(&1.translations))
+    |> Enum.map(&List.first/1)
+    |> Enum.map(&(&1.text))
+    |> IO.inspect()
+
     {:noreply, assign(socket, suggestions: suggestions, search: search, state: :searching)}
   end
 
   def handle_event("search", _params, socket) do
-    {:noreply, assign(socket, state: :results)}
+    {:noreply, assign(socket, state: :results, results: socket.assigns.suggestions)}
   end
 
 

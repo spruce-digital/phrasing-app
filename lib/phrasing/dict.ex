@@ -46,12 +46,13 @@ defmodule Phrasing.Dict do
   end
 
   def search_translations(query) do
-    Repo.all(search_translations_query(query))
+    query
+    |> search_translations_query()
+    |> Repo.all()
   end
 
-  def search_translations(query, nil) do
-    search_translations(query)
-  end
+  def search_translations(query, nil), do: search_translations(query)
+  def search_translations(query, ""), do: search_translations(query)
 
   def search_translations(query, language_id) do
     Repo.all(
@@ -156,13 +157,22 @@ defmodule Phrasing.Dict do
 
   """
   def create_phrase(attrs \\ %{}) do
-    phrase_changeset = %Phrase{}
-    |> Phrase.changeset(attrs)
+    dry_changeset =
+      %Phrase{}
+      |> Phrase.dry_changeset(attrs)
 
-    with {:ok, %Phrase{} = phrase_raw} <- Repo.insert(phrase_changeset),
-         translation_changeset         <- Phrase.translations_changeset(phrase_raw, attrs),
-         {:ok, %Phrase{} = phrase}     <- Repo.update(translation_changeset) do
-      {:ok, phrase}
+    if dry_changeset.valid? do
+      with phrase_changeset <- Phrase.phrase_changeset(%Phrase{}, attrs),
+           {:ok, %Phrase{} = phrase_raw} <- Repo.insert(phrase_changeset),
+           translation_changeset <- Phrase.translations_changeset(phrase_raw, attrs),
+           {:ok, %Phrase{} = phrase} <- Repo.update(translation_changeset) do
+        {:ok, phrase}
+      else
+        {:error, %Ecto.Changeset{} = changeset} ->
+          {:error, changeset}
+      end
+    else
+      {:error, dry_changeset}
     end
 
     # |> notify_dict_subscribers(:phrase_update)
@@ -199,10 +209,10 @@ defmodule Phrasing.Dict do
 
   """
   def update_phrase(%Phrase{} = phrase, attrs) do
-    with phrase_changeset              <- Phrase.changeset(phrase, attrs),
+    with phrase_changeset <- Phrase.changeset(phrase, attrs),
          {:ok, %Phrase{} = phrase_raw} <- Repo.update(phrase_changeset),
-         translation_changeset         <- Phrase.translations_changeset(phrase_raw, attrs),
-         {:ok, %Phrase{} = phrase}     <- Repo.update(translation_changeset) do
+         translation_changeset <- Phrase.translations_changeset(phrase_raw, attrs),
+         {:ok, %Phrase{} = phrase} <- Repo.update(translation_changeset) do
       {:ok, phrase}
     end
   end

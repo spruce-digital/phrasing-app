@@ -21,6 +21,16 @@ defmodule Phrasing.Dict.Translation do
     |> sweep()
   end
 
+  @doc """
+  Used to make sure translations are valid without a phrase_id
+  """
+  def dry_changeset(translation, attrs) do
+    translation
+    |> cast(attrs, [:text, :source, :language_id, :phrase_id])
+    |> validate_required([:text, :source, :language_id])
+    |> sweep()
+  end
+
   def is_empty?(translation) do
     translation.text == nil && translation.language_id == nil
   end

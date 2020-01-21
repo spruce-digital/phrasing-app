@@ -17,9 +17,33 @@ defmodule Phrasing.Dict.Phrase do
 
   @doc false
   def changeset(phrase, attrs) do
+    attrs = attrs
+    |> filter_empty_translations()
+
     phrase
     |> cast(attrs, [:user_id])
     |> cast_assoc(:cards)
+    |> cast_assoc(:translations)
+    |> validate_required([:user_id])
+  end
+
+  @doc "A changeset that eschuwes translations"
+  def phrase_changeset(phrase, attrs) do
+    phrase
+    |> cast(attrs, [:user_id])
+    |> cast_assoc(:cards)
+    |> validate_required([:user_id])
+  end
+
+  @doc "A changset that validates translations as well, without :phrase_id"
+  def dry_changeset(phrase, attrs) do
+    attrs = attrs
+    |> filter_empty_translations()
+
+    phrase
+    |> cast(attrs, [:user_id])
+    |> cast_assoc(:cards)
+    |> cast_assoc(:translations, with: &Phrasing.Dict.Translation.dry_changeset/2)
     |> validate_required([:user_id])
   end
 
@@ -62,26 +86,12 @@ defmodule Phrasing.Dict.Phrase do
     string == ""
   end
 
-# alias Dict
-#
-# phrase_params = %{
-#   "source" => "",
-#   "translations" => %{
-#     "0" => %{"text" => "hello"},
-#     "1" => %{"text" => "world"},
-#     "2" => %{"text" => ""}
-#   },
-#   "user_id" => "1"
-# }
-#
-# Dict.change_phrase(%Dict.Phrase{}, phrase_params)
-
   def filter_empty_translations(attrs) do
     if attrs["translations"] do
       translations = attrs
       |> Access.get("translations", %{})
       |> Enum.reject(fn {_key, t} ->
-           Access.get(t, "language_id", "") == "" && Access.get(t, "text", "") == ""
+           Access.get(t, "text", "") == ""
          end)
       |> Enum.into(%{})
 
