@@ -19,7 +19,9 @@ defmodule PhrasingWeb.SearchLive.Results do
     <main class="search--results">
       <ul class="filters">
         <%= if @filter == nil do %>
-          <li phx-click="add_phrase"><i class="far fa-plus"></i>&nbsp;&nbsp;Create Phrase</li>
+          <li phx-click="add_phrase" phx-target=".search--results">
+            <i class="far fa-plus"></i>&nbsp;&nbsp;Create Phrase
+          </li>
           <li>Languages</li>
           <li>Search Library</li>
           <li>Look up</li>

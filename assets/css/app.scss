@@ -61,6 +61,9 @@ button {
   }
 }
 
+$flag-icon-css-path: "../node_modules/flag-icon-css/flags";
+@import "../node_modules/flag-icon-css/sass/flag-icon.scss";
+
 @import "colors";
 @import "phoenix.css";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";

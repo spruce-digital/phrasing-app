@@ -53,7 +53,7 @@ defmodule PhrasingWeb.SearchLive.Phrase do
           <% end %>
         <% end %>
 
-        <%= f = form_for @changeset, "#", [phx_change: :change, phx_submit: :save] %>
+        <%= f = form_for @changeset, "#", [phx_change: :change, phx_submit: :save, phx_target: ".search--phrase"] %>
           <%= hidden_input f, :id %>
           <%= hidden_input f, :user_id, value: @user_id %>
           <%= hidden_input f, :source %>
@@ -101,12 +101,13 @@ defmodule PhrasingWeb.SearchLive.Phrase do
 
     ~L"""
     <li class="search--phrase---translation">
-      <span>
-        <%= language.name %>
-      </span>
-      <span>
+      <span
+        class="flag flag-icon flag-icon-squared flag-icon-<%= language.flag_code %>"
+        title="<%= language.name %>"
+      ></span>
+      <p>
         <%= assigns.translation.text %>
-      <span>
+      <p>
     </li>
     """
   end

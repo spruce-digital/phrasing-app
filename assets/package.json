@@ -10,6 +10,7 @@
     "watch": "webpack --mode development --watch &> /dev/null"
   },
   "dependencies": {
+    "flag-icon-css": "^3.4.5",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view"
@@ -21,11 +22,13 @@
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",
+    "file-loader": "^5.0.2",
     "mini-css-extract-plugin": "^0.4.0",
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
     "sass-loader": "^7.3.1",
     "uglifyjs-webpack-plugin": "^1.2.4",
+    "url-loader": "^3.0.0",
     "webpack": "4.4.0",
     "webpack-cli": "^2.0.10"
   }
