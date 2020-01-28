@@ -78,7 +78,9 @@ defmodule PhrasingWeb.SearchLive.Phrase do
 
         <main>
           <%= for tr <- @phrase.translations do %>
-            <div class="translation"><%= tr.text %></div>
+            <ul>
+              <%= render_translation Map.put(assigns, :translation, tr) %>
+            </ul>
           <% end %>
 
           <aside class="action" phx-click="edit">
@@ -91,13 +93,29 @@ defmodule PhrasingWeb.SearchLive.Phrase do
     """
   end
 
+  def render_translation(assigns) do
+    language = assigns.languages
+               |> Enum.find(fn language ->
+                 language.id == assigns.translation.language_id
+               end)
+
+    ~L"""
+    <li class="search--phrase---translation">
+      <span>
+        <%= language.name %>
+      </span>
+      <span>
+        <%= assigns.translation.text %>
+      <span>
+    </li>
+    """
+  end
+
   def handle_event("edit", _params, socket) do
     {:noreply, assign(socket, editing?: true)}
   end
 
   def handle_event("change", %{"phrase" => phrase_params}, socket) do
-    IO.inspect phrase_params
-
     changeset =
       socket.assigns.changeset.data
       |> Dict.change_phrase(phrase_params)

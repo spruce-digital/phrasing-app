@@ -10,7 +10,7 @@ defmodule PhrasingWeb.UILive.Field.Translation do
     input_type: :text_input,
     label_prefix: "",
     source: false,
-    translation_id: nil,
+    translation_id: nil
   }
 
   @empty_language %Dict.Language{
@@ -41,12 +41,10 @@ defmodule PhrasingWeb.UILive.Field.Translation do
     id = "#{form.name}_translations_#{language.id}"
     name = label_prefix <> language.name
 
-    Form.label form, :translations, name, [for: id]
+    Form.label(form, :translations, name, for: id)
   end
 
   def render_select(assigns, language) do
-    IO.puts language.name
-    IO.inspect Enum.map(assigns.languages, fn l -> option_selected(l, language) end)
     ~L"""
     <select>
       <%= unless language.id do %>
@@ -83,7 +81,12 @@ defmodule PhrasingWeb.UILive.Field.Translation do
     language_id = Changeset.get_field(form.source, :language_id)
     Enum.find(languages, @empty_language, fn l -> l.id == language_id end)
   end
-  def get_language_from_assigns(%{translation_id: translation_id, languages: languages, form: form}) do
+
+  def get_language_from_assigns(%{
+        translation_id: translation_id,
+        languages: languages,
+        form: form
+      }) do
     translation_id = Changeset.get_field(form.source, :translation_id)
     Enum.find(languages, @empty_language, fn l -> l.id == translation_id end)
   end
@@ -95,8 +98,6 @@ defmodule PhrasingWeb.UILive.Field.Translation do
   def option_disabled(language, assigns) do
     source_language_id = Changeset.get_field(assigns.form.source, :language_id)
     is_source = assigns.source
-
-    IO.inspect %{is_source: is_source, language_id: language.id, source_language_id: source_language_id}
 
     if language.id == source_language_id and !is_source, do: "disabled", else: ""
   end

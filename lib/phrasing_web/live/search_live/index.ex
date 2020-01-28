@@ -10,7 +10,7 @@ defmodule PhrasingWeb.SearchLive.Index do
 
   @default_search %{
     text: "",
-    language_id: "",
+    language_id: ""
   }
 
   @defaults %{
@@ -21,17 +21,22 @@ defmodule PhrasingWeb.SearchLive.Index do
     results: [],
     search: @default_search,
     state: :pristine,
-    suggestions: [],
+    suggestions: []
   }
 
   def mount(%{"user_id" => user_id}, socket) do
     languages = Dict.list_languages()
     recent_phrases = Dict.list_phrases(user_id)
-    {:ok, assign(socket, Map.merge(@defaults, %{
-      user_id: user_id,
-      languages: languages,
-      recent_phrases: recent_phrases,
-    }))}
+
+    {:ok,
+     assign(
+       socket,
+       Map.merge(@defaults, %{
+         user_id: user_id,
+         languages: languages,
+         recent_phrases: recent_phrases
+       })
+     )}
   end
 
   def render(assigns) do
@@ -52,98 +57,136 @@ defmodule PhrasingWeb.SearchLive.Index do
   end
 
   def render_body(a) do
+    IO.puts(a.state)
+
     case a.state do
-      :pristine -> live_component a.socket,
-                                  SearchLive.RecentPhrases,
-                                  recent_phrases: a.recent_phrases
-      :searching -> live_component a.socket,
-                                   SearchLive.Suggestions,
-                                   suggestions: a.suggestions
-      :results -> live_component a.socket,
-                                 SearchLive.Results,
-                                 id: :results,
-                                 results: a.results,
-                                 search: a.search,
-                                 user_id: a.user_id
+      :pristine ->
+        live_component(
+          a.socket,
+          SearchLive.RecentPhrases,
+          id: :pristine,
+          recent_phrases: a.recent_phrases
+        )
+
+      :searching ->
+        live_component(
+          a.socket,
+          SearchLive.Suggestions,
+          id: :suggestions,
+          suggestions: a.suggestions
+        )
+
+      :results ->
+        live_component(
+          a.socket,
+          SearchLive.Results,
+          id: :results,
+          results: a.results,
+          search: a.search,
+          user_id: a.user_id
+        )
     end
   end
 
   def handle_event("query", %{"_target" => ["search", field], "search" => search_params}, socket) do
-    search = Map.put socket.assigns.search, String.to_atom(field), search_params[field]
-    suggestions = Dict.search_translations(search.text, search.language_id)
+    search = Map.put(socket.assigns.search, String.to_atom(field), search_params[field])
 
-    IO.inspect search
+    suggestions =
+      case search.text do
+        "" -> []
+        _ -> Dict.search_translations(search.text, search.language_id)
+      end
 
-    suggestions
-    |> Enum.map(&(&1.translations))
-    |> Enum.map(&List.first/1)
-    |> Enum.map(&(&1.text))
-    |> IO.inspect()
+    state =
+      case search.text do
+        "" -> :pristine
+        _ -> :searching
+      end
 
-    {:noreply, assign(socket, suggestions: suggestions, search: search, state: :searching)}
+    {:noreply, assign(socket, suggestions: suggestions, search: search, state: state)}
   end
 
   def handle_event("search", _params, socket) do
     {:noreply, assign(socket, state: :results, results: socket.assigns.suggestions)}
   end
 
-
-
   ###############################################
   ### PREVIOUS ##################################
   ###############################################
 
-
-
-
-
   def handle_event("add_translation", _params, socket) do
-    translation_languages = socket.assigns.search.translation_languages
-                          |> assume_next_translation(socket.assigns)
+    translation_languages =
+      socket.assigns.search.translation_languages
+      |> assume_next_translation(socket.assigns)
 
-    search = socket.assigns.search
-           |> Map.put(:translation_languages, translation_languages)
+    search =
+      socket.assigns.search
+      |> Map.put(:translation_languages, translation_languages)
 
     {:noreply, assign(socket, search: search)}
   end
 
-  def handle_event("change", %{"_target" => ["search", "source"], "search" => search_params}, socket) do
+  def handle_event(
+        "change",
+        %{"_target" => ["search", "source"], "search" => search_params},
+        socket
+      ) do
     source = search_params["source"]
 
-    source_language = case detect_language(:source, source, socket.assigns) do
-      {:ok, language} -> language.id
-      {:noop, id} -> id
-      {:error} -> nil
-    end
+    source_language =
+      case detect_language(:source, source, socket.assigns) do
+        {:ok, language} -> language.id
+        {:noop, id} -> id
+        {:error} -> nil
+      end
 
-    search = socket.assigns.search
-    |> Map.put(:source, search_params["source"])
-    |> Map.put(:source_language, source_language)
-
+    search =
+      socket.assigns.search
+      |> Map.put(:source, search_params["source"])
+      |> Map.put(:source_language, source_language)
 
     matching_phrases = get_matching_phrases(search)
 
     {:noreply, assign(socket, search: search, matching_phrases: matching_phrases)}
   end
 
-  def handle_event("change", %{"_target" => ["search", "translations"], "search" => search_params}, socket) do
-    search = Map.put socket.assigns.search, :translations, search_params["translations"]
+  def handle_event(
+        "change",
+        %{"_target" => ["search", "translations"], "search" => search_params},
+        socket
+      ) do
+    search = Map.put(socket.assigns.search, :translations, search_params["translations"])
     matching_phrases = get_matching_phrases(search)
     {:noreply, assign(socket, search: search, matching_phrases: matching_phrases)}
   end
 
-  def handle_event("change", %{"_target" => ["search", "translation_languages"], "search" => search_params}, socket) do
-    search = Map.put socket.assigns.search, :translation_languages, search_params["translation_languages"]
+  def handle_event(
+        "change",
+        %{"_target" => ["search", "translation_languages"], "search" => search_params},
+        socket
+      ) do
+    search =
+      Map.put(
+        socket.assigns.search,
+        :translation_languages,
+        search_params["translation_languages"]
+      )
+
     {:noreply, assign(socket, search: search)}
   end
 
-  def handle_event("change", %{"_target" => ["search", "source_language"], "search" => search_params}, socket) do
+  def handle_event(
+        "change",
+        %{"_target" => ["search", "source_language"], "search" => search_params},
+        socket
+      ) do
     source_language = search_params["source_language"]
     detect = source_language == "detect"
-    last_paired_languages = get_last_paired_languages source_language, socket.assigns
+    last_paired_languages = get_last_paired_languages(source_language, socket.assigns)
 
-    search = socket.assigns.search
-           |> Map.put(:source_language, source_language)
+    search =
+      socket.assigns.search
+      |> Map.put(:source_language, source_language)
 
     {:noreply, assign(socket, search: search, detect: detect)}
   end
@@ -157,6 +200,7 @@ defmodule PhrasingWeb.SearchLive.Index do
            |> Dict.create_phrase_from_search() do
         {:ok, _phrase} ->
           {:noreply, assign(socket, Map.merge(@defaults, %{error: nil, message: "Success"}))}
+
         {:error, changeset} ->
           {:noreply, assign(socket, error: List.first(changeset.errors))}
       end
@@ -170,13 +214,23 @@ defmodule PhrasingWeb.SearchLive.Index do
       {:noop, assigns.search["source_language"]}
     else
       case Paasaa.detect(query) do
-        "und" -> {:error}
-        "eng" -> {:ok, Enum.find(languages, fn l -> l.code == "en" end)}
-        "fra" -> {:ok, Enum.find(languages, fn l -> l.code == "fr" end)}
-        "ita" -> {:ok, Enum.find(languages, fn l -> l.code == "it" end)}
-        "hin" -> {:ok, Enum.find(languages, fn l -> l.code == "hi" end)}
+        "und" ->
+          {:error}
+
+        "eng" ->
+          {:ok, Enum.find(languages, fn l -> l.code == "en" end)}
+
+        "fra" ->
+          {:ok, Enum.find(languages, fn l -> l.code == "fr" end)}
+
+        "ita" ->
+          {:ok, Enum.find(languages, fn l -> l.code == "it" end)}
+
+        "hin" ->
+          {:ok, Enum.find(languages, fn l -> l.code == "hi" end)}
+
         lang? ->
-          IO.puts "unhandled language #{lang?} in PhrasingWeb.SearchLive.Index#detect_language"
+          IO.puts("unhandled language #{lang?} in PhrasingWeb.SearchLive.Index#detect_language")
           {:error}
       end
     end
@@ -192,14 +246,18 @@ defmodule PhrasingWeb.SearchLive.Index do
 
   defp assume_next_translation(translation_languages, assigns) do
     case assigns.last_paired_languages do
-      [] ->  translation_languages ++ [1]
-      [x] -> translation_languages ++ [x]
+      [] ->
+        translation_languages ++ [1]
+
+      [x] ->
+        translation_languages ++ [x]
+
       lns ->
-      case lns -- translation_languages do
-        []   -> translation_languages ++ [1]
-        [x]  -> translation_languages ++ [x]
-        lns2 -> translation_languages ++ Enum.slice(lns2, 0, 1)
-      end
+        case lns -- translation_languages do
+          [] -> translation_languages ++ [1]
+          [x] -> translation_languages ++ [x]
+          lns2 -> translation_languages ++ Enum.slice(lns2, 0, 1)
+        end
     end
   end
 
@@ -208,6 +266,6 @@ defmodule PhrasingWeb.SearchLive.Index do
   end
 
   defp get_matching_phrases(search) do
-    Dict.search_translations search.source
+    Dict.search_translations(search.source)
   end
 end

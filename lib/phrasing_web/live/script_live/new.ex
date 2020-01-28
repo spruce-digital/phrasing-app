@@ -29,21 +29,23 @@ defmodule PhrasingWeb.ScriptLive.New do
       |> Library.change_script(script_params)
       |> Map.put(:action, :ignore)
 
-    languages = [script_params["lang"] | script_params["translations"] || []]
-                |> Enum.filter(& &1)
+    languages =
+      [script_params["lang"] | script_params["translations"] || []]
+      |> Enum.filter(& &1)
+
     add_translation = List.first(script_params["add_translation"] || [])
 
-    {:noreply, assign(socket, changeset: changeset, languages: languages, add_translation: add_translation)}
+    {:noreply,
+     assign(socket, changeset: changeset, languages: languages, add_translation: add_translation)}
   end
 
   def handle_event("create", %{"script" => script_params}, socket) do
-    IO.inspect script_params
     case Library.create_script(script_params) do
       {:ok, _script} ->
         {:stop,
-          socket
-          |> put_flash(:info, "Script created successfully.")
-          |> redirect(to: Routes.library_path(socket, :index))}
+         socket
+         |> put_flash(:info, "Script created successfully.")
+         |> redirect(to: Routes.library_path(socket, :index))}
 
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

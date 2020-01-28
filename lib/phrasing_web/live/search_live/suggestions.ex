@@ -4,8 +4,6 @@ defmodule PhrasingWeb.SearchLive.Suggestions do
   alias PhrasingWeb.SearchLive
 
   def render(assigns) do
-    IO.puts "render suggestions"
-    IO.inspect assigns.suggestions
     ~L"""
     <div class="search--suggestions">
       <%= for phrase <- @suggestions do %>

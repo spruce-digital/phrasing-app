@@ -17,15 +17,13 @@ defmodule PhrasingWeb.PhraseLive.Edit do
 
   def handle_event("update", %{"phrase" => phrase_params}, socket) do
     phrase = socket.assigns.phrase
-    IO.puts "inspect"
-    IO.inspect phrase
 
     case Dict.update_phrase(phrase, phrase_params) do
       {:ok, phrase} ->
         {:stop,
-          socket
-          |> put_flash(:info, "Phrase updated successfully")
-          |> redirect(to: Routes.phrase_path(socket, :show, phrase))}
+         socket
+         |> put_flash(:info, "Phrase updated successfully")
+         |> redirect(to: Routes.phrase_path(socket, :show, phrase))}
 
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

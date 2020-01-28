@@ -8,8 +8,9 @@ defmodule PhrasingWeb.BookLive.New do
   alias PhrasingWeb.Router.Helpers, as: Routes
 
   def mount(_session, socket) do
-    changeset = %Library.Book{}
-                |> Library.change_book()
+    changeset =
+      %Library.Book{}
+      |> Library.change_book()
 
     languages = []
 
@@ -28,11 +29,12 @@ defmodule PhrasingWeb.BookLive.New do
   end
 
   def handle_event("add_chapter", _params, socket) do
-    chapters = get_field(socket.assigns.changeset, :chapters)  ++ [%Chapter{}]
+    chapters = get_field(socket.assigns.changeset, :chapters) ++ [%Chapter{}]
 
-    changeset = socket.assigns.changeset
-                |> Ecto.Changeset.put_assoc(:chapters, chapters)
-                |> Map.put(:action, :ignore)
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:chapters, chapters)
+      |> Map.put(:action, :ignore)
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -43,25 +45,27 @@ defmodule PhrasingWeb.BookLive.New do
       |> Library.change_book(book_params)
       |> Map.put(:action, :ignore)
 
-    languages = [book_params["lang"] | book_params["translations"] || []]
-                |> Enum.filter(& &1)
+    languages =
+      [book_params["lang"] | book_params["translations"] || []]
+      |> Enum.filter(& &1)
+
     add_translation = List.first(book_params["add_translation"] || [])
 
-
-    {:noreply, assign(socket, changeset: changeset, languages: languages, add_translation: add_translation)}
+    {:noreply,
+     assign(socket, changeset: changeset, languages: languages, add_translation: add_translation)}
   end
 
   def handle_event("create", %{"book" => book_params}, socket) do
     {chapters_params, just_book_params} = Map.pop(book_params, "chapters")
-    with {:ok, book}  <- Library.create_book(just_book_params),
+
+    with {:ok, book} <- Library.create_book(just_book_params),
          {:ok, _book} <- Library.create_chapters_for_book(book, Map.values(chapters_params)) do
       {:stop,
-        socket
-        |> put_flash(:info, "Book created successfully.")
-        |> redirect(to: Routes.library_path(socket, :index))}
+       socket
+       |> put_flash(:info, "Book created successfully.")
+       |> redirect(to: Routes.library_path(socket, :index))}
     else
       error ->
-        IO.inspect(error)
         {:noreply, socket}
     end
   end
