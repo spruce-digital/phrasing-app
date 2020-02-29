@@ -1,3 +1,5 @@
+$search--phrase---border-radius: 4px;
+
 .search--index {
 
 }
@@ -34,24 +36,30 @@
 .search--phrase {
   $translation-height: 48px;
 
-  border: 1px solid $white---;
   margin: 12px 0;
+
+  ul {
+    border-radius: $search--phrase---border-radius;
+    border: 1px solid $white----;
+    overflow: hidden;
+  }
 
   ul, ul li {
     margin: 0;
   }
 
-  main {
+  > main {
     position: relative;
+    border-radius: 4px;
   }
 
-  main aside {
+  > main > aside {
     display: none;
   }
 
-  main:hover aside,
-  main aside:hover,
-  form aside {
+  > main:hover > aside,
+  > main > aside:hover,
+  form > aside {
     @include flex-center;
     height: $translation-height;
     left: 100%;
@@ -60,16 +68,17 @@
     top: 0;
   }
 
-  main aside:hover,
-  form aside:hover {
+  > main > aside:hover,
+  form > aside:hover {
     @include hoverable;
   }
 
-  form aside button {
+  form > aside button {
     padding: 0;
   }
 
   form {
+    border: 1px solid $white---;
     position: relative;
     margin: 0;
   }
@@ -121,16 +130,62 @@
 .search--phrase---translation {
   display: flex;
   align-items: center;
+  overflow: none;
 
-  .flag {
+  &:not(:first-child) {
+    border-top: 1px solid $white----;
+  }
+
+  >aside {
+    @include flex-center;
+    width: 48px;
+
+    // &:first-child {
+    //   border-top-left-radius: inherit;
+    // }
+
+    // &:last-child {
+    //   border-bottom-left-radius: inherit;
+    // }
+  }
+
+  >aside .flag-icon {
     $size: 24px;
-
     border-radius: $size / 2;
     display: block;
     height: $size;
-    margin: 12px;
+    margin: 12px 0 12px 12px;
     overflow: hidden;
     width: $size;
+  }
+
+  >main {
+    @include flex-center;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    flex: 1;
+  }
+
+  >main .language-code {
+    font-family: "Operator Mono", monospace;
+    font-style: italic;
+    padding: 1px 4px 2px 0;
+    border-radius: 2px;
+    margin-right: 12px;
+    color: $frost-;
+    letter-spacing: 1px;
+    text-align: center;
+    font-size: 11px;
+  }
+
+  >main .text {
+    flex: 1;
+  }
+
+  >main .searched-for {
+    font-weight: bold;
   }
 }
 

@@ -15,8 +15,13 @@ defmodule PhrasingWeb.SearchLive.Phrase do
     disabled: true
   ]
 
+  @default_search %{
+    text: "",
+    language_id: "",
+  }
+
   def mount(socket) do
-    {:ok, assign(socket, editing?: false, error_list: [])}
+    {:ok, assign(socket, editing?: false, error_list: [], search: @default_search)}
   end
 
   def update(a, socket) do
@@ -77,11 +82,11 @@ defmodule PhrasingWeb.SearchLive.Phrase do
       <% else %>
 
         <main>
-          <%= for tr <- @phrase.translations do %>
-            <ul>
+          <ul>
+            <%= for tr <- @phrase.translations do %>
               <%= render_translation Map.put(assigns, :translation, tr) %>
-            </ul>
-          <% end %>
+            <% end %>
+          </ul>
 
           <aside class="action" phx-click="edit">
             <i class="far fa-pencil"></i>
@@ -94,6 +99,7 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   end
 
   def render_translation(assigns) do
+    searched_for? = assigns.search.text == assigns.translation.text
     language = assigns.languages
                |> Enum.find(fn language ->
                  language.id == assigns.translation.language_id
@@ -101,13 +107,23 @@ defmodule PhrasingWeb.SearchLive.Phrase do
 
     ~L"""
     <li class="search--phrase---translation">
-      <span
-        class="flag flag-icon flag-icon-squared flag-icon-<%= language.flag_code %>"
-        title="<%= language.name %>"
-      ></span>
-      <p>
-        <%= assigns.translation.text %>
-      <p>
+      <aside>
+        <span
+          class="flag-icon flag-icon-squared flag-icon-<%= language.flag_code %>"
+          title="<%= language.name %>"
+        ></span>
+      </aside>
+      <main>
+        <div class="language-code">
+          <%= language.code %>
+        </div>
+        <p class="text <%= if searched_for?, do: "searched-for", else: "" %>">
+          <%= assigns.translation.text %>
+        <p>
+        <%= if false do %>
+          <div class="source"></div>
+        <% end %>
+      </main>
     </li>
     """
   end

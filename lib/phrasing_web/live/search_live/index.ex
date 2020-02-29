@@ -57,8 +57,6 @@ defmodule PhrasingWeb.SearchLive.Index do
   end
 
   def render_body(a) do
-    IO.puts(a.state)
-
     case a.state do
       :pristine ->
         live_component(
@@ -72,8 +70,10 @@ defmodule PhrasingWeb.SearchLive.Index do
         live_component(
           a.socket,
           SearchLive.Suggestions,
-          id: :suggestions,
-          suggestions: a.suggestions
+          # id: :suggestions,
+          phrases: a.suggestions,
+          search: a.search,
+          languages: a.languages
         )
 
       :results ->

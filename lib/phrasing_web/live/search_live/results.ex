@@ -47,7 +47,8 @@ defmodule PhrasingWeb.SearchLive.Results do
                              id: "result_#{phrase.id}",
                              phrase: phrase,
                              user_id: @user_id,
-                             editing?: false
+                             editing?: false,
+                             search: @search
           %>
         <% end %>
       <% end %>
@@ -61,7 +62,8 @@ defmodule PhrasingWeb.SearchLive.Results do
                              id: "result_#{phrase.id}",
                              phrase: phrase,
                              user_id: @user_id,
-                             editing?: false
+                             editing?: false,
+                             search: @search
           %>
         <% end %>
       <% end %>
