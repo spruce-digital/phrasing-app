@@ -1,6 +1,7 @@
 APP="phrasing"
 
-BUILD_HOST="phrasing.app"
+# BUILD_HOST="phrasing.app"
+BUILD_HOST="178.62.204.27"
 BUILD_USER="deploy"
 BUILD_AT="/tmp/edeliver/$APP/builds"
 

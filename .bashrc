@@ -1,5 +1,5 @@
 alias console="rlwrap iex -S mix"
-alias ocean="ssh deploy@104.248.93.78"
+alias ocean="ssh deploy@178.62.204.27"
 alias ping="mix edeliver ping production"
 alias build="mix edeliver build release production --verbose"
 alias deploy="mix edeliver deploy release to production"
