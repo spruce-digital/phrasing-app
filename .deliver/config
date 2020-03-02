@@ -14,7 +14,7 @@ STAGING_HOSTS="phrasing.app"
 STAGING_USER="deploy"
 TEST_AT="/home/deploy/staging"
 
-PRODUCTION_HOSTS="phrasing.app"
+PRODUCTION_HOSTS="178.62.204.27"
 PRODUCTION_USER="deploy"
 DELIVER_TO="/home/deploy"
 
