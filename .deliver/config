@@ -1,7 +1,7 @@
 APP="phrasing"
 
-# BUILD_HOST="phrasing.app"
-BUILD_HOST="178.62.204.27"
+BUILD_HOST="phrasing.app"
+# BUILD_HOST="178.62.204.27"
 BUILD_USER="deploy"
 BUILD_AT="/tmp/edeliver/$APP/builds"
 
@@ -14,7 +14,8 @@ STAGING_HOSTS="phrasing.app"
 STAGING_USER="deploy"
 TEST_AT="/home/deploy/staging"
 
-PRODUCTION_HOSTS="178.62.204.27"
+# PRODUCTION_HOSTS="178.62.204.27"
+PRODUCTION_HOSTS="phrasing.app"
 PRODUCTION_USER="deploy"
 DELIVER_TO="/home/deploy"
 
