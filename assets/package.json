@@ -2,8 +2,9 @@
   "repository": {},
   "license": "MIT",
   "scripts": {
-    "postinstall": "npm run cp:fa",
-    "cp:fa": "cp -r node_modules/@fortawesome/fontawesome-pro/ static/fa",
+    "--postinstall": "npm run cp:fa",
+    "clean:fa": "rm -rf static/fa",
+    "cp:fa": "npm run clean:fa && cp -r node_modules/@fortawesome/fontawesome-pro/ static/fa",
     "cp:fa-scss": "cp -r node_modules/@fortawesome/fontawesome-pro/scss css/fontawesome",
     "cp:fa-font": "cp -r node_modules/@fortawesome/fontawesome-pro/webfonts static/webfonts",
     "deploy": "webpack --mode production",
@@ -18,7 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
-    "@fortawesome/fontawesome-pro": "^5.11.2",
+    "@fortawesome/fontawesome-pro": "^5.12.1",
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",

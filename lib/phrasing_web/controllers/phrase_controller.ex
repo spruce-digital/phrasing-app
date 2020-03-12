@@ -9,7 +9,7 @@ defmodule PhrasingWeb.PhraseController do
     # render(conn, "index.html", phrases: phrases)
 
     live_render(conn, Index, session: %{
-      user_id: get_session(conn, "current_user_id"),
+      "user_id" => get_session(conn, "current_user_id"),
     })
   end
 

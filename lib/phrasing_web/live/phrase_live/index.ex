@@ -5,7 +5,7 @@ defmodule PhrasingWeb.PhraseLive.Index do
   alias Phrasing.SRS
   alias PhrasingWeb.PhraseView
 
-  def mount(%{user_id: user_id}, socket) do
+  def mount(%{"user_id" => user_id}, socket) do
     if connected?(socket), do: Dict.subscribe()
     phrases = Dict.list_phrases(user_id)
     {:ok, assign(socket, phrases: phrases, changeset: nil)}

@@ -14,7 +14,7 @@ defmodule PhrasingWeb.SessionController do
       conn
       |> put_session(:current_user_id, user.id)
       |> put_flash(:info, "Signed in successfully.")
-      |> redirect(to: Routes.library_path(conn, :index))
+      |> redirect(to: Routes.search_path(conn, :index))
     {:error, _} ->
       conn
       |> put_flash(:error, "There was a problem with your email/password")
@@ -26,6 +26,6 @@ defmodule PhrasingWeb.SessionController do
     conn
     |> delete_session(:current_user_id)
     |> put_flash(:info, "Signed out successfully.")
-    |> redirect(to: Routes.library_path(conn, :index))
+    |> redirect(to: Routes.search_path(conn, :index))
   end
 end

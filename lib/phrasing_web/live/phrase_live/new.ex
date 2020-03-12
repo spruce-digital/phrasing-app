@@ -9,7 +9,7 @@ defmodule PhrasingWeb.PhraseLive.New do
 
   def mount(_session, socket) do
     changeset = Dict.change_phrase(%Phrase{})
-    languages = Phrase.languages
+    languages = Dict.list_languages()
 
     {:ok, assign(socket, changeset: changeset, languages: languages)}
   end
