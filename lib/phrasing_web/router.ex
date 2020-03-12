@@ -37,7 +37,6 @@ defmodule PhrasingWeb.Router do
     resources "/scripts", ScriptController, only: [:new]
     resources "/songs", SongController, only: [:new]
     resources "/books", BookController, only: [:new]
-    resources "/phrases", PhraseController
   end
 
   # Other scopes may use custom stacks.
