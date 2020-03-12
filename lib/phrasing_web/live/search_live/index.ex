@@ -52,6 +52,7 @@ defmodule PhrasingWeb.SearchLive.Index do
       <%= live_component @socket, SearchLive.SearchField, search: assigns.search %>
 
       <%= render_body assigns %>
+      <h6><i>rendering <%= @state %></i></h6>
     </div>
     """
   end

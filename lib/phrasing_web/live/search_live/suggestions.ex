@@ -25,14 +25,8 @@ defmodule PhrasingWeb.SearchLive.Suggestions do
   def render(assigns) do
     trs = get_suggestion_trs(assigns)
 
-    ids =
-      trs
-      |> Enum.map(fn {language, tr} -> tr.id end)
-      |> Enum.join()
-      |> IO.inspect(label: :ids)
-
     ~L"""
-    <div class="search--suggestions" data-rerender="<%= ids %> <%= Enum.count trs %>">
+    <div class="search--suggestions">
       <%= for {language, tr} <- trs do %>
         <div style="font-family: 'Operator Mono', monospace">
           <%= "#{language.code} : #{tr.text}" %>

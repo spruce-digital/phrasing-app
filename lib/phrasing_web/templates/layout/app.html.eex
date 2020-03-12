@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Phrasing</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/fa/css/all.css") %>"/>
     <%= csrf_meta_tag() %>
   </head>
   <body>
@@ -36,6 +35,8 @@
         <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
         <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
         <%= render @view_module, @view_template, assigns %>
+
+        <footer>powered by space ocelots <i class="fad fa-cat-space"></i></footer>
       </main>
 
       <%# <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: Plug.Conn.get_session(@conn), container: %>
