@@ -1,0 +1,19 @@
+section.layout--live {
+  @include flex-column;
+  background-color: $white-;
+  min-height: 100vh;
+
+  >main {
+    @include flex-column;
+    box-sizing: border-box;
+    padding: 24px;
+  }
+
+  >main >footer {
+    font-size: 10px;
+    padding: 36px;
+    font-style: italic;
+    text-align: center;
+    opacity: 0.5;
+  }
+}

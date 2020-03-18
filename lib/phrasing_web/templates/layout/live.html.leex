@@ -1,2 +1,11 @@
-<h1 style="font-family: Baveuse">Phrasing</h1>
-<%= @inner_content %>
+<section class="layout--live">
+  <%= live_component @socket, PhrasingWeb.UILive.Navigation, user_id: @user_id %>
+
+  <main>
+    <p class="alert alert-info" role="alert"><%= live_flash(@flash, :notice) %></p>
+    <p class="alert alert-error" role="alert"><%= live_flash(@flash, :error) %></p>
+    <%= @inner_content %>
+
+    <footer>powered by space ocelots <i class="fad fa-cat-space"></i></footer>
+  </main>
+</section>

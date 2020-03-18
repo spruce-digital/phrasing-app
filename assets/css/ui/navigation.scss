@@ -1,0 +1,26 @@
+.ui--navigation {
+  ul {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 24px;
+  }
+
+  a {
+    color: $black;
+  }
+
+  ul li:first-child {
+    font-family: Baveuse;
+    letter-spacing: 1px;
+    font-size: 24px;
+  }
+
+  ul li:nth-child(2) {
+    flex: 1;
+  }
+
+  ul li:nth-child(n+3) {
+    margin-left: 12px;
+  }
+}

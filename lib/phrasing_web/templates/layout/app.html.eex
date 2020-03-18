@@ -10,33 +10,10 @@
   </head>
   <body>
     <section class="layout--app">
-      <header>
-        <a class="home" href="/">
-          <h1>Phrasing</h1>
-        </a>
-
-        <nav role="navigation">
-          <ul>
-            <%= if signed_in?(@conn) do %>
-              <%# <li><a href="#" onclick="javascript:Add.navbar()">Add</a></li> %>
-              <li><a href="/cards">Cards</a></li>
-              <li><a href="/flashcards">Flashcards</a></li>
-              <li><%= link "Sign Out", to: Routes.session_path(@conn, :delete), method: :delete %></li>
-            <% else %>
-              <li><%= link "Sign In", to: Routes.session_path(@conn, :new) %></li>
-              <li><%= link "Sign Up", to: Routes.user_path(@conn, :new) %></li>
-              <% end %>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
-      <main role="main" class="container">
+      <main role="main">
         <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
         <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
         <%= render @view_module, @view_template, assigns %>
-
-        <footer>powered by space ocelots <i class="fad fa-cat-space"></i></footer>
       </main>
 
       <%# <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: Plug.Conn.get_session(@conn), container: %>
