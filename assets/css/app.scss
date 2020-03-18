@@ -61,6 +61,13 @@ button {
   }
 }
 
+@font-face {
+  font-family: "Baveuse";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/baveuse.ttf") format("truetype");
+}
+
 $flag-icon-css-path: "../node_modules/flag-icon-css/flags";
 @import "~flag-icon-css/sass/flag-icon.scss";
 
