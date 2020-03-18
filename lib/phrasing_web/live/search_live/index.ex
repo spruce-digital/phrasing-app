@@ -1,5 +1,5 @@
 defmodule PhrasingWeb.SearchLive.Index do
-  use Phoenix.LiveView
+  use Phoenix.LiveView, layout: {PhrasingWeb.LayoutView, "live.html"}
 
   alias Paasaa
   alias Phoenix.HTML.Form
@@ -24,7 +24,7 @@ defmodule PhrasingWeb.SearchLive.Index do
     suggestions: []
   }
 
-  def mount(_params, %{"user_id" => user_id}, socket) do
+  def mount(_params, %{"current_user_id" => user_id}, socket) do
     languages = Dict.list_languages()
     recent_phrases = Dict.list_phrases(user_id)
 
