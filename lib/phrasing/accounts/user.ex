@@ -6,6 +6,9 @@ defmodule Phrasing.Accounts.User do
   schema "users" do
     field :email, :string
     field :encrypted_password, :string
+    has_one :profile, Phrasing.Accounts.Profile
+
+    many_to_many :languages, Phrasing.Dict.Language, join_through: "user_languages", on_replace: :delete
 
     timestamps()
   end
