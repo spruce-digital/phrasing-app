@@ -9,16 +9,18 @@ defmodule PhrasingWeb.SessionController do
 
   def create(conn, %{"session" => auth_params}) do
     user = Accounts.get_by_email(auth_params["email"])
+
     case Bcrypt.check_pass(user, auth_params["password"]) do
-    {:ok, user} ->
-      conn
-      |> put_session(:current_user_id, user.id)
-      |> put_flash(:info, "Signed in successfully.")
-      |> redirect(to: Routes.search_path(conn, :index))
-    {:error, _} ->
-      conn
-      |> put_flash(:error, "There was a problem with your email/password")
-      |> render("new.html")
+      {:ok, user} ->
+        conn
+        |> put_session(:current_user_id, user.id)
+        |> put_flash(:info, "Signed in successfully.")
+        |> redirect(to: Routes.search_index_path(conn, :index))
+
+      {:error, _} ->
+        conn
+        |> put_flash(:error, "There was a problem with your email/password")
+        |> render("new.html")
     end
   end
 
@@ -26,6 +28,6 @@ defmodule PhrasingWeb.SessionController do
     conn
     |> delete_session(:current_user_id)
     |> put_flash(:info, "Signed out successfully.")
-    |> redirect(to: Routes.search_path(conn, :index))
+    |> redirect(to: Routes.search_index_path(conn, :index))
   end
 end
