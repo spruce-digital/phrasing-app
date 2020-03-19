@@ -1,11 +1,11 @@
 <section class="layout--live">
-  <%= live_component @socket, PhrasingWeb.UILive.Navigation, user_id: @user_id %>
+  <%= live_component @socket, PhrasingWeb.UILive.Navigation, id: :nav, user_id: @user_id %>
 
   <main>
     <p class="alert alert-info" role="alert"><%= live_flash(@flash, :notice) %></p>
     <p class="alert alert-error" role="alert"><%= live_flash(@flash, :error) %></p>
     <%= @inner_content %>
 
-    <footer>powered by space ocelots <i class="fad fa-cat-space"></i></footer>
+    <footer>powered by <i class="fad fa-cat-space"></i> space ocelots</footer>
   </main>
 </section>

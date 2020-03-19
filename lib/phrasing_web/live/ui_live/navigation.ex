@@ -10,13 +10,21 @@ defmodule PhrasingWeb.UILive.Navigation do
     ~L"""
     <header class="ui--navigation">
       <nav>
-        <ul>
-          <li><a href="/">Phrasing</a></li>
-          <li></li>
+        <ul class="navigation">
+          <li class="home"><a href="/">Phrasing</a></li>
+          <li class="spacer"></li>
 
           <%= if true do %>
             <li><a href="/cards">Cards</a></li>
-            <li><%= link "Sign Out", to: Routes.session_path(@socket, :delete), method: :delete %></li>
+            <li class="profile">
+              <i class="fal fa-user-circle" phx-click="toggle_dropdown" phx-target=".ui--navigation"></i>
+              <%= if @open do %>
+                <ul class="dropdown">
+                  <li><a href="/profile">Profile</a></li>
+                  <li><%= link "Sign Out", to: Routes.session_path(@socket, :delete), method: :delete %></li>
+                </ul>
+              <% end %>
+            </li>
           <% else %>
             <li><%= link "Sign In", to: Routes.session_path(@socket, :new) %></li>
             <li><%= link "Sign Up", to: Routes.user_path(@socket, :new) %></li>
@@ -27,6 +35,10 @@ defmodule PhrasingWeb.UILive.Navigation do
     """
   end
 
+  def mount(socket) do
+    {:ok, assign(socket, open: false)}
+  end
+
   def update(assigns, socket) do
     user = if assigns.user_id do
       Phrasing.Repo.get(Phrasing.Accounts.User, assigns.user_id)
@@ -35,5 +47,9 @@ defmodule PhrasingWeb.UILive.Navigation do
     end
 
     {:ok, assign(socket, user: user)}
+  end
+
+  def handle_event("toggle_dropdown", _params, socket) do
+    {:noreply, assign(socket, open: !socket.assigns.open)}
   end
 end
