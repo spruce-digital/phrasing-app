@@ -4,6 +4,8 @@ defmodule Phrasing.Repo.Migrations.CreateProfiles do
   def change do
     create table(:profiles) do
       add :name, :string
+      add :gender, :string
+      add :birthday, :date
       add :user_id, references(:users, on_delete: :nothing)
 
       timestamps()

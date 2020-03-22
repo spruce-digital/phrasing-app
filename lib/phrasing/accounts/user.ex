@@ -8,6 +8,7 @@ defmodule Phrasing.Accounts.User do
     field :encrypted_password, :string
     has_one :profile, Phrasing.Accounts.Profile
 
+    has_many :user_languages, Phrasing.Accounts.UserLanguage
     many_to_many :languages, Phrasing.Dict.Language, join_through: "user_languages", on_replace: :delete
 
     timestamps()
@@ -17,6 +18,8 @@ defmodule Phrasing.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:email, :encrypted_password])
+    |> cast_assoc(:profile)
+    |> cast_assoc(:user_languages)
     |> validate_required([:email, :encrypted_password])
     |> unique_constraint(:email)
     |> update_change(:encrypted_password, &Bcrypt.hash_pwd_salt/1)

@@ -31,6 +31,7 @@ defmodule PhrasingWeb.Router do
     pipe_through :check_auth
 
     live "/", SearchLive.Index, :index
+    live "/profile", ProfileLive.Index, :index
     get "/library", LibraryController, :index
     get "/flashcards", SRSController, :flashcards
     get "/cards", SRSController, :cards

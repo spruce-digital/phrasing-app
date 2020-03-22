@@ -14,7 +14,7 @@ defmodule Phrasing.Accounts.UserLanguage do
   @doc false
   def changeset(user_language, attrs) do
     user_language
-    |> cast(attrs, [:level])
-    |> validate_required([:level])
+    |> cast(attrs, [:user_id, :language_id, :level])
+    |> validate_required([:user_id, :language_id, :level])
   end
 end

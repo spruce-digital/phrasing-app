@@ -15,6 +15,6 @@ defmodule Phrasing.Accounts.Profile do
   @doc false
   def changeset(profile, attrs) do
     profile
-    |> cast(attrs, [:age, :gender, :name])
+    |> cast(attrs, [:birthday, :gender, :name])
   end
 end

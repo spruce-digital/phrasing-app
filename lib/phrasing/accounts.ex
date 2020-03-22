@@ -103,8 +103,8 @@ defmodule Phrasing.Accounts do
       %Ecto.Changeset{source: %User{}}
 
   """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
+  def change_user(%User{} = user, attrs \\ %{}) do
+    User.changeset(user, attrs)
   end
 
   alias Phrasing.Accounts.UserLanguage
@@ -295,6 +295,7 @@ defmodule Phrasing.Accounts do
       %Ecto.Changeset{source: %Profile{}}
 
   """
+  def change_profile(nil), do: change_profile(%Profile{})
   def change_profile(%Profile{} = profile) do
     Profile.changeset(profile, %{})
   end
