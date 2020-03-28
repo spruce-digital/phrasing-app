@@ -3,10 +3,6 @@ defmodule PhrasingWeb.SessionController do
 
   alias Phrasing.Accounts
 
-  def new(conn, _params) do
-    render(conn, "new.html")
-  end
-
   def create(conn, %{"session" => auth_params}) do
     user = Accounts.get_by_email(auth_params["email"])
 

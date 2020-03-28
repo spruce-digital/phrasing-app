@@ -14,7 +14,7 @@ defmodule PhrasingWeb.UILive.Navigation do
           <li class="home"><a href="/">Phrasing</a></li>
           <li class="spacer"></li>
 
-          <%= if true do %>
+          <%= if assigns[:user_id] do %>
             <li><a href="/cards">Cards</a></li>
             <li class="profile">
               <i class="fal fa-user-circle" phx-click="toggle_dropdown" phx-target=".ui--navigation"></i>
@@ -26,7 +26,7 @@ defmodule PhrasingWeb.UILive.Navigation do
               <% end %>
             </li>
           <% else %>
-            <li><%= link "Sign In", to: Routes.session_path(@socket, :new) %></li>
+            <li><%= link "Sign In", to: Routes.session_sign_in_path(@socket, :new) %></li>
             <li><%= link "Sign Up", to: Routes.user_path(@socket, :new) %></li>
           <% end %>
         </ul>

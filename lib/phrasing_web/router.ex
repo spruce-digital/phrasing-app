@@ -24,7 +24,7 @@ defmodule PhrasingWeb.Router do
     pipe_through :browser
 
     resources "/register", UserController, only: [:create, :new]
-    get "/signin", SessionController, :new
+    live "/signin", SessionLive.SignIn, :new
     post "/signin", SessionController, :create
     delete "/signout", SessionController, :delete
 
