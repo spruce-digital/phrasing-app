@@ -1,7 +1,7 @@
 .g--container {
-  $padding: 12px;
+  $padding: 12px 18px;
 
-  background: $black---;
+  background: $black--;
   box-shadow: 0 2px 8px rgba($black, 0.33);
   border-radius: 4px;
   overflow: hidden;
@@ -10,14 +10,15 @@
   margin: 0 auto;
 
   >header {
-    background: $black--;
+    background: $black---;
     padding: $padding;
-    color: $frost---;
-    box-shadow: 0 1px 1px $black-;
+    color: $frost-;
+    font-size: 20px;
+    // box-shadow: 0 1px 1px $black-;
   }
 
   >main {
-    padding: $padding * 2 $padding;
+    padding: $padding;
   }
 
   >footer {
@@ -32,10 +33,10 @@
   border-bottom: 1px solid $accent-color;
   position: relative;
   height: 24px;
-  margin: 18px 0;
+  margin: 24px 0;
 
-  &.top { margin-top: 0 }
-  &.bottom { margin-bottom: 0 }
+  &.top { margin-top: 12px; }
+  &.bottom { margin-bottom: 12px; }
 
   >label {
     position: absolute;
@@ -61,7 +62,7 @@
 }
 
 .g--button {
-  @include dark-hover(background, $frost---);
+  @include dark-hover(background, $frost-);
   @include hoverable;
   border-radius: 4px;
   border: none;

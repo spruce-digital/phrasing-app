@@ -1,7 +1,7 @@
 .ui--navigation {
   $background-color: $black--;
   $border-color: $black-;
-  $color: $frost---;
+  $color: $frost--;
 
   position: relative;
   border-bottom: 1px solid $border-color;
@@ -14,7 +14,7 @@
     justify-content: flex-end;
     align-items: center;
     padding: 0 24px;
-    font-size: 18px;
+    font-size: 14px;
   }
 
   li {
@@ -27,10 +27,11 @@
     text-decoration: none;
   }
 
-  li.home {
+  li.home a {
+    color: $frost-;
     font-family: Baveuse;
-    letter-spacing: 1px;
-    font-size: 28px;
+    letter-spacing: 1.2px;
+    font-size: 30px;
   }
 
   li.spacer {

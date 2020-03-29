@@ -27,7 +27,7 @@ defmodule PhrasingWeb.UILive.Navigation do
             </li>
           <% else %>
             <li><%= link "Sign In", to: Routes.session_sign_in_path(@socket, :new) %></li>
-            <li><%= link "Sign Up", to: Routes.user_path(@socket, :new) %></li>
+            <li><%= button "Sign Up", to: Routes.user_path(@socket, :new), class: "g--button" %></li>
           <% end %>
         </ul>
       </nav>
