@@ -6,11 +6,28 @@ defmodule PhrasingWeb.SessionLive.SignIn do
 
   def render(assigns) do
     ~L"""
-    <h1>Sign in</h1>
     <%= f = form_for :foo, Routes.session_path(@socket, :create), [as: :session], fn f -> %>
-      <%= text_input f, :email, placeholder: "email" %>
-      <%= password_input f, :password, placeholder: "password" %>
-      <%= submit "Sign in" %>
+      <div class="g--container">
+        <header>
+          Sign in
+        </header>
+
+        <main>
+          <div class="g--input top">
+            <%= label f, :email %>
+            <%= text_input f, :email %>
+          </div>
+
+          <div class="g--input bottom">
+            <%= label f, :password %>
+            <%= password_input f, :password %>
+          </div>
+        </main>
+
+        <footer>
+          <%= submit "Sign in", class: "g--button" %>
+        </footer>
+      </div>
     <% end %>
     """
   end

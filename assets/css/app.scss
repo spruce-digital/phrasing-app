@@ -1,6 +1,7 @@
 /* This file is for your main application css. */
 
 body, html, h1, h2, h3, h4, h5, h6, p, header {
+  font-family: "Avenir Next", sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -61,25 +62,19 @@ button {
   }
 }
 
-@font-face {
-  font-family: "Baveuse";
-  font-style: normal;
-  font-weight: 400;
-  src: url("/fonts/baveuse.ttf") format("truetype");
-}
-
 $flag-icon-css-path: "../node_modules/flag-icon-css/flags";
 @import "~flag-icon-css/sass/flag-icon.scss";
 
+@import "fonts";
 @import "colors";
-@import "phoenix.css";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
+@import "adder/adder";
 @import "layout/app";
 @import "layout/live";
-@import "srs/flashcards";
-@import "adder/adder";
 @import "library/index";
-@import "ui/inputs";
-@import "ui/search";
-@import "ui/navigation";
 @import "search/index";
+@import "srs/flashcards";
+@import "ui/general";
+@import "ui/inputs";
+@import "ui/navigation";
+@import "ui/search";
