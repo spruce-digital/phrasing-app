@@ -23,8 +23,11 @@
   }
 
   a {
-    color: $color;
     text-decoration: none;
+  }
+
+  a:not(.g--button) {
+    color: $color;
   }
 
   li.home a {

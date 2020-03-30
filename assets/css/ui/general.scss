@@ -64,6 +64,7 @@
 .g--button {
   @include dark-hover(background, $frost-);
   @include hoverable;
+  display: block;
   border-radius: 4px;
   border: none;
   color: $black--;

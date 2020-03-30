@@ -27,7 +27,7 @@ defmodule PhrasingWeb.UILive.Navigation do
             </li>
           <% else %>
             <li><%= link "Sign In", to: Routes.session_sign_in_path(@socket, :new) %></li>
-            <li><%= button "Sign Up", to: Routes.user_path(@socket, :new), class: "g--button" %></li>
+            <li><%= link "Sign Up", to: Routes.user_path(@socket, :new), class: "g--button" %></li>
           <% end %>
         </ul>
       </nav>
@@ -40,11 +40,12 @@ defmodule PhrasingWeb.UILive.Navigation do
   end
 
   def update(assigns, socket) do
-    user = if assigns.user_id do
-      Phrasing.Repo.get(Phrasing.Accounts.User, assigns.user_id)
-    else
-      nil
-    end
+    user =
+      if assigns.user_id do
+        Phrasing.Repo.get(Phrasing.Accounts.User, assigns.user_id)
+      else
+        nil
+      end
 
     {:ok, assign(socket, user: user)}
   end
