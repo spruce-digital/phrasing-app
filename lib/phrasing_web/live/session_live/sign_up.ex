@@ -1,15 +1,17 @@
-defmodule PhrasingWeb.SessionLive.SignIn do
+defmodule PhrasingWeb.SessionLive.SignUp do
   use Phoenix.LiveView, layout: {PhrasingWeb.LayoutView, "live.html"}
   import Phoenix.HTML.Form
 
+  alias Phrasing.Accounts
+  alias Phrasing.Accounts.User
   alias PhrasingWeb.Router.Helpers, as: Routes
 
   def render(assigns) do
     ~L"""
-    <%= f = form_for :foo, Routes.session_path(@socket, :create), [as: :session], fn f -> %>
+    <%= f = form_for @changeset, Routes.user_path(@socket, :create), [as: :session], fn f -> %>
       <div class="g--container">
         <header>
-          Sign in
+          Sign Up
         </header>
 
         <main>
@@ -20,15 +22,20 @@ defmodule PhrasingWeb.SessionLive.SignIn do
 
           <div class="g--input bottom">
             <%= label f, :password %>
-            <%= password_input f, :password %>
+            <%= password_input f, :encrypted_password %>
           </div>
         </main>
 
         <footer>
-          <%= submit "Sign in", class: "g--button" %>
+          <%= submit "Sign up", class: "g--button" %>
         </footer>
       </div>
     <% end %>
     """
+  end
+
+  def mount(_params, _session, socket) do
+    changeset = Accounts.change_user(%User{})
+    {:ok, assign(socket, changeset: changeset)}
   end
 end
