@@ -42,17 +42,19 @@ defmodule PhrasingWeb.SearchLive.Index do
   def render(assigns) do
     ~L"""
     <div class="search--index">
-      <%= if @error do %>
-        <h4><%= @error %></h4>
-      <% end %>
-      <%= if @message do %>
-        <h4><%= @message %></h4>
-      <% end %>
+      <main>
+        <%= if @error do %>
+          <h4><%= @error %></h4>
+        <% end %>
+        <%= if @message do %>
+          <h4><%= @message %></h4>
+        <% end %>
 
-      <%= live_component @socket, SearchLive.SearchField, search: assigns.search %>
+        <%= live_component @socket, SearchLive.SearchField, search: assigns.search %>
 
-      <%= render_body assigns %>
-      <h6><i>rendering <%= @state %></i></h6>
+        <%= render_body assigns %>
+        <h6 style="text-align: center"><i>rendering <%= @state %></i></h6>
+      </main>
     </div>
     """
   end

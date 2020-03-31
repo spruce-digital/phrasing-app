@@ -1,16 +1,5 @@
 /* This file is for your main application css. */
 
-* {
-  // font-family: "Avenir Next", sans-serif;
-  font-family: "Operator Mono", monospace;
-  margin: 0;
-  padding: 0;
-}
-
-button {
-  margin: 0;
-}
-
 @mixin break() {
   @media screen and (min-width: 768px) { @content; }
 }
@@ -63,11 +52,14 @@ button {
   }
 }
 
+@import "colors";
+
 $flag-icon-css-path: "../node_modules/flag-icon-css/flags";
 @import "~flag-icon-css/sass/flag-icon.scss";
 
 @import "fonts";
-@import "colors";
+@import "normalize";
+@import "typography";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
 @import "adder/adder";
 @import "layout/app";

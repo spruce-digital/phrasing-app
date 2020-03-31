@@ -1,7 +1,7 @@
 .g--container {
   $padding: 12px 18px;
 
-  background: $black--;
+  background: $color-card;
   box-shadow: 0 2px 8px rgba($black, 0.33);
   border-radius: 4px;
   overflow: hidden;
@@ -10,7 +10,7 @@
   margin: 0 auto;
 
   >header {
-    background: $black---;
+    background: $color-header;
     padding: $padding;
     color: $frost-;
     font-size: 20px;
@@ -28,7 +28,7 @@
 }
 
 .g--input {
-  $accent-color: $frost;
+  $accent-color: $color-field;
 
   border-bottom: 1px solid $accent-color;
   position: relative;
@@ -62,7 +62,7 @@
 }
 
 .g--button {
-  @include dark-hover(background, $frost-);
+  @include dark-hover(background, $color-icon);
   @include hoverable;
   display: block;
   border-radius: 4px;
