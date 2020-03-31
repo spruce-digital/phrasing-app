@@ -3,32 +3,54 @@ defmodule PhrasingWeb.SessionLive.SignIn do
   import Phoenix.HTML.Form
 
   alias PhrasingWeb.Router.Helpers, as: Routes
+  alias PhrasingWeb.UILive.Field
+  alias Phrasing.Accounts
 
   def render(assigns) do
+    form_opts = [id: __MODULE__, phx_change: :change]
+
     ~L"""
-    <%= f = form_for :foo, Routes.session_path(@socket, :create), [as: :session], fn f -> %>
+    <%= f = form_for @changeset, Routes.session_path(@socket, :create), form_opts %>
       <div class="g--container">
         <header>
           Sign in
         </header>
 
         <main>
-          <div class="g--input top">
-            <%= label f, :email %>
-            <%= text_input f, :email %>
-          </div>
+          <%= live_component @socket, Field.Text,
+            id: :email,
+            form: f,
+            attr: :email,
+            change_target: __MODULE__
+          %>
 
-          <div class="g--input bottom">
-            <%= label f, :password %>
-            <%= password_input f, :password %>
-          </div>
+          <%= live_component @socket, Field.Password,
+            id: :password,
+            form: f,
+            attr: :password,
+            change_target: __MODULE__
+          %>
         </main>
 
         <footer>
           <%= submit "Sign in", class: "g--button" %>
         </footer>
       </div>
-    <% end %>
+    </form>
     """
+  end
+
+  def mount(_params, _session, socket) do
+    changeset = Accounts.change_user_signin(%Accounts.User{})
+
+    {:ok, assign(socket, changeset: changeset)}
+  end
+
+  def handle_event("change", %{"user" => user_params}, socket) do
+    changeset =
+      %Accounts.User{}
+      |> Accounts.change_user_signin(user_params)
+
+    {:noreply, assign(socket, changeset: changeset)}
   end
 end

@@ -9,6 +9,7 @@ defmodule Phrasing.Accounts do
   alias Phrasing.Accounts.User
 
   def get_by_email(email) when is_nil(email), do: nil
+
   def get_by_email(email) do
     Repo.get_by(User, email: email)
   end
@@ -105,6 +106,10 @@ defmodule Phrasing.Accounts do
   """
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
+  end
+
+  def change_user_signin(%User{} = user, attrs \\ %{}) do
+    User.changeset_signin(user, attrs)
   end
 
   alias Phrasing.Accounts.UserLanguage
@@ -296,6 +301,7 @@ defmodule Phrasing.Accounts do
 
   """
   def change_profile(nil), do: change_profile(%Profile{})
+
   def change_profile(%Profile{} = profile) do
     Profile.changeset(profile, %{})
   end

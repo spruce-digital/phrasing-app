@@ -3,10 +3,10 @@ defmodule PhrasingWeb.SessionController do
 
   alias Phrasing.Accounts
 
-  def create(conn, %{"session" => auth_params}) do
-    user = Accounts.get_by_email(auth_params["email"])
+  def create(conn, %{"user" => user_params}) do
+    user = Accounts.get_by_email(user_params["email"])
 
-    case Bcrypt.check_pass(user, auth_params["password"]) do
+    case Bcrypt.check_pass(user, user_params["password"]) do
       {:ok, user} ->
         conn
         |> put_session(:current_user_id, user.id)

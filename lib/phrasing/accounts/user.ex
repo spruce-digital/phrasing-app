@@ -5,11 +5,15 @@ defmodule Phrasing.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :password, :string, virtual: true
     field :encrypted_password, :string
     has_one :profile, Phrasing.Accounts.Profile
 
     has_many :user_languages, Phrasing.Accounts.UserLanguage
-    many_to_many :languages, Phrasing.Dict.Language, join_through: "user_languages", on_replace: :delete
+
+    many_to_many :languages, Phrasing.Dict.Language,
+      join_through: "user_languages",
+      on_replace: :delete
 
     timestamps()
   end
@@ -23,5 +27,12 @@ defmodule Phrasing.Accounts.User do
     |> validate_required([:email, :encrypted_password])
     |> unique_constraint(:email)
     |> update_change(:encrypted_password, &Bcrypt.hash_pwd_salt/1)
+  end
+
+  @doc false
+  def changeset_signin(user, attrs) do
+    user
+    |> cast(attrs, [:email, :password])
+    |> validate_required([:email, :password])
   end
 end
