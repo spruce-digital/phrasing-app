@@ -14,7 +14,7 @@ defmodule PhrasingWeb.UILive.Navigation do
           <li class="home"><a href="/">Phrasing</a></li>
           <li class="spacer"></li>
 
-          <%= if assigns[:user_id] do %>
+          <%= if @user != nil do %>
             <li><a href="/cards">Cards</a></li>
             <li class="profile">
               <i class="fal fa-user-circle" phx-click="toggle_dropdown" phx-target=".ui--navigation"></i>
