@@ -18,22 +18,29 @@ defmodule PhrasingWeb.SessionLive.SignIn do
 
         <main>
           <%= live_component @socket, Field.Text,
-            id: :email,
-            form: f,
             attr: :email,
-            change_target: __MODULE__
+            change_target: __MODULE__,
+            form: f,
+            icon: "far fa-at",
+            id: :email
           %>
 
           <%= live_component @socket, Field.Password,
-            id: :password,
-            form: f,
             attr: :password,
-            change_target: __MODULE__
+            change_target: __MODULE__,
+            form: f,
+            icon: "far fa-key",
+            id: :password
           %>
+
         </main>
 
         <footer>
-          <%= submit "Sign in", class: "g--button" %>
+          <%= submit "Sign in", class: "g--button-full" %>
+
+          <div>
+            Already have an account? <a>Sign In</a> here
+          </div>
         </footer>
       </div>
     </form>
@@ -45,6 +52,8 @@ defmodule PhrasingWeb.SessionLive.SignIn do
 
     {:ok, assign(socket, changeset: changeset)}
   end
+
+  def handle_event("focus", _params, socket), do: {:noreply, socket}
 
   def handle_event("change", %{"user" => user_params}, socket) do
     changeset =

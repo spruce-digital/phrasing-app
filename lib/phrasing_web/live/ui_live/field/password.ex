@@ -5,15 +5,24 @@ defmodule PhrasingWeb.UILive.Field.Password do
 
   def render(assigns) do
     ~L"""
-    <div class="ui--field <%= if @activated, do: "activated" %>" id="<%= @id %>">
-      <%= label @form, @attr %>
-      <%= password_input @form, @attr,
-        phx_focus: :focus,
-        phx_blur: :blur,
-        phx_target: "##{@id}",
-        value: input_value(@form, @attr)
-      %>
-    </div>
+    <article class="ui--field <%= if @activated, do: "activated" %>" id="<%= @id %>">
+      <header>
+        <%= label @form, @attr %>
+      </header>
+
+      <main>
+        <%= if assigns[:icon] do %>
+          <i class="icon <%= @icon %>"></i>
+        <% end %>
+
+        <%= password_input @form, @attr,
+          phx_focus: :focus,
+          phx_blur: :blur,
+          phx_target: "##{@id}",
+          value: input_value(@form, @attr)
+        %>
+      </main>
+    </article>
     """
   end
 

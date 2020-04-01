@@ -1,18 +1,26 @@
 defmodule PhrasingWeb.UILive.Field.Text do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
-  alias Ecto.Changeset
 
   def render(assigns) do
     ~L"""
-    <div class="ui--field <%= if @activated, do: "activated" %>" id="<%= @id %>">
-      <%= label @form, @attr %>
-      <%= text_input @form, @attr,
-        phx_focus: :focus,
-        phx_blur: :blur,
-        phx_target: "##{@id}"
-      %>
-    </div>
+    <article class="ui--field <%= if @activated, do: "activated" %>" id="<%= @id %>">
+      <header>
+        <%= label @form, @attr %>
+      </header>
+
+      <main>
+        <%= if assigns[:icon] do %>
+          <i class="icon <%= @icon %>"></i>
+        <% end %>
+
+        <%= text_input @form, @attr,
+          phx_focus: :focus,
+          phx_blur: :blur,
+          phx_target: "##{@id}"
+        %>
+      </main>
+    </article>
     """
   end
 

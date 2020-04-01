@@ -1,29 +1,27 @@
 .g--container {
-  $padding: 12px 18px;
-
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
   background: $color-card;
   box-shadow: 0 2px 8px rgba($black, 0.33);
   border-radius: 4px;
   overflow: hidden;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
 
   >header {
-    background: $color-header;
-    padding: $padding;
-    color: $frost-;
-    font-size: 20px;
-    // box-shadow: 0 1px 1px $black-;
+    padding: 24px 0 12px;
+    font-size: 22px;
+    text-align: center;
+    color: $color-icon;
   }
 
   >main {
-    padding: $padding;
+    padding: 24px;
   }
 
   >footer {
     @include flex-center;
-    padding: 0 12px 12px;
+    padding: 12px 24px 24px;
+    flex-direction: column;
   }
 }
 
@@ -71,4 +69,10 @@
   font-size: 14px;
   font-weight: 500;
   padding: 12px 18px;
+  margin-bottom: 12px;
+}
+
+.g--button-full {
+  @extend .g--button;
+  width: 100%;
 }

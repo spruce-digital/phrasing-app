@@ -1,3 +1,4 @@
+// Nord Theme
 $white: #fff;
 $white-: #F8F9FB;
 $white--: #ECEFF4;
@@ -22,11 +23,16 @@ $yellow: #EBCB8B;
 $green: #A3BE8C;
 $purple: #B48EAD;
 
-
+// UI Colors
 $color-background: $black-;
 $color-card: $black--;
-$color-header: $black---;
-$color-field: $frost;
+$color-field: $black----;
 $color-logo: $frost-;
 $color-icon: $frost---;
 $color-text: $white----;
+$color-border: $black----;
+$color-label: $frost;
+
+// Borders
+$border-radius: 6px;
+$font-size: 18px;

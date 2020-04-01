@@ -1,45 +1,51 @@
 .ui--field {
-  $accent-color: $frost;
-
-  border-bottom: 1px solid $accent-color;
+  height: 72px;
+  padding-bottom: 12px;
   position: relative;
-  height: 24px;
-  margin: 24px 0;
+  transition: all 100ms ease-out;
 
   &.top { margin-top: 12px; }
   &.bottom { margin-bottom: 12px; }
 
-  >label {
-    transition: all 200ms ease-in-out;
-    position: absolute;
-    color: rgba($accent-color, 0.6);
+  header {
+    padding-bottom: 4px;
   }
 
-  &.activated >label {
-    transform-origin: 0 0;
-    transform: scale(0.66) translateY(-24px);
+  label {
+    color: $color-text;
+    font-size: $font-size / 1.5;
   }
 
-  >input {
-    margin: 0;
-    padding: 0;
+  main {
+    border-radius: $border-radius;
+    background: $color-field;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+  }
+
+  &.activated main {
+    border-color: $color-text;
+  }
+
+  main .icon {
+    padding-right: 12px;
+    color: $color-card;
+  }
+
+  input {
+    background: none;
     color: $color-text;
     font-size: 18px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    border: none;
+    flex: 1;
+    padding: 12px 0;
   }
 
-  >input:focus {
+  input:focus {
     outline: none;
-  }
-
-  >input[type="text"] {
-    background: none;
-    border: none;
-    width: 100%;
-  }
-
-  >input[type="password"] {
-    background: none;
-    border: none;
-    width: 100%;
   }
 }
