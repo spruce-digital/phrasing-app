@@ -1,7 +1,6 @@
 defmodule PhrasingWeb.UILive.Field.Password do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
-  alias Ecto.Changeset
 
   def render(assigns) do
     ~L"""
@@ -31,10 +30,12 @@ defmodule PhrasingWeb.UILive.Field.Password do
   end
 
   def handle_event("focus", _params, socket) do
+    IO.puts("focus password")
     {:noreply, assign(socket, activated: true)}
   end
 
   def handle_event("blur", _params, socket) do
+    IO.puts("blur password")
     value = input_value(socket.assigns.form, socket.assigns.attr)
 
     if value == nil || value == "" do

@@ -13,24 +13,25 @@ defmodule PhrasingWeb.SessionLive.SignIn do
     <%= f = form_for @changeset, Routes.session_path(@socket, :create), form_opts %>
       <div class="g--container">
         <header>
-          Sign in
+          <h1>
+            Sign in
+          </h1>
         </header>
 
         <main>
-          <%= live_component @socket, Field.Text,
+          <%= live_component @socket, Field.Text, id: :email,
             attr: :email,
             change_target: __MODULE__,
             form: f,
             icon: "far fa-at",
-            id: :email
+            autofocus: true
           %>
 
-          <%= live_component @socket, Field.Password,
+          <%= live_component @socket, Field.Password, id: :password,
             attr: :password,
             change_target: __MODULE__,
             form: f,
-            icon: "far fa-key",
-            id: :password
+            icon: "far fa-key"
           %>
 
         </main>
@@ -38,9 +39,9 @@ defmodule PhrasingWeb.SessionLive.SignIn do
         <footer>
           <%= submit "Sign in", class: "g--button-full" %>
 
-          <div>
+          <h5>
             Already have an account? <a>Sign In</a> here
-          </div>
+          </h5>
         </footer>
       </div>
     </form>

@@ -29,10 +29,12 @@ defmodule PhrasingWeb.UILive.Field.Text do
   end
 
   def handle_event("focus", _params, socket) do
+    IO.puts("focus text")
     {:noreply, assign(socket, activated: true)}
   end
 
   def handle_event("blur", _params, socket) do
+    IO.puts("blur text")
     value = input_value(socket.assigns.form, socket.assigns.attr)
 
     if value == nil || value == "" do
