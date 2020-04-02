@@ -13,4 +13,29 @@ section.layout--live {
     text-align: center;
     padding: 36px;
   }
+
+  >main >.alert {
+    border-radius: $border-radius;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    display: block;
+    margin: 0 auto 24px;
+    max-width: 600px;
+    padding: 12px;
+    text-align: center;
+    width: 100%;
+  }
+
+  >main >.alert-info {
+    border-color: $green;
+    color: $green;
+    background-color: rgba($green, 0.25);
+  }
+
+  >main >.alert-error {
+    border-color: $red;
+    color: $red;
+    background-color: rgba($red, 0.25);
+  }
 }
