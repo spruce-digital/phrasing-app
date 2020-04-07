@@ -1,70 +1,26 @@
 /* This file is for your main application css. */
 
-@mixin break() {
-  @media screen and (min-width: 768px) { @content; }
-}
-
-@mixin flex-center() {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
-@mixin flex-column() {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-@mixin dark-hover($property, $value, $percent: 10%) {
-  #{$property}: $value;
-
-  &:hover {
-    #{$property}: darken($value, $percent);
-  }
-}
-
-@mixin light-hover($property, $value, $percent: 10%) {
-  #{$property}: $value;
-
-  &:hover {
-    #{$property}: lighten($value, $percent);
-  }
-}
-
-@mixin hoverable() {
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-@mixin hover($property, $value) {
-  &:hover {
-    #{$property}: $value;
-  }
-}
-
-@mixin invert-hover($property, $no-hover, $hover) {
-  #{$property}: $no-hover;
-
-  &:hover {
-    #{$property}: $hover;
-  }
-}
-
+/* SASS MODULES */
 @import "vars";
+@import "mixins";
 
+/* SETUP MODULES */
+@import "normalize";
+@import "fonts";
+@import "typography";
+
+/* DEPENDENCY MODULES */
 $flag-icon-css-path: "../node_modules/flag-icon-css/flags";
 @import "~flag-icon-css/sass/flag-icon.scss";
 
-@import "fonts";
-@import "normalize";
-@import "typography";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
+
+/* APP MODULES */
 @import "adder/adder";
 @import "layout/app";
 @import "layout/live";
 @import "library/index";
+@import "profile";
 @import "search/index";
 @import "srs/flashcards";
 @import "ui/fields";

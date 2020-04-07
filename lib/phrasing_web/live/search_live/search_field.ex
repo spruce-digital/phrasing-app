@@ -10,7 +10,7 @@ defmodule PhrasingWeb.SearchLive.SearchField do
   def render(assigns) do
     ~L"""
     <form class="search--search-field" phx-submit="search" phx-change="query">
-      <input name="search[text]" value="<%= @search.text %>" />
+      <input name="search[text]" value="<%= @search.text %>" placeholder="Search translations" />
     </form>
     """
   end

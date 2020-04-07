@@ -7,18 +7,18 @@
   border-radius: 4px;
   overflow: hidden;
 
-  >header {
+  >header, .g--container--header {
     padding: 24px 0 0px;
     font-size: 22px;
     text-align: center;
     color: $color-icon;
   }
 
-  >main {
+  >main, .g--container--main {
     padding: 24px;
   }
 
-  >footer {
+  >footer, .g--container--footer {
     @include flex-center;
     padding: 0 24px 24px;
     flex-direction: column;

@@ -9,42 +9,56 @@ defmodule PhrasingWeb.ProfileLive.Index do
 
   def render(assigns) do
     ~L"""
-    <%= f = form_for @changeset, "#", [phx_change: :validate, phx_submit: :save] %>
-      <%= hidden_input f, :id %>
+    <section class="profile--index">
+      <%= f = form_for @changeset, "#", [phx_change: :validate, phx_submit: :save] %>
+        <%= hidden_input f, :id %>
 
-      <h2 style="font-family: Baveuse">Profile</h2>
-      <%= inputs_for f, :profile, fn ff -> %>
-        <%= label ff, :name %>
-        <%= text_input ff, :name %>
+        <header class="g--container--header">
+          <h1>Profile</h1>
+        </header>
 
-        <%= label ff, :birthday %>
-        <%= date_select ff, :birthday %>
+        <main class="g--container--main">
+          <%= inputs_for f, :profile, fn ff -> %>
+            <%= label ff, :name %>
+            <%= text_input ff, :name %>
 
-        <%= label ff, :gender %>
-        <%= select ff, :gender, ["Male": "male", "Female": "female", "Other": "other"], prompt: "Select" %>
-      <% end %>
+            <%= label ff, :birthday %>
+            <%= date_select ff, :birthday %>
 
-      <h2 style="font-family: Baveuse">Languages</h2>
-      <%= for lang <- @languages do %>
-        <div>
-          <%= lang.name %>
+            <%= label ff, :gender %>
+            <%= select ff, :gender, ["Male": "male", "Female": "female", "Other": "other"], prompt: "Select" %>
+          <% end %>
+        </main>
 
-          <input
-            type="checkbox"
-            <%= if LanguageLevel.get_level(@changeset, lang) == 0, do: "checked" %>
-            name="<%= f.name %>[language_levels][<%= lang.id %>][learning]"/>
-          Learning
+        <header class="g--container--header">
+          <h1>Languages</h1>
+        </header>
 
-          <input
-            type="checkbox"
-            <%= if LanguageLevel.get_level(@changeset, lang) == 100, do: "checked" %>
-            name="<%= f.name %>[language_levels][<%= lang.id %>][native]"/>
-          Native
-        </div>
-      <% end %>
+        <main class="g--container--main">
+          <%= for lang <- @languages do %>
+            <div>
+              <%= lang.name %>
 
-      <%= submit "Save" %>
-    </form>
+              <input
+                type="checkbox"
+                <%= if LanguageLevel.get_level(@changeset, lang) == 0, do: "checked" %>
+                name="<%= f.name %>[language_levels][<%= lang.id %>][learning]"/>
+              Learning
+
+              <input
+                type="checkbox"
+                <%= if LanguageLevel.get_level(@changeset, lang) == 100, do: "checked" %>
+                name="<%= f.name %>[language_levels][<%= lang.id %>][native]"/>
+              Native
+            </div>
+          <% end %>
+        </main>
+
+        <footer class="g--container--footer">
+          <%= submit "Save", class: "g--button-full" %>
+        </footer>
+      </form>
+    </section>
     """
   end
 
@@ -58,7 +72,8 @@ defmodule PhrasingWeb.ProfileLive.Index do
 
     changeset = Accounts.change_user(user)
 
-    {:ok, assign(socket, user_id: user_id, changeset: changeset, languages: languages, user: user)}
+    {:ok,
+     assign(socket, user_id: user_id, changeset: changeset, languages: languages, user: user)}
   end
 
   def parse_params(user_params, user_id) do
@@ -88,8 +103,8 @@ defmodule PhrasingWeb.ProfileLive.Index do
     case Accounts.update_user(socket.assigns.user, user_params) do
       {:ok, user} ->
         {:noreply,
-          socket
-          |> put_flash(:info, "Profile updated successfully")}
+         socket
+         |> put_flash(:info, "Profile updated successfully")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

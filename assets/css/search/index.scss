@@ -207,7 +207,12 @@ $search--phrase---border-radius: 4px;
     border-radius: 4px;
     border: none;
     font-size: 18px;
-    color: $color-text;
+    color: $color-icon;
+  }
+
+  @include placeholder {
+    color: $color-icon;
+    opacity: 0.5;
   }
 }
 
