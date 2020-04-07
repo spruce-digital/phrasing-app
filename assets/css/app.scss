@@ -13,18 +13,18 @@
 $flag-icon-css-path: "../node_modules/flag-icon-css/flags";
 @import "~flag-icon-css/sass/flag-icon.scss";
 
-@import "../../deps/phoenix_live_view/assets/css/live_view.css";
-
-/* APP MODULES */
-@import "adder/adder";
-@import "layout/app";
-@import "layout/live";
-@import "library/index";
-@import "profile";
-@import "search/index";
-@import "srs/flashcards";
+/* UI MODULES */
 @import "ui/fields";
 @import "ui/general";
 @import "ui/inputs";
 @import "ui/navigation";
 @import "ui/search";
+
+/* APP MODULES */
+@import "account";
+@import "adder/adder";
+@import "layout/app";
+@import "layout/live";
+@import "library/index";
+@import "search/index";
+@import "srs/flashcards";

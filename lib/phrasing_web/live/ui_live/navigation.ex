@@ -20,7 +20,7 @@ defmodule PhrasingWeb.UILive.Navigation do
               <i class="fal fa-user-circle" phx-click="toggle_dropdown" phx-target=".ui--navigation"></i>
               <%= if @open do %>
                 <ul class="dropdown">
-                  <li><a href="/profile">Profile</a></li>
+                  <li><a href="/account">Account</a></li>
                   <li><%= link "Sign Out", to: Routes.session_path(@socket, :delete), method: :delete %></li>
                 </ul>
               <% end %>

@@ -14,13 +14,24 @@ import css from '../css/app.scss'
 import 'phoenix_html'
 import {Socket} from 'phoenix'
 import LiveSocket from 'phoenix_live_view'
+import _ from 'lodash'
 
 window.__phrasing__ = {}
 const Hooks = {}
 
+let serializeForm = (form, meta = {}) => {
+  const memo = {}
+  const formData = new FormData(form)
+
+  for(let [key, val] of formData.entries()) {
+    _.set(memo, key, val)
+  }
+
+  return memo
+}
+
 Hooks.Adder = {
   mounted() {
-    console.log('mounted')
     window.__phrasing__.pushAdderEvent = this.pushEvent.bind(this)
     const height = this.el.offsetHeight
     this.el.style.transform = `translateY(-${height}px)`
@@ -29,6 +40,30 @@ Hooks.Adder = {
     const height = this.el.offsetHeight
     this.el.style.transform = `translateY(-${height}px)`
   },
+}
+
+Hooks.SelectField = {
+  mounted() {
+    const selector = '#' + this.el.id
+    const query = this.el.querySelector('input[name=query]')
+
+    query.addEventListener('blur', () => {
+      setTimeout(() => this.pushEventTo(selector, 'blur', {}), 0)
+    })
+  },
+  updated() {
+    const selector = '#' + this.el.id
+    const input = this.el.querySelector('input[type=hidden]')
+    const options = this.el.querySelectorAll('li')
+
+    options.forEach(opt => opt.addEventListener('click', () => {
+      const event = document.createEvent('HTMLEvents')
+      input.value = opt.dataset.value
+
+      this.pushEvent('validate', serializeForm(input.form))
+      this.pushEventTo(selector, 'select', {value: input.value})
+    }))
+  }
 }
 
 window.Add = {

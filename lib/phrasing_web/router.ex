@@ -9,7 +9,7 @@ defmodule PhrasingWeb.Router do
     plug :fetch_live_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :put_live_layout, {PhrasingWeb.LayoutView, "app.html"}
+    plug :put_root_layout, {PhrasingWeb.LayoutView, "app.html"}
   end
 
   pipeline :auth do
@@ -32,7 +32,7 @@ defmodule PhrasingWeb.Router do
     pipe_through :check_auth
 
     live "/", SearchLive.Index, :index
-    live "/profile", ProfileLive.Index, :index
+    live "/account", AccountLive.Index, :index
     get "/library", LibraryController, :index
     get "/flashcards", SRSController, :flashcards
     get "/cards", SRSController, :cards

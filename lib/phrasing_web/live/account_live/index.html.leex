@@ -1,0 +1,70 @@
+<section class="account--index">
+  <%= f = form_for @changeset, "#", form_opts() %>
+    <%= hidden_input f, :id %>
+
+    <header class="g--container--header">
+      <h1>Login</h1>
+    </header>
+
+    <main class="g--container--main">
+      <%= live_component @socket, Field.Text, id: :email,
+        attr: :email,
+        change_target: __MODULE__,
+        form: f,
+        icon: "far fa-at"
+      %>
+    </main>
+
+    <header class="g--container--header">
+      <h1>Profile</h1>
+    </header>
+
+    <main class="g--container--main">
+      <%= live_component @socket, Field.Text, id: :name,
+        attr: :name,
+        change_target: __MODULE__,
+        form: f,
+        icon: "far fa-id-badge"
+      %>
+
+      <%= live_component @socket, Field.Select, id: :gender,
+        attr: :gender,
+        change_target: __MODULE__,
+        form: f,
+        icon: "far fa-venus-mars",
+        options: ["Male", "Female", "Other"]
+      %>
+
+      <%= live_component @socket, Field.Text, id: :birthday,
+        attr: :birthday,
+        change_target: __MODULE__,
+        form: f,
+        icon: "far fa-birthday-cake"
+      %>
+    </main>
+
+    <header class="g--container--header">
+      <h1>Languages</h1>
+    </header>
+
+    <main class="g--container--main">
+      <%= live_component @socket, Field.Text, id: :native_languages,
+        attr: :native_languages,
+        change_target: __MODULE__,
+        form: f,
+        icon: "fas fa-user-astronaut"
+      %>
+
+      <%= live_component @socket, Field.Text, id: :learning_languages,
+        attr: :learning_languages,
+        change_target: __MODULE__,
+        form: f,
+        icon: "fas fa-user-graduate"
+      %>
+    </main>
+
+    <footer class="g--container--footer">
+      <%= submit "Save", class: "g--button-full" %>
+    </footer>
+  </form>
+</section>

@@ -9,7 +9,7 @@ defmodule Phrasing.Accounts.User do
     field :encrypted_password, :string
     has_one :profile, Phrasing.Accounts.Profile
 
-    has_many :user_languages, Phrasing.Accounts.UserLanguage
+    has_many :user_languages, Phrasing.Accounts.UserLanguage, on_replace: :delete
 
     many_to_many :languages, Phrasing.Dict.Language,
       join_through: "user_languages",

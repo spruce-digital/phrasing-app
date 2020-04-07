@@ -20,7 +20,7 @@ defmodule Phrasing.MixProject do
   def application do
     [
       mod: {Phrasing.Application, []},
-      extra_applications: [:logger, :runtime_tools],
+      extra_applications: [:logger, :runtime_tools]
       # applications: [:edeliver],
     ]
   end
@@ -43,12 +43,12 @@ defmodule Phrasing.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:paasaa, "~> 0.5.0"},
-      {:phoenix, "~> 1.4.15"},
+      {:phoenix, "~> 1.4.16"},
       {:phoenix_ecto, "~> 4.0"},
       {:phoenix_html, "~> 2.14"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       # {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
-      {:phoenix_live_view, "~> 0.9.0"},
+      {:phoenix_live_view, "~> 0.11.0"},
       {:phoenix_pubsub, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.1"},
@@ -56,7 +56,7 @@ defmodule Phrasing.MixProject do
       {:timex, "~> 3.6"},
       {:triq, "~> 1.3", only: [:dev, :test]},
       {:edeliver, "~> 1.8.0"},
-      {:distillery, "~> 2.0", warn_missing: false},
+      {:distillery, "~> 2.0", warn_missing: false}
     ]
   end
 

@@ -1,3 +1,7 @@
+.ui--field---shadow {
+  box-shadow: 0 1px 2px $black-;
+}
+
 .ui--field {
   height: 72px;
   padding-bottom: 12px;
@@ -24,13 +28,18 @@
     align-items: center;
   }
 
-  &.activated main {
+  &.active main {
+    @extend .ui--field---shadow;
     border-color: $color-text;
   }
 
   main .icon {
     padding-right: 12px;
     color: $color-card;
+  }
+
+  &.active main .icon {
+    color: $color-active;
   }
 
   input {
@@ -47,5 +56,49 @@
 
   input:focus {
     outline: none;
+  }
+}
+
+.ui--field--select {
+  @extend .ui--field;
+
+  main {
+    position: relative;
+  }
+
+  &.active main {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  &.active main::before {
+    background: $color-card;
+    content: '';
+    height: 1px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
+  .dropdown {
+    @extend .ui--field---shadow;
+    background: $color-field;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 100;
+    overflow: scroll;
+    max-height: 144px;
+  }
+
+  .dropdown li {
+    @include hoverable;
+    @include dark-hover(background, $color-field);
+    list-style-type: none;
+    padding: 12px;
   }
 }

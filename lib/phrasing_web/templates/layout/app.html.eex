@@ -11,7 +11,7 @@
   <body>
     <section class="layout--app">
       <main role="main">
-        <%= render @view_module, @view_template, assigns %>
+        <%= @inner_content %>
       </main>
 
       <%# <%= live_render(@conn, PhrasingWeb.AdderLive.Adder, session: Plug.Conn.get_session(@conn), container: %>

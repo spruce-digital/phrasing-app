@@ -7,6 +7,20 @@ defmodule Phrasing.Accounts do
   alias Phrasing.Repo
 
   alias Phrasing.Accounts.User
+  alias Phrasing.Accounts.Form
+
+  @doc """
+  Returns a new form changeset to change account data
+
+  ## Examples
+
+      iex> change_form(%Form{})
+      %Ecto.Changeset{source: %Form{}}
+
+  """
+  def change_form(%Form{} = form, attrs \\ %{}) do
+    Form.changeset(form, attrs)
+  end
 
   def get_by_email(email) when is_nil(email), do: nil
 
