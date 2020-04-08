@@ -35,7 +35,7 @@
         options: ["Male", "Female", "Other"]
       %>
 
-      <%= live_component @socket, Field.Text, id: :birthday,
+      <%= live_component @socket, Field.Date, id: :birthday,
         attr: :birthday,
         change_target: __MODULE__,
         form: f,

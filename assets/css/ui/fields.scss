@@ -52,10 +52,16 @@
     border: none;
     flex: 1;
     padding: 12px 0;
+    font-family: "Operator Mono", monospace;
   }
 
   input:focus {
     outline: none;
+  }
+
+  @placeholder {
+    color: $color-icon;
+    opacity: 0.5;
   }
 }
 
