@@ -3,7 +3,7 @@
 }
 
 .ui--field {
-  height: 72px;
+  min-height: 72px;
   padding-bottom: 12px;
   position: relative;
   transition: all 100ms ease-out;
@@ -106,5 +106,48 @@
     @include dark-hover(background, $color-field);
     list-style-type: none;
     padding: 12px;
+  }
+}
+
+.ui--field--token {
+  @extend .ui--field--select;
+
+  main {
+    display: flex;
+  }
+
+  main > form {
+    flex: 1;
+  }
+
+  .token-list {
+    flex: 2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    overflow: scroll;
+  }
+
+  .token {
+    padding: 4px 6px;
+    border: 1px solid $color-text;
+    margin: 6px 6px 6px 0;
+    font-size: 12px;
+    border-radius: $border-radius;
+    transition: all 200ms ease-out;
+  }
+
+  .token:hover {
+    background: rgba($red, 0.2);
+    border-color: $red;
+    color: $red;
+    cursor: pointer;
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+
+  .token.destroy {
+    opacity: 0;
+    transform: scale(0.5);
   }
 }

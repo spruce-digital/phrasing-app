@@ -12,8 +12,8 @@ defmodule Phrasing.Accounts.Form do
     field :name, :string
 
     # Accounts.UserLanguage
-    field :native_languages, {:array, :string}
-    field :learning_languages, {:array, :string}
+    field :native_languages, {:array, :string}, default: []
+    field :learning_languages, {:array, :string}, default: []
   end
 
   @allowed_fields [:email, :birthday, :gender, :name, :native_languages, :learning_languages]

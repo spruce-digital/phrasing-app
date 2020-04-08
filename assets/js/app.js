@@ -24,7 +24,11 @@ let serializeForm = (form, meta = {}) => {
   const formData = new FormData(form)
 
   for(let [key, val] of formData.entries()) {
-    _.set(memo, key, val)
+    if (key.endsWith('[]')) {
+      _.update(memo, key.slice(0, -2), x => (x || []).concat([val]))
+    } else {
+      _.set(memo, key, val)
+    }
   }
 
   return memo
@@ -57,12 +61,59 @@ Hooks.SelectField = {
     const options = this.el.querySelectorAll('li')
 
     options.forEach(opt => opt.addEventListener('click', () => {
-      const event = document.createEvent('HTMLEvents')
       input.value = opt.dataset.value
 
       this.pushEvent('validate', serializeForm(input.form))
       this.pushEventTo(selector, 'select', {value: input.value})
     }))
+  }
+}
+
+Hooks.TokenField = {
+  mounted() {
+    this.selector = '#' + this.el.id
+    this.onClick = Hooks.TokenField.onClick.bind(this)
+    this.onDocumentClick = Hooks.TokenField.onDocumentClick.bind(this)
+    this.pushCompEvent = (action, args) => (
+      this.pushEventTo(this.selector, action, args)
+    )
+
+    this.events.call(this, 'add')
+  },
+  updated() {
+    const isStale = this.el.querySelector('input[type=hidden][data-stale]')
+
+    if (isStale) {
+      this.pushEvent('validate', serializeForm(isStale.form))
+    }
+  },
+  onClick(event) {
+    const tokens = [...this.el.querySelectorAll('.token')]
+    const options = [...this.el.querySelectorAll('li')]
+    const params = {value: "" + event.target.dataset.value}
+
+    if (tokens.includes(event.target)) {
+      token.classList.add('destroy')
+      setTimeout(() => {
+        this.pushCompEvent('destroy', params)
+      }, 200)
+    }
+
+    if (options.includes(event.target)) {
+      this.pushCompEvent('select', params)
+    }
+  },
+  onDocumentClick(event) {
+    if (!this.el.contains(event.target)) {
+      this.pushCompEvent('blur', {})
+    }
+  },
+  beforeDestroy() {
+    this.events.call(this, 'remove')
+  },
+  events(action) {
+    this.el[action + 'EventListener']('click', this.onClick)
+    document[action + 'EventListener']('click', this.onDocumentClick)
   }
 }
 

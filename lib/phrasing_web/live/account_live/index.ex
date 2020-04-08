@@ -10,6 +10,10 @@ defmodule PhrasingWeb.AccountLive.Index do
 
   def form_opts, do: [phx_change: :validate, phx_submit: :save, id: __MODULE__]
 
+  def getLanguageName(languages, id) do
+    Enum.find(languages, fn l -> to_string(l.id) == to_string(id) end).name
+  end
+
   def mount(_params, %{"current_user_id" => user_id}, socket) do
     languages = Dict.list_languages()
 

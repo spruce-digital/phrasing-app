@@ -48,18 +48,22 @@
     </header>
 
     <main class="g--container--main">
-      <%= live_component @socket, Field.Text, id: :native_languages,
+      <%= live_component @socket, Field.Token, id: :native_languages,
         attr: :native_languages,
         change_target: __MODULE__,
         form: f,
-        icon: "fas fa-user-astronaut"
+        getLabel: fn id -> getLanguageName(@languages, id) end,
+        icon: "fas fa-user-astronaut",
+        options: Enum.map(@languages, &(&1.id))
       %>
 
-      <%= live_component @socket, Field.Text, id: :learning_languages,
+      <%= live_component @socket, Field.Token, id: :learning_languages,
         attr: :learning_languages,
         change_target: __MODULE__,
         form: f,
-        icon: "fas fa-user-graduate"
+        getLabel: fn id -> getLanguageName(@languages, id) end,
+        icon: "fas fa-user-graduate",
+        options: Enum.map(@languages, &(&1.id))
       %>
     </main>
 
