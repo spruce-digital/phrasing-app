@@ -2,6 +2,12 @@ defmodule PhrasingWeb.UILive.Field.Select do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
 
+  def render_label(assigns, ""), do: ""
+
+  def render_label(assigns, value) do
+    if assigns[:getLabel] && value, do: assigns.getLabel.(value), else: value
+  end
+
   def render(assigns) do
     ~L"""
     <article
@@ -34,7 +40,7 @@ defmodule PhrasingWeb.UILive.Field.Select do
             <ul>
               <%= for option <- @visible_options do %>
                 <li data-value="<%= option %>">
-                  <%= option %>
+                  <%= render_label(assigns, option) %>
                 </li>
               <% end %>
             </ul>
@@ -50,11 +56,14 @@ defmodule PhrasingWeb.UILive.Field.Select do
   end
 
   def update(assigns, socket) do
+    attr = assigns[:attr] || assigns[:id]
+
     socket =
       socket
       |> assign(assigns)
       |> assign(visible_options: assigns[:options])
-      |> assign(value: input_value(assigns.form, assigns.attr))
+      |> assign(:attr, attr)
+      |> assign(value: render_label(assigns, input_value(assigns.form, attr)))
 
     {:ok, socket}
   end
@@ -70,12 +79,17 @@ defmodule PhrasingWeb.UILive.Field.Select do
   def handle_event("filter", %{"query" => query}, socket) do
     visible_options =
       socket.assigns.options
-      |> Enum.filter(fn opt -> String.contains?(String.downcase(opt), String.downcase(query)) end)
+      |> Enum.filter(fn opt ->
+        render_label(socket.assigns, opt)
+        |> to_string()
+        |> String.downcase()
+        |> String.contains?(String.downcase(query))
+      end)
 
     {:noreply, assign(socket, visible_options: visible_options)}
   end
 
   def handle_event("select", %{"value" => value}, socket) do
-    {:noreply, assign(socket, active: false, value: value)}
+    {:noreply, assign(socket, active: false, value: render_label(socket.assigns, value))}
   end
 end

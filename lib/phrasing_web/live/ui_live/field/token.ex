@@ -2,6 +2,10 @@ defmodule PhrasingWeb.UILive.Field.Token do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
 
+  def render_label(assigns, value) do
+    if assigns[:getLabel], do: assigns.getLabel.(value), else: value
+  end
+
   def render(assigns) do
     ~L"""
     <article
@@ -40,7 +44,7 @@ defmodule PhrasingWeb.UILive.Field.Token do
             />
 
             <div class="token" data-value="<%= v %>">
-              <%= if assigns[:getLabel], do: @getLabel.(v), else: v %>
+              <%= render_label(assigns, v) %>
             </div>
           <% end %>
         </div>
@@ -50,11 +54,7 @@ defmodule PhrasingWeb.UILive.Field.Token do
             <ul>
               <%= for option <- @visible_options do %>
                 <li data-value="<%= option %>">
-                  <%= if assigns[:getLabel] do %>
-                    <%= @getLabel.(option) %>
-                  <% else %>
-                    <%= option %>
-                  <% end %>
+                  <%= render_label(assigns, option) %>
                 </li>
               <% end %>
             </ul>
@@ -91,7 +91,7 @@ defmodule PhrasingWeb.UILive.Field.Token do
     visible_options =
       socket.assigns.options
       |> Enum.filter(fn opt ->
-        opt
+        render_label(socket.assigns, opt)
         |> to_string()
         |> String.downcase()
         |> String.contains?(String.downcase(query))

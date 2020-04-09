@@ -1,4 +1,4 @@
-defmodule Phrasing.Accounts.UserLanguage do
+defmodule Phrasing.Account.UserLanguage do
   use Ecto.Schema
   import Ecto.Changeset
 

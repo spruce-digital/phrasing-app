@@ -1,15 +1,17 @@
-defmodule Phrasing.Accounts.User do
+defmodule Phrasing.Account.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Bcrypt
 
   schema "users" do
     field :email, :string
-    field :password, :string, virtual: true
     field :encrypted_password, :string
-    has_one :profile, Phrasing.Accounts.Profile
+    field :is_admin, :boolean
+    field :password, :string, virtual: true
 
-    has_many :user_languages, Phrasing.Accounts.UserLanguage, on_replace: :delete
+    has_one :profile, Phrasing.Account.Profile
+
+    has_many :user_languages, Phrasing.Account.UserLanguage, on_replace: :delete
 
     many_to_many :languages, Phrasing.Dict.Language,
       join_through: "user_languages",
@@ -21,7 +23,7 @@ defmodule Phrasing.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :encrypted_password])
+    |> cast(attrs, [:email, :encrypted_password, :is_admin])
     |> cast_assoc(:profile)
     |> cast_assoc(:user_languages)
     |> validate_required([:email, :encrypted_password])

@@ -2,8 +2,8 @@ defmodule PhrasingWeb.SessionLive.SignUp do
   use Phoenix.LiveView, layout: {PhrasingWeb.LayoutView, "live.html"}
   import Phoenix.HTML.Form
 
-  alias Phrasing.Accounts
-  alias Phrasing.Accounts.User
+  alias Phrasing.Account
+  alias Phrasing.Account.User
   alias PhrasingWeb.Router.Helpers, as: Routes
 
   def render(assigns) do
@@ -35,7 +35,7 @@ defmodule PhrasingWeb.SessionLive.SignUp do
   end
 
   def mount(_params, _session, socket) do
-    changeset = Accounts.change_user(%User{})
+    changeset = Account.change_user(%User{})
     {:ok, assign(socket, changeset: changeset)}
   end
 end

@@ -4,7 +4,7 @@ defmodule PhrasingWeb.SessionLive.SignIn do
 
   alias PhrasingWeb.Router.Helpers, as: Routes
   alias PhrasingWeb.UILive.Field
-  alias Phrasing.Accounts
+  alias Phrasing.Account
 
   def render(assigns) do
     form_opts = [id: __MODULE__, phx_change: :change]
@@ -49,7 +49,7 @@ defmodule PhrasingWeb.SessionLive.SignIn do
   end
 
   def mount(_params, _session, socket) do
-    changeset = Accounts.change_user_signin(%Accounts.User{})
+    changeset = Account.change_user_signin(%Account.User{})
 
     {:ok, assign(socket, changeset: changeset)}
   end
@@ -58,8 +58,8 @@ defmodule PhrasingWeb.SessionLive.SignIn do
 
   def handle_event("change", %{"user" => user_params}, socket) do
     changeset =
-      %Accounts.User{}
-      |> Accounts.change_user_signin(user_params)
+      %Account.User{}
+      |> Account.change_user_signin(user_params)
 
     {:noreply, assign(socket, changeset: changeset)}
   end

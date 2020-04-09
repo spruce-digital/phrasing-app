@@ -1,4 +1,4 @@
-defmodule Phrasing.Accounts.Profile do
+defmodule Phrasing.Account.Profile do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -7,7 +7,7 @@ defmodule Phrasing.Accounts.Profile do
     field :gender, :string
     field :name, :string
 
-    belongs_to :user, Phrasing.Accounts.User
+    belongs_to :user, Phrasing.Account.User
 
     timestamps()
   end

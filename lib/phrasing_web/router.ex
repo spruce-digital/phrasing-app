@@ -33,10 +33,10 @@ defmodule PhrasingWeb.Router do
 
     live "/", SearchLive.Index, :index
     live "/account", AccountLive.Index, :index
+    live "/admin", AdminLive.Index, :index
     get "/library", LibraryController, :index
     get "/flashcards", SRSController, :flashcards
     get "/cards", SRSController, :cards
-    get "/admin", AdminController, :index
     resources "/scripts", ScriptController, only: [:new]
     resources "/songs", SongController, only: [:new]
     resources "/books", BookController, only: [:new]

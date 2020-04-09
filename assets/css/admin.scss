@@ -1,0 +1,24 @@
+.admin--index {
+  @extend .g--container;
+
+  table {
+    width: 100%;
+    text-align: left;
+  }
+
+  table th,
+  table td {
+    padding: 6px 0;
+  }
+
+  table th:first-child,
+  table td:first-child {
+    width: 50px;
+  }
+
+  table th:last-child,
+  table td:last-child {
+    width: 100px;
+    text-align: right;
+  }
+}

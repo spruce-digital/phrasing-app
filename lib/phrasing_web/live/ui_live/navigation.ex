@@ -4,7 +4,6 @@ defmodule PhrasingWeb.UILive.Navigation do
   import Phoenix.HTML.Link
 
   alias PhrasingWeb.Router.Helpers, as: Routes
-  alias PhrasingWeb.Helpers.Auth
 
   def render(assigns) do
     ~L"""
@@ -20,6 +19,9 @@ defmodule PhrasingWeb.UILive.Navigation do
               <i class="fal fa-user-circle" phx-click="toggle_dropdown" phx-target=".ui--navigation"></i>
               <%= if @open do %>
                 <ul class="dropdown">
+                  <%= if @user.is_admin do %>
+                    <li><a href="/admin">Admin</a></li>
+                  <% end %>
                   <li><a href="/account">Account</a></li>
                   <li><%= link "Sign Out", to: Routes.session_path(@socket, :delete), method: :delete %></li>
                 </ul>
@@ -42,7 +44,7 @@ defmodule PhrasingWeb.UILive.Navigation do
   def update(assigns, socket) do
     user =
       if assigns.user_id do
-        Phrasing.Repo.get(Phrasing.Accounts.User, assigns.user_id)
+        Phrasing.Repo.get(Phrasing.Account.User, assigns.user_id)
       else
         nil
       end

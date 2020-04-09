@@ -1,0 +1,66 @@
+<section class="admin--index">
+  <header class="g--container--header">
+    <h1>Languages</h1>
+  </header>
+
+  <main class="g--container--main">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Flag</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for l <- @languages do %>
+          <tr>
+            <td><%= l.code %></td>
+            <td><%= l.name %></td>
+            <td>
+              <span
+                class="flag-icon flag-icon-squared flag-icon-<%= l.flag_code %>"
+                title="<%= l.flag_code %>"
+              ></span>
+              (<%= l.flag_code %>)
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </main>
+
+  <header class="g--container--header">
+    <h1>Add Language</h1>
+  </header>
+
+  <%= f = form_for @language_changeset, "#", [phx_change: :validate, phx_submit: :create_language] %>
+    <div>
+      <main class="g--container--main">
+        <%= live_component @socket, Field.Text, id: :name,
+          change_target: __MODULE__,
+          form: f,
+          icon: "far fa-text"
+        %>
+
+        <%= live_component @socket, Field.Text, id: :code,
+          change_target: __MODULE__,
+          form: f,
+          icon: "far fa-code"
+        %>
+
+        <%= live_component @socket, Field.Select, id: :flag_code,
+          change_target: __MODULE__,
+          form: f,
+          icon: "fas fa-flag-alt",
+          options: Map.keys(Dict.Language.alpha_2_codes),
+          getLabel: fn code -> getFlagLabel(code) end
+        %>
+      </main>
+
+      <footer class="g--container--footer">
+        <%= submit "Save", class: "g--button-full" %>
+      </footer>
+    </div>
+  </form>
+</section>

@@ -1,17 +1,17 @@
-defmodule Phrasing.Accounts.Form do
+defmodule Phrasing.Account.Form do
   use Ecto.Schema
   import Ecto.Changeset
 
   embedded_schema do
-    # Accounts.User
+    # Account.User
     field :email, :string
 
-    # Accounts.Profile
+    # Account.Profile
     field :birthday, :date
     field :gender, :string
     field :name, :string
 
-    # Accounts.UserLanguage
+    # Account.UserLanguage
     field :native_languages, {:array, :string}, default: []
     field :learning_languages, {:array, :string}, default: []
   end

@@ -446,7 +446,7 @@ defmodule Phrasing.Dict do
 
   """
   def change_language(%Language{} = language, attrs \\ %{}) do
-    Language.changeset(language, %{})
+    Language.changeset(language, attrs)
   end
 
   alias Phrasing.Dict.Translation

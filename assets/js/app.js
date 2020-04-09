@@ -48,24 +48,42 @@ Hooks.Adder = {
 
 Hooks.SelectField = {
   mounted() {
-    const selector = '#' + this.el.id
-    const query = this.el.querySelector('input[name=query]')
+    this.selector = '#' + this.el.id
+    this.onClick = Hooks.SelectField.onClick.bind(this)
+    this.onDocumentClick = Hooks.SelectField.onDocumentClick.bind(this)
+    this.pushCompEvent = (act, args) => this.pushEventTo(this.selector, act, args)
 
-    query.addEventListener('blur', () => {
-      setTimeout(() => this.pushEventTo(selector, 'blur', {}), 0)
-    })
+    this.events.call(this, 'add')
   },
-  updated() {
-    const selector = '#' + this.el.id
+  onClick(event) {
     const input = this.el.querySelector('input[type=hidden]')
-    const options = this.el.querySelectorAll('li')
+    const query = this.el.querySelector('input[name=query]')
+    const main = this.el.querySelector('main')
+    const options = [...this.el.querySelectorAll('li')]
 
-    options.forEach(opt => opt.addEventListener('click', () => {
-      input.value = opt.dataset.value
-
+    if (options.includes(event.target)) {
+      const params = {value: "" + event.target.dataset.value}
+      input.value = event.target.dataset.value
       this.pushEvent('validate', serializeForm(input.form))
-      this.pushEventTo(selector, 'select', {value: input.value})
-    }))
+      this.pushCompEvent('select', params)
+      // setTimeout(() => this.pushCompEvent('blur', {}), 0)
+    }
+
+    if (main == event.target) {
+      query.focus()
+    }
+  },
+  onDocumentClick(event) {
+    if (!this.el.contains(event.target)) {
+      this.pushCompEvent('blur', {})
+    }
+  },
+  beforeDestroy() {
+    this.events.call(this, 'remove')
+  },
+  events(action) {
+    this.el[action + 'EventListener']('click', this.onClick)
+    document[action + 'EventListener']('click', this.onDocumentClick)
   }
 }
 
@@ -74,9 +92,7 @@ Hooks.TokenField = {
     this.selector = '#' + this.el.id
     this.onClick = Hooks.TokenField.onClick.bind(this)
     this.onDocumentClick = Hooks.TokenField.onDocumentClick.bind(this)
-    this.pushCompEvent = (action, args) => (
-      this.pushEventTo(this.selector, action, args)
-    )
+    this.pushCompEvent = (act, args) => this.pushEventTo(this.selector, act, args)
 
     this.events.call(this, 'add')
   },

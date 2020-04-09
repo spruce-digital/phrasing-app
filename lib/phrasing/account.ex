@@ -1,13 +1,13 @@
-defmodule Phrasing.Accounts do
+defmodule Phrasing.Account do
   @moduledoc """
-  The Accounts context.
+  The Account context.
   """
 
   import Ecto.Query, warn: false
   alias Phrasing.Repo
 
-  alias Phrasing.Accounts.User
-  alias Phrasing.Accounts.Form
+  alias Phrasing.Account.User
+  alias Phrasing.Account.Form
 
   @doc """
   Returns a new form changeset to change account data
@@ -126,7 +126,7 @@ defmodule Phrasing.Accounts do
     User.changeset_signin(user, attrs)
   end
 
-  alias Phrasing.Accounts.UserLanguage
+  alias Phrasing.Account.UserLanguage
 
   @doc """
   Returns the list of user_languages.
@@ -222,7 +222,7 @@ defmodule Phrasing.Accounts do
     UserLanguage.changeset(user_language, %{})
   end
 
-  alias Phrasing.Accounts.Profile
+  alias Phrasing.Account.Profile
 
   @doc """
   Returns the list of profiles.

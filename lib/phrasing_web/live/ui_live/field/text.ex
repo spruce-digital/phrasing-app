@@ -28,6 +28,15 @@ defmodule PhrasingWeb.UILive.Field.Text do
     {:ok, assign(socket, activated: false)}
   end
 
+  def update(assigns, socket) do
+    socket =
+      socket
+      |> assign(assigns)
+      |> assign(:attr, assigns[:attr] || assigns[:id])
+
+    {:ok, socket}
+  end
+
   def handle_event("focus", _params, socket) do
     {:noreply, assign(socket, activated: true)}
   end
