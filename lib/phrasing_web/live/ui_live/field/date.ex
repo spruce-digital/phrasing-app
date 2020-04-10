@@ -26,7 +26,16 @@ defmodule PhrasingWeb.UILive.Field.Date do
   end
 
   def mount(socket) do
-    {:ok, assign(socket, activated: false, placeholder: "DD/MM/YYYY")}
+    {:ok, assign(socket, activated: false, placeholder: "YYYY-MM-DD")}
+  end
+
+  def update(assigns, socket) do
+    socket =
+      socket
+      |> assign(assigns)
+      |> assign(:attr, assigns[:attr] || assigns[:id])
+
+    {:ok, socket}
   end
 
   def handle_event("focus", _params, socket) do

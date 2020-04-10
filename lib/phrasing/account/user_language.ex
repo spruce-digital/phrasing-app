@@ -12,6 +12,10 @@ defmodule Phrasing.Account.UserLanguage do
   end
 
   @doc false
+  def changeset(user_language, %__MODULE__{} = attrs) do
+    __MODULE__.changeset(user_language, Map.from_struct(attrs))
+  end
+
   def changeset(user_language, attrs) do
     user_language
     |> cast(attrs, [:user_id, :language_id, :level])

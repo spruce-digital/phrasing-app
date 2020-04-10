@@ -2,8 +2,8 @@
   <%= live_component @socket, PhrasingWeb.UILive.Navigation, id: :nav, user_id: assigns[:user_id] %>
 
   <main>
-    <%= if live_flash(@flash, :notice) do %>
-      <p class="alert alert-info" role="alert"><%= live_flash(@flash, :notice) %></p>
+    <%= if live_flash(@flash, :success) do %>
+      <p class="alert alert-info" role="alert"><%= live_flash(@flash, :success) %></p>
     <% end %>
 
     <%= if live_flash(@flash, :error) do %>

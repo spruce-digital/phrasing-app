@@ -18,6 +18,10 @@ defmodule Phrasing.Account do
       %Ecto.Changeset{source: %Form{}}
 
   """
+  def change_form(%Form{} = form, %User{} = user) do
+    Form.changeset_from_user(form, user)
+  end
+
   def change_form(%Form{} = form, attrs \\ %{}) do
     Form.changeset(form, attrs)
   end
@@ -87,6 +91,12 @@ defmodule Phrasing.Account do
       {:error, %Ecto.Changeset{}}
 
   """
+  def update_user(%User{} = user, form: attrs) do
+    user
+    |> Form.user_changeset(attrs)
+    |> Repo.update()
+  end
+
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)

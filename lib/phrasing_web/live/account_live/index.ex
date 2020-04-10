@@ -22,7 +22,7 @@ defmodule PhrasingWeb.AccountLive.Index do
       |> Account.get_user!()
       |> Phrasing.Repo.preload([:profile, :user_languages])
 
-    changeset = Account.change_form(%Account.Form{})
+    changeset = Account.change_form(%Account.Form{}, user)
 
     {:ok,
      assign(socket, user_id: user_id, changeset: changeset, languages: languages, user: user)}
@@ -37,15 +37,34 @@ defmodule PhrasingWeb.AccountLive.Index do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("save", %{"user" => user_params}, socket) do
-    case Account.update_user(socket.assigns.user, user_params) do
+  def handle_event("save", %{"form" => form_params}, socket) do
+    case Account.update_user(socket.assigns.user, form: form_params) do
       {:ok, user} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Profile updated successfully")}
+        socket =
+          socket
+          |> assign(user: user)
+          |> assign(changeset: Account.change_form(%Account.Form{}, user))
+          |> put_flash(:success, "Account successfully updated")
+
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        socket =
+          socket
+          |> assign(changeset: changeset)
+          |> put_flash(:error, "An error occurred")
+
+        {:noreply, socket}
     end
+
+    # case Account.update_user(socket.assigns.user, user_params) do
+    #   {:ok, user} ->
+    #     {:noreply,
+    #      socket
+    #      |> put_flash(:info, "Profile updated successfully")}
+
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     {:noreply, assign(socket, changeset: changeset)}
+    # end
   end
 end

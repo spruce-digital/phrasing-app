@@ -1,74 +1,78 @@
 <section class="account--index">
   <%= f = form_for @changeset, "#", form_opts() %>
-    <%= hidden_input f, :id %>
+    <div>
+      <%= hidden_input f, :id %>
 
-    <header class="g--container--header">
-      <h1>Login</h1>
-    </header>
+      <header class="g--container--header">
+        <h1>Login</h1>
+      </header>
 
-    <main class="g--container--main">
-      <%= live_component @socket, Field.Text, id: :email,
-        attr: :email,
-        change_target: __MODULE__,
-        form: f,
-        icon: "far fa-at"
-      %>
-    </main>
+      <main class="g--container--main">
+        <%= live_component @socket, Field.Text, id: :email,
+          attr: :email,
+          change_target: __MODULE__,
+          form: f,
+          icon: "far fa-at"
+        %>
+      </main>
 
-    <header class="g--container--header">
-      <h1>Profile</h1>
-    </header>
+      <header class="g--container--header">
+        <h1>Profile</h1>
+      </header>
 
-    <main class="g--container--main">
-      <%= live_component @socket, Field.Text, id: :name,
-        attr: :name,
-        change_target: __MODULE__,
-        form: f,
-        icon: "far fa-id-badge"
-      %>
+      <main class="g--container--main">
+        <%= hidden_input f, :profile_id, value: @user.profile.id %>
 
-      <%= live_component @socket, Field.Select, id: :gender,
-        attr: :gender,
-        change_target: __MODULE__,
-        form: f,
-        icon: "far fa-venus-mars",
-        options: ["Male", "Female", "Other"]
-      %>
+        <%= live_component @socket, Field.Text, id: :name,
+          attr: :name,
+          change_target: __MODULE__,
+          form: f,
+          icon: "far fa-id-badge"
+        %>
 
-      <%= live_component @socket, Field.Date, id: :birthday,
-        attr: :birthday,
-        change_target: __MODULE__,
-        form: f,
-        icon: "far fa-birthday-cake"
-      %>
-    </main>
+        <%= live_component @socket, Field.Select, id: :gender,
+          attr: :gender,
+          change_target: __MODULE__,
+          form: f,
+          icon: "far fa-venus-mars",
+          options: ["Male", "Female", "Other"]
+        %>
 
-    <header class="g--container--header">
-      <h1>Languages</h1>
-    </header>
+        <%= live_component @socket, Field.Date, id: :birthday,
+          attr: :birthday,
+          change_target: __MODULE__,
+          form: f,
+          icon: "far fa-birthday-cake"
+        %>
+      </main>
 
-    <main class="g--container--main">
-      <%= live_component @socket, Field.Token, id: :native_languages,
-        attr: :native_languages,
-        change_target: __MODULE__,
-        form: f,
-        getLabel: fn id -> getLanguageName(@languages, id) end,
-        icon: "fas fa-user-astronaut",
-        options: Enum.map(@languages, &(&1.id))
-      %>
+      <header class="g--container--header">
+        <h1>Languages</h1>
+      </header>
 
-      <%= live_component @socket, Field.Token, id: :learning_languages,
-        attr: :learning_languages,
-        change_target: __MODULE__,
-        form: f,
-        getLabel: fn id -> getLanguageName(@languages, id) end,
-        icon: "fas fa-user-graduate",
-        options: Enum.map(@languages, &(&1.id))
-      %>
-    </main>
+      <main class="g--container--main">
+        <%= live_component @socket, Field.Token, id: :native_languages,
+          attr: :native_languages,
+          change_target: __MODULE__,
+          form: f,
+          getLabel: fn id -> getLanguageName(@languages, id) end,
+          icon: "fas fa-user-astronaut",
+          options: Enum.map(@languages, &(&1.id))
+        %>
 
-    <footer class="g--container--footer">
-      <%= submit "Save", class: "g--button-full" %>
-    </footer>
+        <%= live_component @socket, Field.Token, id: :learning_languages,
+          attr: :learning_languages,
+          change_target: __MODULE__,
+          form: f,
+          getLabel: fn id -> getLanguageName(@languages, id) end,
+          icon: "fas fa-user-graduate",
+          options: Enum.map(@languages, &(&1.id))
+        %>
+      </main>
+
+      <footer class="g--container--footer">
+        <%= submit "Save", class: "g--button-full" %>
+      </footer>
+    </div>
   </form>
 </section>
