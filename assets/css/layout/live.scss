@@ -14,14 +14,15 @@ section.layout--live {
     padding: 36px;
   }
 
-  >main >.alert {
+  >main >.alert,
+  >main >footer >.alert {
     border-radius: $border-radius;
     border-style: solid;
     border-width: 1px;
     box-sizing: border-box;
     display: block;
     margin: 0 auto 24px;
-    max-width: 600px;
+    max-width: $max-width;
     padding: 12px;
     text-align: center;
     width: 100%;
@@ -37,5 +38,12 @@ section.layout--live {
     border-color: $red;
     color: $red;
     background-color: rgba($red, 0.25);
+  }
+
+  >main >footer >.alert {
+    border-color: $black----;
+    color: $black----;
+    background-color: rgba($black----, 0.25);
+    margin-top: 24px;
   }
 }

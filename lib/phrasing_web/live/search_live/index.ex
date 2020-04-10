@@ -28,15 +28,17 @@ defmodule PhrasingWeb.SearchLive.Index do
     languages = Dict.list_languages()
     recent_phrases = Dict.list_phrases(user_id)
 
-    {:ok,
-     assign(
-       socket,
-       Map.merge(@defaults, %{
-         user_id: user_id,
-         languages: languages,
-         recent_phrases: recent_phrases
-       })
-     )}
+    socket =
+      socket
+      |> assign(@defaults)
+      |> assign(%{
+        user_id: user_id,
+        languages: languages,
+        recent_phrases: recent_phrases
+      })
+      |> put_flash(:dev, @defaults.state)
+
+    {:ok, socket}
   end
 
   def render(assigns) do

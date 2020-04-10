@@ -9,12 +9,15 @@
     <%= if live_flash(@flash, :error) do %>
       <p class="alert alert-error" role="alert"><%= live_flash(@flash, :error) %></p>
     <% end %>
+
     <%= @inner_content %>
 
     <footer>
       <h6>
         powered by <i class="fad fa-cat-space"></i> space ocelots
       </h6>
+
+      <p class="alert alert-dev" role="alert"><%= live_flash(@flash, :dev) %></p>
     </footer>
   </main>
 </section>
