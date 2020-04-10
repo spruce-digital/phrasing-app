@@ -1,10 +1,10 @@
 defmodule PhrasingWeb.SessionController do
   use PhrasingWeb, :controller
 
-  alias Phrasing.Accounts
+  alias Phrasing.Account
 
   def create(conn, %{"user" => user_params}) do
-    user = Accounts.get_by_email(user_params["email"])
+    user = Account.get_by_email(user_params["email"])
 
     case Bcrypt.check_pass(user, user_params["password"]) do
       {:ok, user} ->
