@@ -48,100 +48,24 @@ $search--phrase---border-radius: 4px;
   $translation-height: 48px;
 
   margin: 12px 0;
+  background-color: $color-card;
+  border-radius: $border-radius / 2;
 
   ul {
     border-radius: $search--phrase---border-radius;
-    border: 1px solid $white----;
     overflow: hidden;
   }
 
   ul, ul li {
     margin: 0;
   }
-
-  > main {
-    position: relative;
-    border-radius: 4px;
-  }
-
-  > main > aside {
-    display: none;
-  }
-
-  > main:hover > aside,
-  > main > aside:hover,
-  form > aside {
-    @include flex-center;
-    height: $translation-height;
-    left: 100%;
-    padding-left: 12px;
-    position: absolute;
-    top: 0;
-  }
-
-  > main > aside:hover,
-  form > aside:hover {
-    @include hoverable;
-  }
-
-  form > aside button {
-    padding: 0;
-  }
-
-  form {
-    border: 1px solid $white---;
-    position: relative;
-    margin: 0;
-  }
-
-  .source {
-    padding: 12px;
-    background: $white---;
-  }
-
-  form .translation {
-    display: flex;
-    align-items: stretch;
-    height: $translation-height;
-    align-items: center;
-    margin: 0;
-
-    &:not(:first-child) {
-      border-top: 1px solid $white--;
-    }
-  }
-
-  form .translation .remove {
-    @include flex-center;
-    @include hoverable;
-    padding: 0 12px;
-  }
-
-  form input[id$=text] {
-    border: none;
-    padding: 12px;
-    margin: 0;
-    flex: 1;
-  }
-
-  form select[id$=language_id] {
-    margin: 0;
-    border: none;
-
-  }
-
-  form button {
-    @include dark-hover(color, $black----);
-    background: none;
-    border: none;
-    margin: 0;
-  }
 }
 
-.search--phrase---translation {
+.search--phrase--translation {
   display: flex;
   align-items: center;
   overflow: none;
+  height: 48px;
 
   &:not(:first-child) {
     border-top: 1px solid $white----;
@@ -150,14 +74,6 @@ $search--phrase---border-radius: 4px;
   >aside {
     @include flex-center;
     width: 48px;
-
-    // &:first-child {
-    //   border-top-left-radius: inherit;
-    // }
-
-    // &:last-child {
-    //   border-bottom-left-radius: inherit;
-    // }
   }
 
   >aside .flag-icon {
@@ -179,23 +95,36 @@ $search--phrase---border-radius: 4px;
     flex: 1;
   }
 
-  >main .language-code {
+  .language-code {
     font-family: "Operator Mono", monospace;
-    font-style: italic;
-    padding: 1px 4px 2px 0;
+    padding: 1px 2px 2px 0;
     border-radius: 2px;
-    margin-right: 12px;
-    color: $frost-;
+    color: $color-bang;
     letter-spacing: 1px;
     text-align: center;
-    font-size: 11px;
+    font-size: 14px;
   }
 
-  >main .text {
+  .text {
     flex: 1;
   }
 
-  >main .searched-for {
+  .learn {
+    margin-right: 12px;
+    font-size: 18px;
+  }
+
+  .learn-off  {
+    @include hoverable;
+    @include light-hover(color, $color-field, 20);
+  }
+
+  .learn-on {
+    @include dark-hover(color, $color-icon, 20);
+    @include hoverable;
+  }
+
+  .searched-for {
     font-weight: bold;
   }
 }

@@ -9,6 +9,7 @@ defmodule Phrasing.Dict.Translation do
     field :delete, :boolean, default: false, virtual: true
     belongs_to :language, Phrasing.Dict.Language
     belongs_to :phrase, Phrasing.Dict.Phrase
+    has_many :cards, Phrasing.SRS.Card
 
     timestamps()
   end

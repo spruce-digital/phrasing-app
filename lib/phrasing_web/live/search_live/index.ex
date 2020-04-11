@@ -52,10 +52,6 @@ defmodule PhrasingWeb.SearchLive.Index do
           languages: @languages
         %>
 
-        <div style="height: 150px; display: flex; flex-direction: column; justify-content: center">
-          <!-- controls will go here -->
-        </div>
-
         <%= render_body assigns %>
       </main>
     </div>
@@ -65,27 +61,23 @@ defmodule PhrasingWeb.SearchLive.Index do
   def render_body(a) do
     case a.state do
       :pristine ->
-        live_component(
-          a.socket,
-          SearchLive.RecentPhrases,
+        live_component(a.socket, SearchLive.RecentPhrases,
           id: :pristine,
-          recent_phrases: a.recent_phrases
+          search: a.search,
+          recent_phrases: a.recent_phrases,
+          user_id: a.user_id
         )
 
       :searching ->
-        live_component(
-          a.socket,
-          SearchLive.Suggestions,
+        live_component(a.socket, SearchLive.Suggestions,
           # id: :suggestions,
+          languages: a.languages,
           phrases: a.suggestions,
-          search: a.search,
-          languages: a.languages
+          search: a.search
         )
 
       :results ->
-        live_component(
-          a.socket,
-          SearchLive.Results,
+        live_component(a.socket, SearchLive.Results,
           id: :results,
           results: a.results,
           search: a.search,

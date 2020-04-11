@@ -14,7 +14,7 @@ section.layout--live {
     padding: 36px;
   }
 
-  >main >.alert,
+  >main >aside >.alert,
   >main >footer >.alert {
     border-radius: $border-radius;
     border-style: solid;
@@ -28,13 +28,13 @@ section.layout--live {
     width: 100%;
   }
 
-  >main >.alert-info {
+  >main >aside >.alert-info {
     border-color: $green;
     color: $green;
     background-color: rgba($green, 0.25);
   }
 
-  >main >.alert-error {
+  >main >aside >.alert-error {
     border-color: $red;
     color: $red;
     background-color: rgba($red, 0.25);

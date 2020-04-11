@@ -7,6 +7,7 @@ defmodule Phrasing.Dict do
   import Ecto.Changeset
   alias Phrasing.Repo
 
+  alias Phrasing.SRS
   alias Phrasing.Dict.Phrase
   alias Phrasing.Dict.Translation
 
@@ -82,8 +83,7 @@ defmodule Phrasing.Dict do
   def list_phrases_query do
     from p in Phrase,
       where: p.active == true,
-      order_by: [desc: p.updated_at],
-      preload: [:cards, :translations]
+      order_by: [desc: p.updated_at]
   end
 
   def list_phrases do
@@ -91,9 +91,12 @@ defmodule Phrasing.Dict do
   end
 
   def list_phrases(user_id) do
+    cards_query = from c in SRS.Card, where: c.user_id == ^user_id
+
     Repo.all(
       from p in list_phrases_query,
-        where: p.user_id == ^user_id
+        where: p.user_id == ^user_id,
+        preload: [translations: [cards: ^cards_query]]
     )
   end
 

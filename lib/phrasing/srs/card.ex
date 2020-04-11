@@ -3,13 +3,14 @@ defmodule Phrasing.SRS.Card do
   import Ecto.Changeset
 
   schema "cards" do
+    field :active, :boolean, default: true
     field :hint, :string
     field :mnem, :string
 
-    belongs_to :phrase, Phrasing.Dict.Phrase
-    belongs_to :prev_rep, Phrasing.SRS.Rep
     belongs_to :language, Phrasing.Dict.Language
+    belongs_to :prev_rep, Phrasing.SRS.Rep
     belongs_to :translation, Phrasing.Dict.Language
+    belongs_to :user, Phrasing.Account.User
     has_many :reps, Phrasing.SRS.Rep
 
     timestamps()
@@ -18,8 +19,8 @@ defmodule Phrasing.SRS.Card do
   @doc false
   def changeset(card, attrs) do
     card
-    |> cast(attrs, [:phrase_id, :prev_rep_id, :hint, :mnem, :lang, :translation])
-    |> validate_required([:lang, :translation])
+    |> cast(attrs, [:translation_id, :user_id, :prev_rep_id, :hint, :mnem, :active])
+    |> validate_required([:translation_id, :user_id])
   end
 
   def source(card) do

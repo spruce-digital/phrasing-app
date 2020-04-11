@@ -4,34 +4,10 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   import Ecto.Changeset
 
   alias Phrasing.Dict
+  alias Phrasing.SRS
   alias Phrasing.Dict.{Phrase, Translation}
   alias PhrasingWeb.PhraseView
   alias PhrasingWeb.UILive
-
-  @select_prompt [
-    key: "Select",
-    value: "",
-    selected: true,
-    disabled: true
-  ]
-
-  @default_search %{
-    text: "",
-    language_id: "",
-  }
-
-  def mount(socket) do
-    {:ok, assign(socket, editing?: false, error_list: [], search: @default_search)}
-  end
-
-  def update(a, socket) do
-    changeset =
-      a.phrase
-      |> Dict.change_phrase()
-      |> ensure_extra_translation()
-
-    {:ok, assign(socket, Map.put(a, :changeset, changeset))}
-  end
 
   def preload(list_of_assigns) do
     languages = Dict.list_languages()
@@ -51,62 +27,29 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   def render(assigns) do
     ~L"""
     <div class="search--phrase">
-      <%= if @editing? do %>
-        <%= unless Enum.empty?(@error_list) do %>
-          <%= for error <- @error_list do %>
-            <%= error %>
+      <main>
+        <ul>
+          <%= for tr <- @phrase.translations do %>
+            <%= render_translation Map.put(assigns, :translation, tr) %>
           <% end %>
-        <% end %>
-
-        <%= f = form_for @changeset, "#", [phx_change: :change, phx_submit: :save, phx_target: ".search--phrase"] %>
-          <%= hidden_input f, :id %>
-          <%= hidden_input f, :user_id, value: @user_id %>
-          <%= hidden_input f, :source %>
-          <%= ff = inputs_for f, :translations, fn ff -> %>
-            <fieldset class="translation">
-              <%= select ff, :language_id, @language_options %>
-              <%= text_input ff, :text %>
-              <div class="remove" phx-click="remove" phx-value-index="<%= ff.index %>">
-                <i class="far fa-times"></i>
-              </div>
-            </fieldset>
-          <% end %>
-
-          <aside class="action">
-            <%= submit do %>
-              <i class="far fa-check"></i>
-            <% end %>
-          </aside>
-        </form>
-
-      <% else %>
-
-        <main>
-          <ul>
-            <%= for tr <- @phrase.translations do %>
-              <%= render_translation Map.put(assigns, :translation, tr) %>
-            <% end %>
-          </ul>
-
-          <aside class="action" phx-click="edit">
-            <i class="far fa-pencil"></i>
-          </aside>
-        </main>
-
-      <% end %>
+        </ul>
+      </main>
     </div>
     """
   end
 
   def render_translation(assigns) do
     searched_for? = assigns.search.text == assigns.translation.text
-    language = assigns.languages
-               |> Enum.find(fn language ->
-                 language.id == assigns.translation.language_id
-               end)
+    active = !!Enum.find(assigns.translation.cards, & &1.active)
+
+    language =
+      assigns.languages
+      |> Enum.find(fn language ->
+        language.id == assigns.translation.language_id
+      end)
 
     ~L"""
-    <li class="search--phrase---translation">
+    <li class="search--phrase--translation">
       <aside>
         <span
           class="flag-icon flag-icon-squared flag-icon-<%= language.flag_code %>"
@@ -114,77 +57,33 @@ defmodule PhrasingWeb.SearchLive.Phrase do
         ></span>
       </aside>
       <main>
-        <div class="language-code">
-          <%= language.code %>
-        </div>
         <p class="text <%= if searched_for?, do: "searched-for", else: "" %>">
+          <span class="language-code">
+            @<%= language.code %>
+          </span>
           <%= assigns.translation.text %>
         <p>
-        <%= if false do %>
-          <div class="source"></div>
-        <% end %>
+      <div class="learn learn-<%= if active, do: "on", else: "off" %>"
+          phx-click="<%= if active, do: "stop_learning", else: "learn" %>"
+          phx-target="<%= @myself %>" phx-value-tr="<%= assigns.translation.id %>">
+          <i class="<%= if active, do: "fas", else: "fal" %> fa-paper-plane"></i>
+        </div>
       </main>
     </li>
     """
   end
 
-  def handle_event("edit", _params, socket) do
-    {:noreply, assign(socket, editing?: true)}
-  end
-
-  def handle_event("change", %{"phrase" => phrase_params}, socket) do
-    changeset =
-      socket.assigns.changeset.data
-      |> Dict.change_phrase(phrase_params)
-      |> ensure_extra_translation()
-
-    {:noreply, assign(socket, changeset: changeset)}
-  end
-
-  def handle_event("remove", %{"index" => index}, socket) do
-    translations =
-      get_field(socket.assigns.changeset, :translations)
-      |> List.delete_at(String.to_integer(index))
-
-    changeset =
-      socket.assigns.changeset
-      |> put_assoc(:translations, [])
-      |> put_assoc(:translations, translations)
-      |> Map.put(:action, :ignore)
-
-    {:noreply, assign(socket, changeset: changeset)}
-  end
-
-  def handle_event("save", %{"phrase" => phrase_params}, socket) do
-    case Dict.save_phrase(phrase_params) do
-      {:ok, phrase} ->
-        {:noreply, assign(socket, editing?: false, phrase: phrase)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        error_list = PhraseView.get_all_errors(changeset)
-        {:noreply, assign(socket, changeset: ensure_extra_translation(changeset), error_list: error_list)}
+  def handle_event("learn", %{"tr" => tr}, socket) do
+    case SRS.learn(translation_id: tr, user_id: socket.assigns.user_id) do
+      {:ok, _card} -> {:noreply, socket}
+      {:error, _error} -> {:noreply, put_flash(socket, :error, "An error occurred")}
     end
   end
 
-  defp ensure_extra_translation(changeset) do
-    translations = get_field(changeset, :translations)
-
-    with_extra_translation =
-      if Enum.any?(translations, &is_blank_translation?/1) do
-        translations
-      else
-        translations ++ [%Translation{}]
-      end
-
-    changeset
-    |> put_assoc(
-      :translations,
-      with_extra_translation |> Enum.map(fn x -> Map.put(x, :action, :ignore) end)
-    )
-    |> Map.put(:action, :ignore)
-  end
-
-  defp is_blank_translation?(translation) do
-    translation.language_id == nil && translation.text == nil
+  def handle_event("stop_learning", %{"tr" => tr}, socket) do
+    case SRS.stop_learning(translation_id: tr, user_id: socket.assigns.user_id) do
+      {:ok, _card} -> {:noreply, socket}
+      {:error, _error} -> {:noreply, put_flash(socket, :error, "An error occurred")}
+    end
   end
 end

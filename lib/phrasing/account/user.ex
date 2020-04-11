@@ -12,6 +12,7 @@ defmodule Phrasing.Account.User do
     has_one :profile, Phrasing.Account.Profile, on_replace: :update
 
     has_many :user_languages, Phrasing.Account.UserLanguage, on_replace: :delete
+    has_many :cards, Phrasing.SRS.Card
 
     many_to_many :languages, Phrasing.Dict.Language,
       join_through: "user_languages",
