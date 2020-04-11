@@ -1,0 +1,42 @@
+<form class="search--search-field" phx-submit="search" phx-change="query">
+  <input
+    type="hidden"
+    name="search[language_id]"
+    value="<%= @search.language_id %>"
+  />
+
+  <div class="language-select" phx-click="toggle_field" phx-target="<%= @myself %>">
+    <div
+      class="flag-icon flag-icon-squared flag-icon-<%= flag_code(@search, @languages) %>"
+      ></div>
+  </div>
+
+  <div class="inputs input-<%= @field %>">
+    <input
+      name="search[text]"
+      value="<%= @search.text %>"
+      placeholder="Search translations"
+    />
+    <input
+      name="search[language_text]"
+      value="<%= @search.language_text %>"
+      placeholder"Filter languages"
+    />
+  </div>
+
+  <div class="create-phrase" phx-click="create_phrase">
+    <i class="fal fa-plus"></i>
+  </div>
+
+  <div class="dropdown">
+    <%= if @field == :language_text do %>
+      <%= for lang <- visible_languages(@languages, @search) do %>
+        <div class="row" phx-click="select_language" phx-value-language="<%= lang.id %>" phx-target="<%= @myself %>">
+          <div class="flag-icon flag-icon-squared flag-icon-<%= lang.flag_code %>"></div>
+          <div class="language-name"><%= lang.name %></div>
+          <div class="language-code">@<%= lang.code %></div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</form>

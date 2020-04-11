@@ -53,6 +53,7 @@ defmodule Phrasing.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:poison, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
+      {:struct_access, "~> 1.1.2"},
       {:timex, "~> 3.6"},
       {:triq, "~> 1.3", only: [:dev, :test]},
       {:edeliver, "~> 1.8.0"},

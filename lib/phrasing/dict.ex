@@ -8,11 +8,21 @@ defmodule Phrasing.Dict do
   alias Phrasing.Repo
 
   alias Phrasing.Dict.Phrase
+  alias Phrasing.Dict.Translation
 
   @topic "phrases"
 
   def subscribe do
     Phoenix.PubSub.subscribe(Phrasing.PubSub, @topic)
+  end
+
+  alias Phrasing.Dict.Search
+
+  @doc """
+  Accepts a search struct and returns a list of translations
+  """
+  def search(%Search{} = search) do
+    search_translations(search.text, search.language_id)
   end
 
   def get_last_translations(user_id: user_id, language_id: language_id) do
@@ -51,7 +61,6 @@ defmodule Phrasing.Dict do
     |> Repo.all()
   end
 
-  def search_translations(query, nil), do: search_translations(query)
   def search_translations(query, ""), do: search_translations(query)
 
   def search_translations(query, language_id) do
@@ -156,6 +165,22 @@ defmodule Phrasing.Dict do
       {:error, %Ecto.Changeset{}}
 
   """
+  def create_phrase(%Search{} = search, user_id) do
+    translation_params = Search.to_translation_params(search)
+
+    Repo.transaction(fn ->
+      {:ok, phrase} = Repo.insert(%Phrase{user_id: user_id})
+
+      case create_translation(%{translation_params | "phrase_id" => phrase.id}) do
+        {:ok, _translation} ->
+          phrase
+
+        {:error, error} ->
+          Repo.rollback(error)
+      end
+    end)
+  end
+
   def create_phrase(attrs \\ %{}) do
     dry_changeset =
       %Phrase{}
