@@ -18,14 +18,14 @@ config :phrasing, PhrasingWeb.Endpoint,
   pubsub: [name: Phrasing.PubSub, adapter: Phoenix.PubSub.PG2],
   live_view: [signing_salt: "3vLEv4KpFMASLYNMFlY3RL7OWEiZtdQexUWFwSetof3b8VurBO9U1JR7myLpQmUd"]
 
+# Configure Sentry's Logger backend
+config :logger,
+  backends: [:console, Sentry.LoggerBackend]
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
-
-# Configure Sentry's Logger backend
-config :logger,
-  backends: [:console, Sentry.LoggerBackend]
 
 # Use Poison for JSON parsing in Phoenix and Ecto
 config :phoenix, :json_library, Poison
