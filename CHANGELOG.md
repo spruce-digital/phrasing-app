@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4
+
+Redirect failed logins to an existing page
+
 ## 1.1.3
 
 Updates to error tracking config
