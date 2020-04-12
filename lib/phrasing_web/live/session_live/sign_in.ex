@@ -40,7 +40,7 @@ defmodule PhrasingWeb.SessionLive.SignIn do
           <%= submit "Sign in", class: "g--button-full" %>
 
           <h5>
-            Already have an account? <a>Sign In</a> here
+            Already have an account? <a href="/signup">Sign up</a> here
           </h5>
         </footer>
       </div>

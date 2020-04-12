@@ -25,10 +25,10 @@ defmodule PhrasingWeb.Router do
   scope "/", PhrasingWeb do
     pipe_through :browser
 
-    resources "/register", UserController, only: [:create]
     live "/signin", SessionLive.SignIn, :new
     live "/signup", SessionLive.SignUp, :new
     post "/signin", SessionController, :create
+    post "/signup", UserController, :create
     delete "/signout", SessionController, :delete
 
     pipe_through :check_auth

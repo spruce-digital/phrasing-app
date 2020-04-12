@@ -7,7 +7,7 @@ defmodule Phrasing.Dict.Phrase do
   schema "phrases" do
     field :active, :boolean, default: true
     field :translation_id, :id, virtual: true
-    belongs_to :user, Phrasing.Accounts.User
+    belongs_to :user, Phrasing.Account.User
     has_many :translations, Phrasing.Dict.Translation, on_replace: :delete
     has_one :entry, Phrasing.Dict.Entry
 

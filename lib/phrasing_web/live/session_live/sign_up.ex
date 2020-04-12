@@ -5,32 +5,44 @@ defmodule PhrasingWeb.SessionLive.SignUp do
   alias Phrasing.Account
   alias Phrasing.Account.User
   alias PhrasingWeb.Router.Helpers, as: Routes
+  alias PhrasingWeb.UILive.Field
 
   def render(assigns) do
     ~L"""
-    <%= f = form_for @changeset, Routes.user_path(@socket, :create), [as: :session], fn f -> %>
+    <%= f = form_for @changeset, Routes.user_path(@socket, :create), [as: :session] %>
       <div class="g--container">
         <header>
-          Sign Up
+          <h1>
+            Sign up
+          </h1>
         </header>
 
         <main>
-          <div class="g--input top">
-            <%= label f, :email %>
-            <%= text_input f, :email %>
-          </div>
+          <%= live_component @socket, Field.Text, id: :email,
+            change_target: __MODULE__,
+            form: f,
+            icon: "far fa-at",
+            autofocus: true
+          %>
 
-          <div class="g--input bottom">
-            <%= label f, :password %>
-            <%= password_input f, :encrypted_password %>
-          </div>
+          <%= live_component @socket, Field.Password, id: :encrypted_password,
+            change_target: __MODULE__,
+            label: "Password",
+            form: f,
+            icon: "far fa-key"
+          %>
+
         </main>
 
         <footer>
-          <%= submit "Sign up", class: "g--button" %>
+          <%= submit "Sign up", class: "g--button-full" %>
+
+          <h5>
+            Already have an account? <a href="/signin">Sign in</a> here
+          </h5>
         </footer>
       </div>
-    <% end %>
+    </form>
     """
   end
 

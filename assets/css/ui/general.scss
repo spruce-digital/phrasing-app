@@ -6,6 +6,10 @@
   box-shadow: 0 2px 8px rgba($black, 0.33);
   border-radius: 4px;
 
+  a {
+    color: $color-icon;
+  }
+
   >header, .g--container--header {
     padding: 24px 0 0px;
     font-size: 22px;

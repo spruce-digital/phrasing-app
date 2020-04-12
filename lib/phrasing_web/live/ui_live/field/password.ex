@@ -6,7 +6,11 @@ defmodule PhrasingWeb.UILive.Field.Password do
     ~L"""
     <article class="ui--field <%= if @activated, do: "activated" %>" id="<%= @id %>">
       <header>
-        <%= label @form, @attr %>
+        <%= if assigns[:label] do %>
+          <%= label @form, @attr, @label %>
+        <% else %>
+          <%= label @form, @attr %>
+        <% end %>
       </header>
 
       <main>
@@ -29,13 +33,20 @@ defmodule PhrasingWeb.UILive.Field.Password do
     {:ok, assign(socket, activated: false)}
   end
 
+  def update(assigns, socket) do
+    socket =
+      socket
+      |> assign(assigns)
+      |> assign(:attr, assigns[:attr] || assigns[:id])
+
+    {:ok, socket}
+  end
+
   def handle_event("focus", _params, socket) do
-    IO.puts("focus password")
     {:noreply, assign(socket, activated: true)}
   end
 
   def handle_event("blur", _params, socket) do
-    IO.puts("blur password")
     value = input_value(socket.assigns.form, socket.assigns.attr)
 
     if value == nil || value == "" do

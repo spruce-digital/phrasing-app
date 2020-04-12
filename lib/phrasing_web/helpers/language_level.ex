@@ -1,7 +1,8 @@
 defmodule PhrasingWeb.Helpers.LanguageLevel do
-  alias Phrasing.Accounts.UserLanguage
+  alias Phrasing.Account.UserLanguage
 
   def to_user_languages(nil, user_id: user_id), do: []
+
   def to_user_languages(language_levels, user_id: user_id) do
     Enum.reduce(language_levels, [], fn {id, attrs}, acc ->
       add =
