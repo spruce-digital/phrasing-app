@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3
+
+Updates to error tracking config
+
 ## 1.1.2
 
 Add error tracking
