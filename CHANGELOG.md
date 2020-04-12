@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.1
+
+### Enhancements
+  - `SRSLive.Cards` Activate and deactivate cards
+  - `SRSLive.Cards` Show all cards
+
+### Breaking changes
+  - `SRS.list_active_cards/1` moved `user_id` to a named parameter
+
 ## 1.1.0
 
 First functional version! Can now search for and create phrases, add them to your memory, study the cards, and see the results.
