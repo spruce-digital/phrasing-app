@@ -5,14 +5,16 @@
 
   <main>
     <%= for {card, rep_count} <- @cards do %>
-      <div class="card">
+      <div class="card <%= if_active card, "", "inactive" %>">
         <div class="translation">
           <p class="translation-text">
             <%= card.translation.text %>
           </p>
 
-          <div class="learn">
-            <i class="fas fa-paper-plane"></i>
+          <div class="learn"
+               phx-value-tr="<%= card.translation.id %>"
+               phx-click="<%= if_active card, "stop_learning", "learn" %>">
+            <i class="<%= if_active card, "fas", "fal" %> fa-paper-plane"></i>
           </div>
         </div>
         <div class="card-details">

@@ -7,9 +7,7 @@ defmodule PhrasingWeb.SRSLive.Cards do
   alias Phrasing.Dict
 
   def mount(_params, %{"current_user_id" => user_id}, socket) do
-    cards =
-      SRS.list_active_cards(user_id)
-      |> IO.inspect()
+    cards = SRS.list_active_cards(user_id: user_id)
 
     socket =
       socket
@@ -25,4 +23,20 @@ defmodule PhrasingWeb.SRSLive.Cards do
       {:noreply, assign(socket, cards: cards)}
     end
   end
+
+  def handle_event("learn", %{"tr" => tr}, socket) do
+    case SRS.learn(translation_id: tr, user_id: socket.assigns.user_id) do
+      {:ok, _card} -> {:noreply, socket}
+      {:error, _error} -> {:noreply, put_flash(socket, :error, "An error occurred")}
+    end
+  end
+
+  def handle_event("stop_learning", %{"tr" => tr}, socket) do
+    case SRS.stop_learning(translation_id: tr, user_id: socket.assigns.user_id) do
+      {:ok, _card} -> {:noreply, socket}
+      {:error, _error} -> {:noreply, put_flash(socket, :error, "An error occurred")}
+    end
+  end
+
+  def if_active(card, active, inactive), do: if(card.active, do: active, else: inactive)
 end

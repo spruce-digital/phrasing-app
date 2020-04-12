@@ -39,4 +39,12 @@
     text-align: right;
     color: $color-subtext;
   }
+
+  .inactive p, .inactive span {
+    opacity: 0.33;
+  }
+
+  .inactive i {
+    @include light-hover(color, $color-field, 20);
+  }
 }

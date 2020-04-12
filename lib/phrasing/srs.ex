@@ -31,12 +31,11 @@ defmodule Phrasing.SRS do
     )
   end
 
-  def list_active_cards(user_id) do
+  def list_active_cards(user_id: user_id) do
     Repo.all(
       from c in Card,
         distinct: c.translation_id,
         where: c.user_id == ^user_id,
-        where: c.active == true,
         left_join: r in assoc(c, :reps),
         group_by: c.id,
         select: {c, count(r.id)},
