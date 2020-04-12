@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.6
+
+Improvements to session pages
+
+### Enhancements
+  - Remove logging and debugging strategies
+  - `.g--container` Style anchor tags
+
+### Bugfixes
+  - Remove all references to Accounts
+  - `SessionLive.SignUp` Fix form styles
+  - `SessionLive.SignIn` Fix `/signup` link
+
 ## 1.1.4
 
 Redirect failed logins to an existing page
