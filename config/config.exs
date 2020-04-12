@@ -23,6 +23,10 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Configure Sentry's Logger backend
+config :logger,
+  backends: [:console, Sentry.LoggerBackend]
+
 # Use Poison for JSON parsing in Phoenix and Ecto
 config :phoenix, :json_library, Poison
 config :postgrex, :json_library, Poison

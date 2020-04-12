@@ -1,5 +1,6 @@
 defmodule PhrasingWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :phrasing
+  use Sentry.Phoenix.Endpoint
 
   @session_options [
     store: :cookie,
