@@ -1,6 +1,15 @@
 # Changelog
 
+## 1.1.2
+
+Add error tracking
+
+### Enhancements
+  - `config` Add sentry to config
+
 ## 1.1.1
+
+Updates to user card management
 
 ### Enhancements
   - `SRSLive.Cards` Activate and deactivate cards
