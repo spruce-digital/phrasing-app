@@ -1,27 +1,54 @@
 defmodule PhrasingWeb.SRSLive.Flashcards do
-  use Phoenix.LiveView
+  use Phoenix.LiveView, layout: {PhrasingWeb.LayoutView, "live.html"}
 
   alias Phrasing.SRS
+  alias Phrasing.SRS.Card
   alias PhrasingWeb.FlashcardsView
 
   def deconstruct_queue([]), do: [nil]
   def deconstruct_queue(queue), do: queue
 
-  def mount(%{user_id: user_id}, socket) do
-    [current|queue] = deconstruct_queue SRS.queued_cards(user_id)
-    history = []
-
-    {:ok, assign(socket,
-      current: current,
-      flipped: false,
-      history: history,
-      queue: queue,
-      user_id: user_id,
-    )}
+  def render_score(assigns) do
+    ~L"""
+    <div class="score score-more">
+      <i class="fal fa-bars"></i>
+    </div>
+    """
   end
 
-  def render(assigns) do
-    FlashcardsView.render("index.html", assigns)
+  def render_score(assigns, score) when score < 6 do
+    class =
+      Enum.at(
+        [
+          "fal fa-exclamation-square",
+          "fal fa-tired",
+          "fal fa-times",
+          "fal fa-repeat",
+          "fal fa-check",
+          "fal fa-laugh-beam"
+        ],
+        score
+      )
+
+    ~L"""
+    <div class="score score-#{score}" phx-click="score" phx-value-score="#{score}">
+      <i class="<%= class %>"></i>
+    </div>
+    """
+  end
+
+  def mount(_params, %{"current_user_id" => user_id}, socket) do
+    [current | queue] = deconstruct_queue(SRS.queued_cards(user_id))
+    history = []
+
+    {:ok,
+     assign(socket,
+       current: current,
+       flipped: false,
+       history: history,
+       queue: queue,
+       user_id: user_id
+     )}
   end
 
   def handle_event("flip", _params, socket) do
@@ -29,17 +56,18 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
   end
 
   def handle_event("score", %{"score" => score}, socket) do
-    case SRS.score_card socket.assigns.current, String.to_integer(score) do
+    case SRS.score_card(socket.assigns.current, String.to_integer(score)) do
       {:ok, card} ->
-        history = [card|socket.assigns.history]
-        [current|queue] = deconstruct_queue SRS.queued_cards(socket.assigns.user_id)
+        history = [card | socket.assigns.history]
+        [current | queue] = deconstruct_queue(SRS.queued_cards(socket.assigns.user_id))
 
-        {:noreply, assign(socket, history: history, current: current, queue: queue, flipped: false)}
+        {:noreply,
+         assign(socket, history: history, current: current, queue: queue, flipped: false)}
 
       {:error, _msg} ->
         {:noreply,
-          socket
-          |> put_flash(:error, "An error occured")}
+         socket
+         |> put_flash(:error, "An error occured")}
     end
   end
 

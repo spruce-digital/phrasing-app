@@ -1,0 +1,71 @@
+<section class="flashcards--index">
+  <%= if !is_nil(@current) do %>
+    <%# DECK ########################################################%>
+    <main class="flashcards--deck">
+      <ul class="phrase-container">
+        <li class="phrase-attr-source">
+          <i class="fad fa-signal-alt-3"></i>
+          <h2><%= @current.translation.text %></h2>
+        </li>
+
+        <%= unless @flipped do %>
+          <%= if @current.hint do %>
+            <li class="phrase-attr-hint">
+              <i class="fal fa-question-square"></i>
+              <h4><%= @current.hint %></h4>
+            </li>
+          <% end %>
+        <% else %>
+          <li class="phrase-attr-english">
+            <i class="fal fa-flag-usa"></i>
+            <h3><%= Card.target(@current) %></h3>
+          </li>
+
+          <%= if @current.mnem do %>
+            <li class="phrase-attr-mnem">
+              <i class="fal fa-magic"></i>
+              <h4><%= @current.mnem %></h4>
+            </li>
+          <% end %>
+        <% end %>
+    </main>
+
+    <%# ANSWERS #####################################################%>
+    <aside class="flashcards--answers" data-flipped="<%= @flipped %>">
+      <%= if @flipped do %>
+        <div class="score-container-blackout">
+          <%= render_score %{}, 0 %>
+        </div>
+
+        <div class="score-container">
+          <%= render_score %{}, 1 %>
+
+          <div class="score-primary">
+            <%= render_score %{}, 2 %>
+            <%= render_score %{}, 3 %>
+            <%= render_score %{}, 4 %>
+          </div>
+
+          <%= render_score %{}, 5 %>
+        </div>
+
+        <div class="score-container-more">
+          <%= render_score %{} %>
+        </div>
+      <% else %>
+        <div class="flip" phx-click="flip">
+          <i class="far fa-redo"></i>
+        </div>
+      <% end %>
+    </aside>
+  <% else %>
+    <main class="flashcards--finished">
+      <i class="fad fa-dragon"></i>
+      <h2>Congratulations!</h2>
+      <p>You've conquered all of your reviews due today. You're a memory champ!</p>
+      <p>Enjoy the rest of the day off, or come back once you've added new phrases</p>
+      <div class="spacer" />
+    </main>
+    <aside class="flashcards--finished"></aside>
+  <% end %>
+</section>

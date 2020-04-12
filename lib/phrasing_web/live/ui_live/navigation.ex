@@ -15,6 +15,7 @@ defmodule PhrasingWeb.UILive.Navigation do
 
           <%= if @user != nil do %>
             <li><a href="/cards">Cards</a></li>
+            <li><a href="/flashcards">Study</a></li>
             <li class="profile">
               <i class="fal fa-user-circle" phx-click="toggle_dropdown" phx-target=".ui--navigation"></i>
               <%= if @open do %>

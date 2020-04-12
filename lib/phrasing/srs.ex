@@ -47,12 +47,13 @@ defmodule Phrasing.SRS do
   def queued_cards(user_id) do
     Repo.all(
       from c in Card,
-        distinct: c.phrase_id,
+        distinct: c.translation_id,
         join: r in assoc(c, :prev_rep),
-        join: p in assoc(c, :phrase),
+        join: t in assoc(c, :translation),
         where: r.due_date <= ^Timex.today(),
-        where: p.user_id == ^user_id,
-        preload: [:prev_rep, :phrase]
+        where: c.user_id == ^user_id,
+        where: c.active == true,
+        preload: [:prev_rep, translation: :language]
     )
   end
 

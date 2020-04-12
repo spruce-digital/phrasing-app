@@ -23,10 +23,8 @@ defmodule Phrasing.SRS.Card do
   end
 
   def source(card) do
-    card.phrase.translations[card.lang]
   end
 
   def target(card) do
-    card.phrase.translations[card.translation]
   end
 end
