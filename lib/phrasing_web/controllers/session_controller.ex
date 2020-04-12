@@ -16,7 +16,7 @@ defmodule PhrasingWeb.SessionController do
       {:error, _} ->
         conn
         |> put_flash(:error, "There was a problem with your email/password")
-        |> render("new.html")
+        |> redirect(to: Routes.session_sign_in_path(conn, :new))
     end
   end
 

@@ -19,7 +19,7 @@ config :phrasing, PhrasingWeb.Endpoint,
   http: [port: 8888],
   url: [scheme: "https", host: "phrasing.app", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  check_origin: ["https://phrasing.app", "https://www.phrasing.app"]
+  check_origin: ["https://phrasing.app", "https://www.phrasing.app", "http://127.0.0.1:8888"]
 
 # Sentry config (DSN in prod.secret.exs)
 config :sentry,
