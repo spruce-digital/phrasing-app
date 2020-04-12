@@ -7,9 +7,8 @@ defmodule Phrasing.SRS.Card do
     field :hint, :string
     field :mnem, :string
 
-    belongs_to :language, Phrasing.Dict.Language
     belongs_to :prev_rep, Phrasing.SRS.Rep
-    belongs_to :translation, Phrasing.Dict.Language
+    belongs_to :translation, Phrasing.Dict.Translation
     belongs_to :user, Phrasing.Account.User
     has_many :reps, Phrasing.SRS.Rep
 

@@ -19,7 +19,9 @@
         powered by <i class="fad fa-cat-space"></i> space ocelots
       </h6>
 
-      <p class="alert alert-dev" role="alert"><%= live_flash(@flash, :dev) %></p>
+      <%= if live_flash(@flash, :dev) do %>
+        <p class="alert alert-dev" role="alert"><%= live_flash(@flash, :dev) %></p>
+      <% end %>
     </footer>
   </main>
 </section>

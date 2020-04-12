@@ -6,6 +6,7 @@ defmodule Phrasing.Dict.Language do
     field :code, :string
     field :flag_code, :string
     field :name, :string
+    has_many :translations, Phrasing.Dict.Translation
     has_many :entries, Phrasing.Dict.Entry
     has_many :cards, Phrasing.SRS.Card
     has_many :card_translations, Phrasing.SRS.Card, foreign_key: :translation_id

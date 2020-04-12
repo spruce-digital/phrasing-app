@@ -1,0 +1,31 @@
+<section class="srs--cards">
+  <header>
+    <h2>Your Cards</h2>
+  </header>
+
+  <main>
+    <%= for {card, rep_count} <- @cards do %>
+      <div class="card">
+        <div class="translation">
+          <p class="translation-text">
+            <%= card.translation.text %>
+          </p>
+
+          <div class="learn">
+            <i class="fas fa-paper-plane"></i>
+          </div>
+        </div>
+        <div class="card-details">
+          <span class="language">
+            @<%= card.translation.language.code %>
+          </span>
+          <span class="rep-count">
+            Reps: <%= rep_count - 1 %>
+          </span>
+          <span class="due-date">
+            Due: <%= Timex.from_now(card.prev_rep.due_date) %>
+          </span>
+        </div>
+      </div>
+    <% end %>
+</section>

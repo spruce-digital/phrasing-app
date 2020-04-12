@@ -1,0 +1,42 @@
+.srs--cards {
+  @extend .g--container;
+
+  .card {
+    padding: 12px 0;
+  }
+
+  .translation {
+    padding-bottom: 6px;
+    display: flex;
+  }
+
+  .translation-text {
+    flex: 1;
+  }
+
+  .learn {
+    @include flex-center;
+    @include hoverable;
+    @include dark-hover(color, $color-icon, 20);
+  }
+
+  .card-details {
+    display: flex;
+    font-size: 12px;
+  }
+
+  .language {
+    color: $color-bang;
+    margin-right: 12px;
+  }
+
+  .rep-count {
+    color: $color-subtext;
+  }
+
+  .due-date {
+    flex: 1;
+    text-align: right;
+    color: $color-subtext;
+  }
+}
