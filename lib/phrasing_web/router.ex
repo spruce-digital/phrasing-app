@@ -1,5 +1,7 @@
 defmodule PhrasingWeb.Router do
   use PhrasingWeb, :router
+  use Plug.ErrorHandler
+  use Sentry.Plug
   import PhrasingWeb.Helpers.Auth, only: [check_auth: 2]
   import Phoenix.LiveView.Router
 

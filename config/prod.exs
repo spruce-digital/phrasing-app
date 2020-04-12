@@ -21,6 +21,16 @@ config :phrasing, PhrasingWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   check_origin: ["https://phrasing.app", "https://www.phrasing.app"]
 
+# Sentry config (DSN in prod.secret.exs)
+config :sentry,
+  environment_name: :prod,
+  enable_source_code_context: true,
+  root_source_code_path: File.cwd!(),
+  tags: %{
+    env: "production"
+  },
+  included_environments: [:prod]
+
 # Do not print debug messages in production
 config :logger, level: :info
 
