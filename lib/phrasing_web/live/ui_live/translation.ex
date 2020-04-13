@@ -4,7 +4,8 @@ defmodule PhrasingWeb.UILive.Translation do
   alias Phrasing.SRS
 
   @defaults %{
-    searched_for?: false
+    searched_for?: false,
+    user_id: nil
   }
 
   def update(assigns, socket) do
@@ -34,11 +35,13 @@ defmodule PhrasingWeb.UILive.Translation do
         <p class="text <%= if @searched_for?, do: "searched-for", else: "" %>">
           <%= @translation.text %>
         <p>
-      <div class="learn learn-<%= if active, do: "on", else: "off" %>"
-          phx-click="<%= if active, do: "stop_learning", else: "learn" %>"
-          phx-target="<%= @myself %>" phx-value-tr="<%= @translation.id %>">
-          <i class="<%= if active, do: "fas", else: "fal" %> fa-paper-plane"></i>
-        </div>
+        <%= if @user_id do %>
+          <div class="learn learn-<%= if active, do: "on", else: "off" %>"
+              phx-click="<%= if active, do: "stop_learning", else: "learn" %>"
+              phx-target="<%= @myself %>" phx-value-tr="<%= @translation.id %>">
+              <i class="<%= if active, do: "fas", else: "fal" %> fa-paper-plane"></i>
+          </div>
+        <% end %>
       </main>
     </li>
     """

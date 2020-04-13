@@ -24,7 +24,8 @@
       <% else %>
         <%= for t <- @phrase.translations do %>
           <%= live_component @socket, UILive.Translation, id: t.id,
-            translation: t
+            translation: t,
+            user_id: @user_id
           %>
         <% end %>
       <% end %>

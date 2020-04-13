@@ -1,4 +1,4 @@
-defmodule PhrasingWeb.PhraseLive.Edit do
+defmodule PhrasingWeb.PhraseLive.Show do
   use Phoenix.LiveView, layout: {PhrasingWeb.LayoutView, "live.html"}
   import Phoenix.HTML.Form
 

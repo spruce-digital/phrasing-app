@@ -10,7 +10,8 @@ defmodule PhrasingWeb.SearchLive.Phrase do
         <ul class="translations">
           <%= for tr <- @phrase.translations do %>
             <%= live_component @socket, UILive.Translation, id: tr.id,
-              translation: tr
+              translation: tr,
+              user_id: assigns[:user_id]
             %>
           <% end %>
         </ul>
@@ -20,7 +21,7 @@ defmodule PhrasingWeb.SearchLive.Phrase do
   end
 
   def handle_event("show_phrase", _params, socket) do
-    path = Routes.phrase_edit_path(socket, :show, socket.assigns.phrase.id)
+    path = Routes.phrase_show_path(socket, :show, socket.assigns.phrase.id)
     {:noreply, push_redirect(socket, to: path)}
   end
 end

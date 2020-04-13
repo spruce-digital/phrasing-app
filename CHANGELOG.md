@@ -8,6 +8,9 @@
   - `SearchLive.Phrase` Phrases are now navagatable and clickable
   - `UILive.Translation` Abstracted translation view into reusable component
 
+### Bugfixes
+  - `UILive.Translation` Provide @user_id
+
 ## 1.1.6
 
 Improvements to session pages
