@@ -5,16 +5,28 @@
 
       <h1>View Phrase</h1>
 
-      <span class="g--container--nav">
-        <i class="fal fa-pencil"></i>
+      <span class="g--container--nav" phx-click="toggle_edit">
+        <i class="<%= if assigns[:changeset], do: "fas", else: "fal" %> fa-pencil"></i>
       </span>
     </header>
 
     <main>
-      <%= for t <- @phrase.translations do %>
-        <%= live_component @socket, UILive.Translation, id: t.id,
-          translation: t
-        %>
+      <%= if assigns[:changeset] do %>
+        <%= f = form_for @changeset, "#", [phx_change: :validate, phx_submit: :save] %>
+          <%= for t <- @phrase.translations do %>
+            <%= live_component @socket, UILive.Field.Text, id: "#{t.id}-text",
+              attr: :text,
+              change_target: __MODULE__,
+              form: f
+            %>
+          </form>
+        <% end %>
+      <% else %>
+        <%= for t <- @phrase.translations do %>
+          <%= live_component @socket, UILive.Translation, id: t.id,
+            translation: t
+          %>
+        <% end %>
       <% end %>
     </main>
   </div>

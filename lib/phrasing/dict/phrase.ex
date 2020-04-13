@@ -22,7 +22,6 @@ defmodule Phrasing.Dict.Phrase do
 
     phrase
     |> cast(attrs, [:user_id])
-    |> cast_assoc(:cards)
     |> cast_assoc(:translations)
     |> validate_required([:user_id])
   end
