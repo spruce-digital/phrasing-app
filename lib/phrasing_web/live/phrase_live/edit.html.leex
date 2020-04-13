@@ -1,0 +1,21 @@
+<section class="phrase--edit">
+  <div class="g--container">
+    <header>
+      <span class="g--container--nav"></span>
+
+      <h1>View Phrase</h1>
+
+      <span class="g--container--nav">
+        <i class="fal fa-pencil"></i>
+      </span>
+    </header>
+
+    <main>
+      <%= for t <- @phrase.translations do %>
+        <%= live_component @socket, UILive.Translation, id: t.id,
+          translation: t
+        %>
+      <% end %>
+    </main>
+  </div>
+</section>

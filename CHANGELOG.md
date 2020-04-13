@@ -3,7 +3,10 @@
 ## 1.1.7
 
 ### Enhancements
+  - `PhraseLive.Edit` Created a dedicated edit phrase page
   - `SearchLive.Phrase` Better support for multiline translations
+  - `SearchLive.Phrase` Phrases are now navagatable and clickable
+  - `UILive.Translation` Abstracted translation view into reusable component
 
 ## 1.1.6
 

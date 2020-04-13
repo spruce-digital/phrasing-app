@@ -21,7 +21,10 @@ defmodule PhrasingWeb.SearchLive.Index do
 
   def mount(_params, %{"current_user_id" => user_id}, socket) do
     languages = Dict.list_languages()
-    recent_phrases = Dict.list_phrases(user_id)
+
+    recent_phrases =
+      Dict.list_phrases(user_id)
+      |> Phrasing.Repo.preload(translations: :language)
 
     socket =
       socket

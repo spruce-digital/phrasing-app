@@ -133,6 +133,14 @@ Hooks.TokenField = {
   }
 }
 
+Hooks.GoBack = {
+  mounted() {
+    this.el.addEventListener('click', () => {
+      setTimeout(() => window.history.back(), 0)
+    })
+  },
+}
+
 window.Add = {
   navbar() {
     window.__phrasing__.pushAdderEvent('open', {})

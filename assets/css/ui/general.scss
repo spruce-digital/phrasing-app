@@ -11,10 +11,24 @@
   }
 
   >header, .g--container--header {
-    padding: 24px 0 0px;
-    font-size: 22px;
-    text-align: center;
+    @include flex-center;
     color: $color-icon;
+    font-size: 22px;
+    padding: 24px 24px 0px;
+    text-align: center;
+  }
+
+  >header h1, >header h2, >header h3 {
+    flex: 1;
+  }
+
+  >header .g--container--nav {
+    @include flex-center;
+    width: 24px;
+  }
+
+  >header i {
+    font-size: 18px;
   }
 
   >main, .g--container--main {

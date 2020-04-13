@@ -1,0 +1,76 @@
+.ui--translation {
+  $height: 48px;
+  display: flex;
+  align-items: center;
+  overflow: none;
+  min-height: 48px;
+  align-items: flex-start;
+
+  &:not(:first-child) {
+    border-top: 1px solid $white----;
+  }
+
+  >aside {
+    @include flex-center;
+    width: $height;
+  }
+
+  >aside .flag-icon {
+    $size: 24px;
+    border-radius: $size / 2;
+    display: block;
+    height: $size;
+    margin: 12px 0 12px 12px;
+    overflow: hidden;
+    width: $size;
+    background-size: cover;
+  }
+
+  >main {
+    align-self: stretch;
+    display: flex;
+    align-items: flex-start;
+    padding: 0 12px 0 12px;
+    flex: 1;
+  }
+
+  .language-code {
+    font-family: "Operator Mono", monospace;
+    padding-left: 6px;
+    @include flex-center;
+    height: $height;
+    box-sizing: border-box;
+    border-radius: 2px;
+    color: $color-bang;
+    letter-spacing: 1px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .text {
+    flex: 1;
+    box-sizing: border-box;
+    padding: 14px 0;
+  }
+
+  .learn {
+    @include flex-center;
+    height: $height;
+    margin-right: 12px;
+    font-size: 18px;
+  }
+
+  .learn-off  {
+    @include hoverable;
+    @include light-hover(color, $color-field, 20);
+  }
+
+  .learn-on {
+    @include dark-hover(color, $color-icon, 20);
+    @include hoverable;
+  }
+
+  .searched-for {
+    font-weight: bold;
+  }
+}

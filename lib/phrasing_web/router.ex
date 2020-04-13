@@ -38,6 +38,7 @@ defmodule PhrasingWeb.Router do
     live "/admin", AdminLive.Index, :index
     live "/cards", SRSLive.Cards, :index
     live "/flashcards", SRSLive.Flashcards, :flashcards
+    live "/phrases/:id", PhraseLive.Edit, :show
     get "/library", LibraryController, :index
     resources "/scripts", ScriptController, only: [:new]
     resources "/songs", SongController, only: [:new]
