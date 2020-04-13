@@ -62,10 +62,12 @@ $search--phrase---border-radius: 4px;
 }
 
 .search--phrase--translation {
+  $height: 48px;
   display: flex;
   align-items: center;
   overflow: none;
-  height: 48px;
+  min-height: 48px;
+  align-items: flex-start;
 
   &:not(:first-child) {
     border-top: 1px solid $white----;
@@ -73,7 +75,7 @@ $search--phrase---border-radius: 4px;
 
   >aside {
     @include flex-center;
-    width: 48px;
+    width: $height;
   }
 
   >aside .flag-icon {
@@ -84,20 +86,23 @@ $search--phrase---border-radius: 4px;
     margin: 12px 0 12px 12px;
     overflow: hidden;
     width: $size;
+    background-size: cover;
   }
 
   >main {
-    @include flex-center;
     align-self: stretch;
     display: flex;
-    align-items: center;
-    padding: 0 12px;
+    align-items: flex-start;
+    padding: 0 12px 0 12px;
     flex: 1;
   }
 
   .language-code {
     font-family: "Operator Mono", monospace;
-    padding: 1px 2px 2px 0;
+    padding-left: 6px;
+    @include flex-center;
+    height: $height;
+    box-sizing: border-box;
     border-radius: 2px;
     color: $color-bang;
     letter-spacing: 1px;
@@ -107,9 +112,13 @@ $search--phrase---border-radius: 4px;
 
   .text {
     flex: 1;
+    box-sizing: border-box;
+    padding: 14px 0;
   }
 
   .learn {
+    @include flex-center;
+    height: $height;
     margin-right: 12px;
     font-size: 18px;
   }

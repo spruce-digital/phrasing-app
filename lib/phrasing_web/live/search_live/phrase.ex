@@ -56,11 +56,11 @@ defmodule PhrasingWeb.SearchLive.Phrase do
           title="<%= language.name %>"
         ></span>
       </aside>
+      <div class="language-code">
+        @<%= language.code %>
+      </div>
       <main>
         <p class="text <%= if searched_for?, do: "searched-for", else: "" %>">
-          <span class="language-code">
-            @<%= language.code %>
-          </span>
           <%= assigns.translation.text %>
         <p>
       <div class="learn learn-<%= if active, do: "on", else: "off" %>"

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.7
+
+### Enhancements
+  - `SearchLive.Phrase` Better support for multiline translations
+
 ## 1.1.6
 
 Improvements to session pages
