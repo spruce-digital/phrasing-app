@@ -10,6 +10,7 @@
 
 ### Bugfixes
   - `UILive.Translation` Provide @user_id
+  - `SRSLive.Flashcards` Fix rendering of scoring buttons
 
 ## 1.1.6
 
