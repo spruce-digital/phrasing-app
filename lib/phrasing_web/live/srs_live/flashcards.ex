@@ -31,7 +31,7 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
       )
 
     ~L"""
-    <div class="score score-#{score}" phx-click="score" phx-value-score="#{score}">
+    <div class="score score-<%= score %>" phx-click="score" phx-value-score="<%= score %>">
       <i class="<%= class %>"></i>
     </div>
     """
