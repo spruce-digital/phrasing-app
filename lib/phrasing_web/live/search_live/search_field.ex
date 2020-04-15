@@ -10,8 +10,6 @@ defmodule PhrasingWeb.SearchLive.SearchField do
   end
 
   def update(assigns, socket) do
-    IO.inspect(assigns.search)
-
     socket =
       socket
       |> assign(assigns)

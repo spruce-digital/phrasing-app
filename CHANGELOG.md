@@ -4,6 +4,7 @@
 
 ### Enhancements
   - `PhraseLive.Edit` Created a dedicated edit phrase page
+  - `PhraseLive.TranslationForm` Add translations to a phrase
   - `SearchLive.Phrase` Better support for multiline translations
   - `SearchLive.Phrase` Phrases are now navagatable and clickable
   - `UILive.Translation` Abstracted translation view into reusable component

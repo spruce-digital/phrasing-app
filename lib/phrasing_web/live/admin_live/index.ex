@@ -32,8 +32,6 @@ defmodule PhrasingWeb.AdminLive.Index do
   end
 
   def handle_event("create_language", %{"language" => language_params}, socket) do
-    IO.inspect(language_params)
-
     case Dict.create_language(language_params) do
       {:ok, language} ->
         languages = [language | socket.assigns.languages]

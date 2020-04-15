@@ -90,7 +90,6 @@ defmodule PhrasingWeb.SearchLive.Index do
   end
 
   def handle_info({:select_language, language_id}, socket) do
-    IO.puts(:handle_info)
     search = Map.put(socket.assigns.search, :language_id, language_id)
 
     socket =
@@ -153,7 +152,6 @@ defmodule PhrasingWeb.SearchLive.Index do
   end
 
   defp assign_search(socket, search) do
-    IO.inspect(search, label: :assign_search)
     suggestions = if search.text == "", do: [], else: Dict.search(search)
     state = if search.text == "", do: :pristine, else: :searching
 

@@ -5,7 +5,7 @@ defmodule PhrasingWeb.AdderView do
   alias Ecto.Changeset
   alias PhrasingWeb.UILive
 
-  def language_class language, changeset do
+  def language_class(language, changeset) do
     value = Access.get(language, :value)
     current = Changeset.get_field(changeset, :lang)
 
@@ -20,11 +20,9 @@ defmodule PhrasingWeb.AdderView do
     [:translation, :literal, :translit]
   end
 
-  def entry_placeholder changeset do
+  def entry_placeholder(changeset) do
     translations = Changeset.get_field(changeset, :translations)
     lang = Changeset.get_field(changeset, :lang)
-
-    IO.inspect(changeset)
 
     translations[lang]
   end

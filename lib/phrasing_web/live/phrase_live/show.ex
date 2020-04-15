@@ -21,8 +21,6 @@ defmodule PhrasingWeb.PhraseLive.Show do
       |> assign(@defaults)
       |> assign(phrase: phrase, user_id: user_id)
 
-    IO.inspect(TranslationForm)
-
     {:ok, socket}
   end
 

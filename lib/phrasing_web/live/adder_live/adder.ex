@@ -48,7 +48,6 @@ defmodule PhrasingWeb.AdderLive.Adder do
     Changeset.put_assoc(changeset, :entry, entry_params)
   end
   def update_changeset(changeset, target, _phrase) do
-    IO.puts "Did not capture target: #{Enum.join(target, ", ")}"
     changeset
   end
 

@@ -74,8 +74,6 @@ defmodule Phrasing.SRS do
   def stop_learning(translation_id: translation_id, user_id: user_id) do
     tr = Dict.get_translation!(translation_id)
 
-    IO.inspect(list_cards(tr, user_id: user_id))
-
     case list_cards(tr, user_id: user_id) do
       [] -> {:ok, nil}
       [card] -> update_card(card, %{"active" => false})

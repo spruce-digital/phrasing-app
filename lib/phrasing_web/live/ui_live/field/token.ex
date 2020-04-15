@@ -112,7 +112,6 @@ defmodule PhrasingWeb.UILive.Field.Token do
     value =
       socket.assigns.value
       |> Enum.filter(fn v -> v != value end)
-      |> IO.inspect()
 
     {:noreply, assign(socket, value: value)}
   end
