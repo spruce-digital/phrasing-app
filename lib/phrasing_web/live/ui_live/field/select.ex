@@ -2,10 +2,26 @@ defmodule PhrasingWeb.UILive.Field.Select do
   use Phoenix.LiveComponent
   import Phoenix.HTML.Form
 
+  @defaults %{
+    form_selector: nil
+  }
+
   def render_label(assigns, ""), do: ""
 
   def render_label(assigns, value) do
-    if assigns[:getLabel] && value, do: assigns.getLabel.(value), else: value
+    vopts = assigns.visible_options
+
+    cond do
+      assigns[:labels] && value ->
+        index = Enum.find_index(vopts, &(to_string(&1) == to_string(value)))
+        Enum.at(assigns.labels, index, value)
+
+      assigns[:getLabel] && value ->
+        assigns.getLabel.(value)
+
+      true ->
+        value
+    end
   end
 
   def render(assigns) do
@@ -14,6 +30,7 @@ defmodule PhrasingWeb.UILive.Field.Select do
       class="ui--field--select <%= if @active, do: "active" %>"
       id="<%= @id %>"
       phx-hook="SelectField"
+      data-form-selector=<%= @form_selector %>
     >
       <%= hidden_input @form, @attr %>
 
@@ -60,10 +77,12 @@ defmodule PhrasingWeb.UILive.Field.Select do
 
     socket =
       socket
+      |> assign(@defaults)
       |> assign(assigns)
-      |> assign(visible_options: assigns[:options])
+      |> assign_languages(assigns.languages)
+      |> assign_visible_options()
       |> assign(:attr, attr)
-      |> assign(value: render_label(assigns, input_value(assigns.form, attr)))
+      |> assign_value()
 
     {:ok, socket}
   end
@@ -91,5 +110,22 @@ defmodule PhrasingWeb.UILive.Field.Select do
 
   def handle_event("select", %{"value" => value}, socket) do
     {:noreply, assign(socket, active: false, value: render_label(socket.assigns, value))}
+  end
+
+  defp assign_languages(socket, nil), do: socket
+
+  defp assign_languages(socket, languages) do
+    options = Enum.map(languages, & &1.id)
+    labels = Enum.map(languages, & &1.name)
+    assign(socket, options: options, labels: labels)
+  end
+
+  defp assign_visible_options(socket) do
+    assign(socket, visible_options: socket.assigns.options)
+  end
+
+  defp assign_value(socket) do
+    value = input_value(socket.assigns.form, socket.assigns.attr)
+    assign(socket, value: render_label(socket.assigns, value))
   end
 end

@@ -6,9 +6,9 @@
   min-height: 48px;
   align-items: flex-start;
 
-  &:not(:first-child) {
-    border-top: 1px solid $white----;
-  }
+  // &:not(:first-child) {
+  //   border-top: 1px solid $white----;
+  // }
 
   >aside {
     @include flex-center;

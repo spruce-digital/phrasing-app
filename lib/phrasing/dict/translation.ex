@@ -7,6 +7,7 @@ defmodule Phrasing.Dict.Translation do
     field :text, :string
     field :script, :string, default: "latin"
     field :delete, :boolean, default: false, virtual: true
+    field :guid, :integer, virtual: true
     belongs_to :language, Phrasing.Dict.Language
     belongs_to :phrase, Phrasing.Dict.Phrase
     has_many :cards, Phrasing.SRS.Card
@@ -17,7 +18,7 @@ defmodule Phrasing.Dict.Translation do
   @doc false
   def changeset(translation, attrs) do
     translation
-    |> cast(attrs, [:text, :source, :language_id, :phrase_id])
+    |> cast(attrs, [:text, :source, :language_id, :phrase_id, :guid])
     |> validate_required([:text, :source, :language_id, :phrase_id])
     |> sweep()
   end

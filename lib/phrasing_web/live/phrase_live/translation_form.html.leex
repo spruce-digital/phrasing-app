@@ -1,0 +1,26 @@
+<section class="phrase--translation-form" id="<%= @id %>">
+  <%= f = form_for @changeset, "#", form_opts(@myself) %>
+    <div>
+      <%= hidden_input f, :guid %>
+      <%= hidden_input f, :user_id %>
+      <%= hidden_input f, :phrase_id %>
+
+      <%= live_component @socket, Field.Select, id: "#{@id}-language_id",
+        attr: :language_id,
+        change_target: @myself,
+        form: f,
+        form_selector: "##{@id}",
+        languages: @languages
+      %>
+
+      <%= live_component @socket, Field.Text, id: "#{@id}-text",
+        attr: :text,
+        form: f,
+        change_target: @myself
+      %>
+
+      <%= submit "Save" %>
+    </div>
+  </form>
+</section>
+

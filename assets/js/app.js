@@ -52,6 +52,9 @@ Hooks.SelectField = {
     this.onClick = Hooks.SelectField.onClick.bind(this)
     this.onDocumentClick = Hooks.SelectField.onDocumentClick.bind(this)
     this.pushCompEvent = (act, args) => this.pushEventTo(this.selector, act, args)
+    this.pushFormEvent = this.el.dataset.formSelector
+      ? (act, args) => this.pushEventTo(this.el.dataset.formSelector, act, args)
+      : this.pushEvent
 
     this.events.call(this, 'add')
   },
@@ -64,7 +67,7 @@ Hooks.SelectField = {
     if (options.includes(event.target)) {
       const params = {value: "" + event.target.dataset.value}
       input.value = event.target.dataset.value
-      this.pushEvent('validate', serializeForm(input.form))
+      this.pushFormEvent('validate', serializeForm(input.form))
       this.pushCompEvent('select', params)
       // setTimeout(() => this.pushCompEvent('blur', {}), 0)
     }

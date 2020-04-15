@@ -1,34 +1,26 @@
 <section class="phrase--edit">
   <div class="g--container">
     <header>
-      <span class="g--container--nav"></span>
-
       <h1>View Phrase</h1>
-
-      <span class="g--container--nav" phx-click="toggle_edit">
-        <i class="<%= if assigns[:changeset], do: "fas", else: "fal" %> fa-pencil"></i>
-      </span>
     </header>
 
     <main>
-      <%= if assigns[:changeset] do %>
-        <%= f = form_for @changeset, "#", [phx_change: :validate, phx_submit: :save] %>
-          <%= for t <- @phrase.translations do %>
-            <%= live_component @socket, UILive.Field.Text, id: "#{t.id}-text",
-              attr: :text,
-              change_target: __MODULE__,
-              form: f
-            %>
-          </form>
-        <% end %>
-      <% else %>
-        <%= for t <- @phrase.translations do %>
-          <%= live_component @socket, UILive.Translation, id: t.id,
-            translation: t,
-            user_id: @user_id
-          %>
-        <% end %>
+      <%= for tr <- @phrase.translations do %>
+        <%= live_component @socket, UILive.Translation, id: tr_id(tr),
+          translation: tr,
+          user_id: @user_id
+        %>
+      <% end %>
+
+      <%= for tr <- @translations do %>
+        <%= live_component @socket, TranslationForm, id: tr_id(tr),
+          changeset: tr
+        %>
       <% end %>
     </main>
+
+    <footer>
+      <button class="g--button" phx-click="add_translation">Add Translation</button>
+    </footer>
   </div>
 </section>

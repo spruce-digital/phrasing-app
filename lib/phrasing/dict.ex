@@ -569,7 +569,17 @@ defmodule Phrasing.Dict do
       %Ecto.Changeset{source: %Translation{}}
 
   """
-  def change_translation(%Translation{} = translation) do
-    Translation.changeset(translation, %{})
+  def change_translation(%Translation{} = translation, params \\ %{}) do
+    Translation.changeset(translation, params)
+  end
+
+  def save_translation(attrs) do
+    if !attrs["id"] do
+      create_translation(attrs)
+    else
+      attrs["id"]
+      |> get_translation!()
+      |> update_translation(attrs)
+    end
   end
 end
