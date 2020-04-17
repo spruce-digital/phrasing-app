@@ -28,7 +28,7 @@ defmodule PhrasingWeb.PhraseLive.TranslationForm do
   def handle_event("save", %{"translation" => tr_params}, socket) do
     case Dict.save_translation(tr_params) do
       {:ok, _translation} ->
-      send(self(), {:flash, :success, "Translation saved"})
+        send(self(), {:flash, :success, "Translation saved"})
         {:noreply, socket}
 
       {:error, _changeset} ->

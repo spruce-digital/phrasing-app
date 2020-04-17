@@ -1,5 +1,6 @@
 defmodule Phrasing.Dict.Translation do
   use Ecto.Schema
+  use StructAccess
   import Ecto.Changeset
 
   schema "translations" do

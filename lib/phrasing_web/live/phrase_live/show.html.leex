@@ -5,22 +5,34 @@
     </header>
 
     <main>
-      <%= for tr <- @phrase.translations do %>
-        <%= live_component @socket, UILive.Translation, id: tr_id(tr),
-          translation: tr,
-          user_id: @user_id
-        %>
+      <%= for tr <- translations(@phrase.translations, @changesets) do %>
+        <div class="show-translation">
+          <%= if tr_type(tr) == :tr do %>
+            <div class="edit-translation" phx-click="edit" phx-value-id="<%= tr.id %>">
+              <i class="fal fa-pencil"></i>
+            </div>
+
+            <div class="translation">
+              <%= live_component @socket, UILive.Translation, id: tr_id(tr),
+                translation: tr,
+                user_id: @user_id
+              %>
+            </div>
+          <% else %>
+            <%= live_component @socket, TranslationForm, id: tr_id(tr),
+              changeset: tr
+            %>
+          <% end %>
+          </div>
+
       <% end %>
 
-      <%= for tr <- @translations do %>
-        <%= live_component @socket, TranslationForm, id: tr_id(tr),
-          changeset: tr
-        %>
+      <%= for tr <- @changesets do %>
       <% end %>
     </main>
 
     <footer>
-      <button class="g--button" phx-click="add_translation">Add Translation</button>
+      <button class="g--button" phx-click="add">Add Translation</button>
     </footer>
   </div>
 </section>

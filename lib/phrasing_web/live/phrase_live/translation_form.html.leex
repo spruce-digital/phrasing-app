@@ -19,7 +19,10 @@
         change_target: @myself
       %>
 
-      <%= submit "Save" %>
+      <button type="button" class="g--button" phx-click="cancel" phx-value-guid="<%= input_value(f, :guid) %>">
+        Cancel
+      </button>
+      <%= submit "Save", class: "g--button" %>
     </div>
   </form>
 </section>

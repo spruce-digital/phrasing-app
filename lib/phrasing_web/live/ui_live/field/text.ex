@@ -15,6 +15,7 @@ defmodule PhrasingWeb.UILive.Field.Text do
         <% end %>
 
         <%= text_input @form, @attr,
+          id: "#{@id}_#{@attr}",
           phx_focus: :focus,
           phx_blur: :blur,
           phx_target: @myself

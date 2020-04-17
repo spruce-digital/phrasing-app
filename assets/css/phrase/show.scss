@@ -1,0 +1,17 @@
+.phrase--edit {
+
+  .show-translation {
+    display: flex;
+    align-items: center;
+  }
+
+  .translation {
+    flex: 1;
+  }
+
+  .edit-translation {
+    @include flex-center;
+    @include hoverable;
+    @include light-hover(color, $color-subtext, 30);
+  }
+}
