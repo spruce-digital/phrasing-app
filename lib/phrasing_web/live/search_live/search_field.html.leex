@@ -1,4 +1,4 @@
-<form class="search--search-field" phx-submit="search" phx-change="query">
+<form class="search--search-field" phx-change="filter" phx-window-keydown="keydown">
   <input
     type="hidden"
     name="search[language_id]"
@@ -24,7 +24,7 @@
     />
   </div>
 
-  <div class="create-phrase" phx-click="create_phrase">
+  <div class="create-phrase <%= if disabled?(@search), do: "disabled" %>" phx-click="create_phrase">
     <i class="fal fa-plus"></i>
   </div>
 

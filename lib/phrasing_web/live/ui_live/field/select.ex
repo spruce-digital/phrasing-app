@@ -79,7 +79,7 @@ defmodule PhrasingWeb.UILive.Field.Select do
       socket
       |> assign(@defaults)
       |> assign(assigns)
-      |> assign_languages(assigns.languages)
+      |> assign_languages(assigns[:languages])
       |> assign_visible_options()
       |> assign(:attr, attr)
       |> assign_value()

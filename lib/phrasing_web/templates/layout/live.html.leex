@@ -1,5 +1,5 @@
 <section class="layout--live">
-  <%= live_component @socket, PhrasingWeb.UILive.Navigation, id: :nav, user_id: assigns[:user_id] %>
+  <%= live_component @socket, PhrasingWeb.UILive.Navigation, id: :nav, user_id: assigns[:user_id], user: assigns[:user] %>
 
   <main>
     <aside>

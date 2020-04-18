@@ -7,86 +7,28 @@ defmodule PhrasingWeb.SearchLive.Index do
   alias Phrasing.Dict
   alias Phrasing.Dict.{Phrase, Search}
   alias PhrasingWeb.{SearchLive, UILive}
+  alias PhrasingWeb.Router.Helpers, as: Routes
 
   @defaults %{
-    detect: true,
-    error: nil,
+    filter_translations: false,
     last_paired_languages: [],
-    message: nil,
-    results: [],
-    search: %Search{},
-    state: :pristine,
-    suggestions: []
+    phrases: [],
+    search: %Search{}
   }
 
   def mount(_params, %{"current_user_id" => user_id}, socket) do
     languages = Dict.list_languages()
 
-    recent_phrases =
-      Dict.list_phrases(user_id)
-      |> Phrasing.Repo.preload(translations: :language)
-
     socket =
       socket
-      |> assign_state(@defaults.state)
       |> assign(@defaults)
       |> assign(%{
         user_id: user_id,
-        languages: languages,
-        recent_phrases: recent_phrases
+        languages: languages
       })
+      |> assign_search(%Search{})
 
     {:ok, socket}
-  end
-
-  def render(assigns) do
-    ~L"""
-    <div class="search--index">
-      <main>
-        <%= if @error do %>
-          <h4><%= @error %></h4>
-        <% end %>
-        <%= if @message do %>
-          <h4><%= @message %></h4>
-        <% end %>
-
-        <%= live_component @socket, SearchLive.SearchField, id: :search_field,
-          search: @search,
-          languages: @languages
-        %>
-
-        <%= render_body assigns %>
-      </main>
-    </div>
-    """
-  end
-
-  def render_body(a) do
-    case a.state do
-      :pristine ->
-        live_component(a.socket, SearchLive.RecentPhrases,
-          id: :pristine,
-          search: a.search,
-          recent_phrases: a.recent_phrases,
-          user_id: a.user_id
-        )
-
-      :searching ->
-        live_component(a.socket, SearchLive.Suggestions,
-          # id: :suggestions,
-          languages: a.languages,
-          phrases: a.suggestions,
-          search: a.search
-        )
-
-      :results ->
-        live_component(a.socket, SearchLive.Results,
-          id: :results,
-          results: a.results,
-          search: a.search,
-          user_id: a.user_id
-        )
-    end
   end
 
   def handle_info({:select_language, language_id}, socket) do
@@ -95,27 +37,29 @@ defmodule PhrasingWeb.SearchLive.Index do
     socket =
       socket
       |> assign_search(search)
-      |> assign_state(search)
 
     {:noreply, socket}
   end
 
-  def handle_event("query", %{"_target" => ["search", field], "search" => search_params}, socket) do
+  def handle_event("filter", %{"_target" => ["search", field], "search" => search_params}, socket) do
     search = Search.new(search_params)
 
     socket =
       socket
       |> assign_search(search)
-      |> assign_state(search)
+      |> assign(filter_translations: search.text != "")
+
+    IO.inspect(socket.assigns.filter_translations)
 
     {:noreply, socket}
   end
 
-  def handle_event("search", _params, socket) do
-    {:noreply,
-     socket
-     |> assign_state(:results)
-     |> assign(state: :results, results: socket.assigns.suggestions)}
+  def handle_event("keydown", %{"code" => "Enter"}, socket) do
+    {:noreply, assign(socket, filter_translations: false)}
+  end
+
+  def handle_event("keydown", _params, socket) do
+    {:noreply, socket}
   end
 
   def handle_event("create_phrase", _params, socket) do
@@ -135,26 +79,28 @@ defmodule PhrasingWeb.SearchLive.Index do
     end
   end
 
+  def handle_event("show_phrase:" <> id, _params, socket) do
+    path = Routes.phrase_show_path(socket, :show, id)
+    {:noreply, push_redirect(socket, to: path)}
+  end
+
   ## PRIVATE ##################################################################
 
-  defp assign_state(socket, %Search{} = search) do
-    state = if search.text == "", do: :pristine, else: :searching
-
-    socket
-    |> assign(state: state)
-    |> put_flash(:dev, "state:#{state}")
-  end
-
-  defp assign_state(socket, state) do
-    socket
-    |> assign(state: state)
-    |> put_flash(:dev, "state:#{state}")
-  end
-
   defp assign_search(socket, search) do
-    suggestions = if search.text == "", do: [], else: Dict.search(search)
-    state = if search.text == "", do: :pristine, else: :searching
+    phrases =
+      if search.text == "" do
+        Dict.list_phrases(socket.assigns.user_id)
+        |> Phrasing.Repo.preload(translations: :language)
+      else
+        Dict.search(search)
+      end
 
-    assign(socket, search: search, suggestions: suggestions)
+    assign(socket, search: search, phrases: phrases)
+  end
+
+  defp tr_id(tr), do: "search_phrase_#{tr.phrase_id}_tr_#{tr.id}"
+
+  defp tr_match?(tr, %Search{} = search) do
+    String.contains?(String.downcase(tr.text), String.downcase(search.text))
   end
 end

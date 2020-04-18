@@ -230,6 +230,11 @@ $search--phrase---border-radius: 4px;
     width: 60px;
   }
 
+  .create-phrase.disabled {
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
   @include placeholder {
     color: $color-icon;
     opacity: 0.5;

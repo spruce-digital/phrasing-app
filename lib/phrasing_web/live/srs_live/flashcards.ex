@@ -1,6 +1,8 @@
 defmodule PhrasingWeb.SRSLive.Flashcards do
   use Phoenix.LiveView, layout: {PhrasingWeb.LayoutView, "live.html"}
 
+  alias Phrasing.Account
+  alias Phrasing.Dict
   alias Phrasing.SRS
   alias Phrasing.SRS.Card
   alias PhrasingWeb.FlashcardsView
@@ -39,6 +41,12 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
 
   def mount(_params, %{"current_user_id" => user_id}, socket) do
     [current | queue] = deconstruct_queue(SRS.queued_cards(user_id))
+
+    user =
+      user_id
+      |> Account.get_user!()
+      |> Phrasing.Repo.preload([:user_languages])
+
     history = []
 
     {:ok,
@@ -47,19 +55,24 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
        flipped: false,
        history: history,
        queue: queue,
-       user_id: user_id
+       user: user
      )}
   end
 
   def handle_event("flip", _params, socket) do
-    {:noreply, assign(socket, flipped: true)}
+    socket =
+      socket
+      |> assign(flipped: true)
+      |> assign_known_translation()
+
+    {:noreply, socket}
   end
 
   def handle_event("score", %{"score" => score}, socket) do
     case SRS.score_card(socket.assigns.current, String.to_integer(score)) do
       {:ok, card} ->
         history = [card | socket.assigns.history]
-        [current | queue] = deconstruct_queue(SRS.queued_cards(socket.assigns.user_id))
+        [current | queue] = deconstruct_queue(SRS.queued_cards(socket.assigns.user.id))
 
         {:noreply,
          assign(socket, history: history, current: current, queue: queue, flipped: false)}
@@ -83,4 +96,20 @@ defmodule PhrasingWeb.SRSLive.Flashcards do
 
   #   {:noreply, assign(socket, phrases: phrases)}
   # end
+
+  def assign_known_translation(socket) do
+    known_language_ids =
+      socket.assigns.user.user_languages
+      |> Enum.filter(&(&1.level > 50))
+      |> Enum.map(& &1.language_id)
+
+    known_translation =
+      socket.assigns.current.translation.phrase.translations
+      |> Enum.shuffle()
+      |> Enum.find(%Dict.Translation{}, &Enum.member?(known_language_ids, &1.language_id))
+
+    IO.inspect(known_translation)
+
+    assign(socket, known_translation: known_translation)
+  end
 end

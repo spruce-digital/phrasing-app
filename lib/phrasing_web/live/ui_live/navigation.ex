@@ -3,6 +3,7 @@ defmodule PhrasingWeb.UILive.Navigation do
 
   import Phoenix.HTML.Link
 
+  alias Phrasing.Account
   alias PhrasingWeb.Router.Helpers, as: Routes
 
   def render(assigns) do
@@ -44,11 +45,13 @@ defmodule PhrasingWeb.UILive.Navigation do
 
   def update(assigns, socket) do
     user =
-      if assigns.user_id do
-        Phrasing.Repo.get(Phrasing.Account.User, assigns.user_id)
-      else
-        nil
+      cond do
+        !!assigns.user -> assigns.user
+        !!assigns.user_id -> Account.get_user!(assigns.user_id)
+        true -> nil
       end
+
+    IO.inspect(assigns)
 
     {:ok, assign(socket, user: user)}
   end

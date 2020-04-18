@@ -52,7 +52,7 @@ defmodule Phrasing.SRS do
         where: r.due_date <= ^Timex.today(),
         where: c.user_id == ^user_id,
         where: c.active == true,
-        preload: [:prev_rep, translation: :language]
+        preload: [:prev_rep, translation: [:language, phrase: [:translations]]]
     )
   end
 

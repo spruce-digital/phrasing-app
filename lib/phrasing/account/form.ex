@@ -71,6 +71,8 @@ defmodule Phrasing.Account.Form do
     })
   end
 
+  def to_user_languages(nil, _user, level: _level), do: []
+
   def to_user_languages(language_ids, user, level: level) do
     language_ids
     |> Enum.map(fn id ->

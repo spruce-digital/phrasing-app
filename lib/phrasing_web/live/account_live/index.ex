@@ -17,6 +17,10 @@ defmodule PhrasingWeb.AccountLive.Index do
   def mount(_params, %{"current_user_id" => user_id}, socket) do
     languages = Dict.list_languages()
 
+    if Phrasing.Repo.get_by(Account.Profile, user_id: user_id) == nil do
+      Account.create_profile(%{user_id: user_id})
+    end
+
     user =
       user_id
       |> Account.get_user!()

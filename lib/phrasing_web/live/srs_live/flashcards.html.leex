@@ -18,7 +18,7 @@
         <% else %>
           <li class="phrase-attr-english">
             <i class="fal fa-flag-usa"></i>
-            <h3><%= Card.target(@current) %></h3>
+            <h3><%= @known_translation.text %></h3>
           </li>
 
           <%= if @current.mnem do %>

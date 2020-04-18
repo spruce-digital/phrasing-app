@@ -1,0 +1,27 @@
+<section class="search--index">
+  <main>
+    <%= live_component @socket, SearchLive.SearchField, id: :search_field,
+      search: @search,
+      languages: @languages
+    %>
+
+    <div class="phrase-list">
+      <%= for phrase <- @phrases do %>
+        <div class="search--phrase" phx-click="show_phrase:<%= phrase.id %>">
+          <main>
+            <ul class="translations">
+              <%= for tr <- phrase.translations do %>
+                <%= if !@filter_translations or tr_match?(tr, @search) do %>
+                  <%= live_component @socket, UILive.Translation, id: tr_id(tr),
+                    translation: tr,
+                    user_id: @user_id
+                  %>
+                <% end %>
+              <% end %>
+            </ul>
+          </main>
+        </div>
+      <% end %>
+    </div>
+  </main>
+</section>

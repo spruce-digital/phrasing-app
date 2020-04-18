@@ -50,10 +50,11 @@ defmodule Phrasing.Dict do
     ilike_query = "%#{query}%"
 
     from p in Phrase,
+      distinct: p.id,
       join: t in assoc(p, :translations),
       where: ilike(t.text, ^ilike_query),
       order_by: fragment("length(?)", t.text),
-      preload: [:translations]
+      preload: [translations: [:cards, :language]]
   end
 
   def search_translations(query) do

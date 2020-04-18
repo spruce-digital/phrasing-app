@@ -21,10 +21,4 @@ defmodule Phrasing.SRS.Card do
     |> cast(attrs, [:translation_id, :user_id, :prev_rep_id, :hint, :mnem, :active])
     |> validate_required([:translation_id, :user_id])
   end
-
-  def source(card) do
-  end
-
-  def target(card) do
-  end
 end

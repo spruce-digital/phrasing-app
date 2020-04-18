@@ -5,13 +5,20 @@
 ### Enhancements
   - `PhraseLive.Edit` Created a dedicated edit phrase page
   - `PhraseLive.TranslationForm` Add translations to a phrase
-  - `SearchLive.Phrase` Better support for multiline translations
-  - `SearchLive.Phrase` Phrases are now navagatable and clickable
+  - `SearchLive.Index` Squashed `SearchLive.RecentPhrases` and `SearchLive.Phrase` into `SearchLive.Index`
+  - `SearchLive.Index` Better support for multiline translations
+  - `SearchLive.Index` Phrases are now navagatable and clickable
+  - `SearchLive.Index` Show matching phrases on search
+  - `SearchLive.Index` Show only matching translaitons while searching
+  - `SearchLive.SearchField` Disable create buton with invalid search parameters
   - `UILive.Translation` Abstracted translation view into reusable component
+  - `SRSLive.Flashcards` Show a random native language on card flip
 
 ### Bugfixes
   - `UILive.Translation` Provide @user_id
   - `SRSLive.Flashcards` Fix rendering of scoring buttons
+  - `SearchLive.Index` Deletes, multiple results, and cleared input all render correctly now
+  - `AccountLive.Index` Create a profile when none exists on page load
 
 ## 1.1.6
 

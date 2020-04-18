@@ -55,4 +55,5 @@ defmodule PhrasingWeb.SearchLive.SearchField do
 
   defp toggle_field(:text), do: :language_text
   defp toggle_field(:language_text), do: :text
+  defp disabled?(search), do: search.text == "" or search.language_id == ""
 end
