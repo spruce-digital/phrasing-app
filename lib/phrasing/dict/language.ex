@@ -10,9 +10,6 @@ defmodule Phrasing.Dict.Language do
     has_many :entries, Phrasing.Dict.Entry
     has_many :cards, Phrasing.SRS.Card
     has_many :card_translations, Phrasing.SRS.Card, foreign_key: :translation_id
-    has_many :songs, Phrasing.Library.Song
-    has_many :books, Phrasing.Library.Book
-    has_many :scripts, Phrasing.Library.Script
 
     timestamps()
   end
