@@ -13,6 +13,8 @@
   - `SearchLive.SearchField` Disable create buton with invalid search parameters
   - `UILive.Translation` Abstracted translation view into reusable component
   - `SRSLive.Flashcards` Show a random native language on card flip
+  - `LibraryLive.Index` Replaced with new library context
+  - `DialogueLive.Edit` Edit dialogues live
 
 ### Bugfixes
   - `UILive.Translation` Provide @user_id

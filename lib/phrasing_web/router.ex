@@ -39,6 +39,8 @@ defmodule PhrasingWeb.Router do
     live "/cards", SRSLive.Cards, :index
     live "/flashcards", SRSLive.Flashcards, :flashcards
     live "/phrases/:id", PhraseLive.Show, :show
+    live "/library", LibraryLive.Index, :index
+    live "/dialogues/:id/edit", DialogueLive.Edit, :edit
   end
 
   # Other scopes may use custom stacks.

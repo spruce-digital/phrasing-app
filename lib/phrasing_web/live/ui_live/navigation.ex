@@ -15,6 +15,7 @@ defmodule PhrasingWeb.UILive.Navigation do
           <li class="spacer"></li>
 
           <%= if @user != nil do %>
+            <li><a href="/library">Library</a></li>
             <li><a href="/cards">Cards</a></li>
             <li><a href="/flashcards">Study</a></li>
             <li class="profile">
@@ -50,8 +51,6 @@ defmodule PhrasingWeb.UILive.Navigation do
         !!assigns.user_id -> Account.get_user!(assigns.user_id)
         true -> nil
       end
-
-    IO.inspect(assigns)
 
     {:ok, assign(socket, user: user)}
   end
