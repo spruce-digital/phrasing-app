@@ -5,6 +5,7 @@ defmodule Phrasing.Library do
 
   import Ecto.Query, warn: false
   alias Phrasing.Repo
+  alias Phrasing.Dict
 
   alias Phrasing.Library.Dialogue
 
@@ -71,6 +72,7 @@ defmodule Phrasing.Library do
     dialogue
     |> Dialogue.changeset(attrs)
     |> Repo.update()
+    |> notify_dialogue_subscribers(:dialogue_update)
   end
 
   @doc """
@@ -98,8 +100,8 @@ defmodule Phrasing.Library do
       %Ecto.Changeset{source: %Dialogue{}}
 
   """
-  def change_dialogue(%Dialogue{} = dialogue) do
-    Dialogue.changeset(dialogue, %{})
+  def change_dialogue(%Dialogue{} = dialogue, attrs \\ %{}) do
+    Dialogue.changeset(dialogue, attrs)
   end
 
   alias Phrasing.Library.DialogueLine
@@ -151,6 +153,24 @@ defmodule Phrasing.Library do
     |> Repo.insert()
   end
 
+  def create_dialogue_line(attrs, user_id: user_id, language_id: language_id) do
+    Repo.transaction(fn ->
+      {:ok, phrase} = Dict.create_phrase(%{"user_id" => user_id})
+
+      {:ok, translation} =
+        Dict.create_translation(%{
+          "phrase_id" => phrase.id,
+          "language_id" => language_id,
+          "text" => attrs["translation"]
+        })
+
+      {:ok, line} = create_dialogue_line(Map.put(attrs, "phrase_id", phrase.id))
+
+      line
+    end)
+    |> notify_dialogue_subscribers(:line_update)
+  end
+
   @doc """
   Updates a dialogue_line.
 
@@ -167,6 +187,48 @@ defmodule Phrasing.Library do
     dialogue_line
     |> DialogueLine.changeset(attrs)
     |> Repo.update()
+  end
+
+  def update_dialogue_line(%DialogueLine{} = dialogue_line, attrs, language_id: language_id) do
+    Repo.transaction(fn ->
+      {:ok, translation} =
+        Dict.create_translation(%{
+          "text" => attrs["translation"],
+          "language_id" => language_id,
+          "phrase_id" => dialogue_line.phrase.id
+        })
+
+      {:ok, line} = update_dialogue_line(dialogue_line, attrs)
+
+      line
+    end)
+    |> notify_dialogue_subscribers(:line_create)
+  end
+
+  def update_dialogue_line(%DialogueLine{} = dialogue_line, attrs, translation_id: translation_id) do
+    Repo.transaction(fn ->
+      {:ok, translation} =
+        translation_id
+        |> Dict.get_translation!()
+        |> Dict.update_translation(%{"text" => attrs["translation"]})
+
+      {:ok, line} = update_dialogue_line(dialogue_line, attrs)
+
+      line
+    end)
+    |> notify_dialogue_subscribers(:line_create)
+  end
+
+  def notify_dialogue_subscribers({:ok, %Dialogue{} = dialogue}, event) do
+    topic = "dialogue:#{dialogue.id}"
+    Phoenix.PubSub.broadcast(Phrasing.PubSub, topic, {:dialogue_change, event})
+    {:ok, dialogue}
+  end
+
+  def notify_dialogue_subscribers({:ok, %DialogueLine{} = line}, event) do
+    topic = "dialogue:#{line.dialogue_id}"
+    Phoenix.PubSub.broadcast(Phrasing.PubSub, topic, {:dialogue_change, event})
+    {:ok, line}
   end
 
   @doc """
@@ -194,7 +256,7 @@ defmodule Phrasing.Library do
       %Ecto.Changeset{source: %DialogueLine{}}
 
   """
-  def change_dialogue_line(%DialogueLine{} = dialogue_line) do
-    DialogueLine.changeset(dialogue_line, %{})
+  def change_dialogue_line(%DialogueLine{} = dialogue_line, attrs \\ %{}) do
+    DialogueLine.changeset(dialogue_line, attrs)
   end
 end

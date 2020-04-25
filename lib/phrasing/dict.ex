@@ -186,25 +186,9 @@ defmodule Phrasing.Dict do
   end
 
   def create_phrase(attrs \\ %{}) do
-    dry_changeset =
-      %Phrase{}
-      |> Phrase.dry_changeset(attrs)
-
-    if dry_changeset.valid? do
-      with phrase_changeset <- Phrase.phrase_changeset(%Phrase{}, attrs),
-           {:ok, %Phrase{} = phrase_raw} <- Repo.insert(phrase_changeset),
-           translation_changeset <- Phrase.translations_changeset(phrase_raw, attrs),
-           {:ok, %Phrase{} = phrase} <- Repo.update(translation_changeset) do
-        {:ok, phrase}
-      else
-        {:error, %Ecto.Changeset{} = changeset} ->
-          {:error, changeset}
-      end
-    else
-      {:error, dry_changeset}
-    end
-
-    # |> notify_dict_subscribers(:phrase_update)
+    %Phrase{}
+    |> Phrase.changeset(attrs)
+    |> Repo.insert()
   end
 
   def create_phrase_from_adder(attrs \\ %{}) do

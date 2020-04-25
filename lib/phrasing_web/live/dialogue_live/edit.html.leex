@@ -1,0 +1,80 @@
+<section class="dialogue--edit">
+  <%= f = form_for @changeset, "#", [phx_change: :validate, phx_submit: :save] %>
+    <%= live_component @socket, Field.Text, id: :title,
+      form: f
+    %>
+
+    <div class="row">
+      <div class="col">
+        <%= live_component @socket, Field.Select, id: :source_language_id,
+          change_target: __MODULE__,
+          form: f,
+          languages: @languages,
+          user_id: @user_id
+        %>
+      </div>
+      <div class="vr"></div>
+      <div class="col">
+        <%= live_component @socket, Field.Select, id: :translation_language_id,
+          change_target: __MODULE__,
+          form: f,
+          languages: @languages,
+          user_id: @user_id
+        %>
+      </div>
+    </div>
+
+  </form>
+
+  <%= for line <- @dialogue.lines do %>
+    <div class="row">
+      <div class="col">
+        <%= if @source_language do %>
+          <%= live_component @socket, DialogueLive.LineEditor,
+            id: "line_#{line.id}_#{@source_language.id}",
+            language: @source_language,
+            line: line,
+            user_id: @user_id
+          %>
+        <% end %>
+      </div>
+      <div class="vr"></div>
+      <div class="col">
+        <%= if @translation_language do %>
+          <%= live_component @socket, DialogueLive.LineEditor,
+            id: "line_#{line.id}_#{@translation_language.id}",
+            language: @translation_language,
+            line: line,
+            user_id: @user_id
+          %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col">
+      <%= if @source_language do %>
+        <%= live_component @socket, DialogueLive.LineEditor,
+          id: "line_n_#{@source_language.id}",
+          language: @source_language,
+          dialogue: @dialogue,
+          position: @max_position + 1,
+          user_id: @user_id
+        %>
+      <% end %>
+    </div>
+    <div class="vr"></div>
+    <div class="col">
+      <%= if @translation_language do %>
+        <%= live_component @socket, DialogueLive.LineEditor,
+          id: "line_n_#{@translation_language.id}",
+          language: @translation_language,
+          dialogue: @dialogue,
+          position: @max_position + 1,
+          user_id: @user_id
+        %>
+      <% end %>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,12 @@
+<section class="dialogue--line-editor">
+  <%= f = form_for @changeset, "#", [phx_change: :validate, phx_submit: @submit_action, phx_target: @myself] %>
+    <%= hidden_input f, :phrase_id %>
+    <%= hidden_input f, :dialogue_id %>
+    <%= hidden_input f, :position %>
+    <%= live_component @socket, Field.Text, id: @id,
+      change_target: __MODULE__,
+      attr: :translation,
+      form: f
+    %>
+  </form>
+</section>
