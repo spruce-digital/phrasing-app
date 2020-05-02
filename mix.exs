@@ -34,6 +34,8 @@ defmodule Phrasing.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:absinthe, "~> 1.4"},
+      {:absinthe_plug, "~> 1.4"},
       {:bcrypt_elixir, "~> 2.0"},
       {:comeonin, "~> 5.1.3"},
       {:ecto_sql, "~> 3.0"},

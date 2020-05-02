@@ -43,6 +43,15 @@ defmodule PhrasingWeb.Router do
     live "/dialogues/:id/edit", DialogueLive.Edit, :edit
   end
 
+  forward "/api", Absinthe.Plug,
+    schema: PhrasingWeb.Schema
+
+  if Mix.env == :dev do
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: PhrasingWeb.Schema
+  end
+
+
   # Other scopes may use custom stacks.
   # scope "/api", PhrasingWeb do
   #   pipe_through :api
