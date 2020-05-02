@@ -72,7 +72,7 @@ defmodule Phrasing.Library do
     dialogue
     |> Dialogue.changeset(attrs)
     |> Repo.update()
-    |> notify_dialogue_subscribers(:dialogue_update)
+    |> notify_dialogue_subscribers(:update)
   end
 
   @doc """
@@ -221,13 +221,13 @@ defmodule Phrasing.Library do
 
   def notify_dialogue_subscribers({:ok, %Dialogue{} = dialogue}, event) do
     topic = "dialogue:#{dialogue.id}"
-    Phoenix.PubSub.broadcast(Phrasing.PubSub, topic, {:dialogue_change, event})
+    Phoenix.PubSub.broadcast(Phrasing.PubSub, topic, {:dialogue_save, :dialogue, event})
     {:ok, dialogue}
   end
 
   def notify_dialogue_subscribers({:ok, %DialogueLine{} = line}, event) do
     topic = "dialogue:#{line.dialogue_id}"
-    Phoenix.PubSub.broadcast(Phrasing.PubSub, topic, {:dialogue_change, event})
+    Phoenix.PubSub.broadcast(Phrasing.PubSub, topic, {:dialogue_save, event})
     {:ok, line}
   end
 

@@ -26,12 +26,13 @@
 
   </form>
 
-  <%= for line <- @dialogue.lines do %>
+  <%= for line <- @lines do %>
     <div class="row">
       <div class="col">
         <%= if @source_language do %>
-          <%= live_component @socket, DialogueLive.LineEditor,
+          <%= live_component @socket, DialogueLive.TranslationForm,
             id: "line_#{line.id}_#{@source_language.id}",
+            changeset: line.source,
             language: @source_language,
             line: line,
             user_id: @user_id
@@ -41,8 +42,9 @@
       <div class="vr"></div>
       <div class="col">
         <%= if @translation_language do %>
-          <%= live_component @socket, DialogueLive.LineEditor,
+          <%= live_component @socket, DialogueLive.TranslationForm,
             id: "line_#{line.id}_#{@translation_language.id}",
+            changeset: line.translation,
             language: @translation_language,
             line: line,
             user_id: @user_id
@@ -55,8 +57,9 @@
   <div class="row">
     <div class="col">
       <%= if @source_language do %>
-        <%= live_component @socket, DialogueLive.LineEditor,
+        <%= live_component @socket, DialogueLive.TranslationForm,
           id: "line_n_#{@source_language.id}",
+          changeset: Dict.change_translation(%Dict.Translation{}),
           language: @source_language,
           dialogue: @dialogue,
           position: @max_position + 1,
@@ -67,8 +70,9 @@
     <div class="vr"></div>
     <div class="col">
       <%= if @translation_language do %>
-        <%= live_component @socket, DialogueLive.LineEditor,
+        <%= live_component @socket, DialogueLive.TranslationForm,
           id: "line_n_#{@translation_language.id}",
+          changeset: Dict.change_translation(%Dict.Translation{}),
           language: @translation_language,
           dialogue: @dialogue,
           position: @max_position + 1,

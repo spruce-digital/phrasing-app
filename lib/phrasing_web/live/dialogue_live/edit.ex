@@ -21,16 +21,21 @@ defmodule PhrasingWeb.DialogueLive.Edit do
       socket
       |> assign(user_id: user_id)
       |> assign(languages: Dict.list_languages())
-      |> assign(dialogue: dialogue)
-      |> assign_lines(dialogue.lines)
-      |> assign_changeset(dialogue)
+      |> assign_dialogue(dialogue)
+      |> assign_lines(dialogue)
 
     {:ok, socket}
   end
 
-  def handle_info({:dialogue_change, event}, socket) do
-    IO.puts(:handle_info)
+  def handle_info({:dialogue_validate, :dialogue, %Ecto.Changeset{} = changeset}, socket) do
+    {:noreply, assign_dialogue(socket, changeset)}
+  end
 
+  def handle_info({:dialogue_save, :dialogue, event}, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_info({:dialogue_save, event}, socket) do
     dialogue =
       socket.assigns.dialogue.id
       |> Library.get_dialogue!()
@@ -39,8 +44,7 @@ defmodule PhrasingWeb.DialogueLive.Edit do
     socket =
       socket
       |> assign(dialogue: dialogue)
-      |> assign_changeset(dialogue)
-      |> assign_lines(dialogue.lines)
+      |> assign_dialogue(dialogue)
 
     {:noreply, socket}
   end
@@ -50,7 +54,8 @@ defmodule PhrasingWeb.DialogueLive.Edit do
       {:ok, dialogue} ->
         socket =
           socket
-          |> assign_changeset(dialogue)
+          |> assign_dialogue(dialogue, dialogue_params)
+          |> assign_lines(dialogue)
           |> put_flash(:dev, "Successfully Created Dialogue")
 
         {:noreply, socket}
@@ -58,39 +63,93 @@ defmodule PhrasingWeb.DialogueLive.Edit do
       {:error, changeset} ->
         socket =
           socket
-          |> assign_changeset(changeset)
+          |> assign_dialogue(changeset)
+          |> notify_dialogue_subscribers(changeset)
           |> put_flash(:dev, "Error Updating Dialogue")
 
         {:noreply, socket}
     end
   end
 
-  defp assign_changeset(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, changeset: changeset)
+  defp notify_dialogue_subscribers(socket, changeset) do
+    topic = "dialogue:#{socket.assigns.dialogue.id}"
+    Phoenix.PubSub.broadcast(Phrasing.PubSub, topic, {:dialogue_validate, :dialogue, changeset})
+
+    socket
   end
 
-  defp assign_changeset(socket, %Library.Dialogue{} = dialogue) do
-    changeset = Library.change_dialogue(dialogue, %{})
+  defp assign_dialogue(socket, %Ecto.Changeset{} = changeset) do
+    socket
+    |> assign(changeset: changeset)
+    |> assign(dialogue: changeset.data.dialogue)
+    |> assign_languages()
+  end
+
+  defp assign_dialogue(socket, %Library.Dialogue{} = dialogue) do
+    changeset =
+      if socket.assigns[:changeset] do
+        Library.change_dialogue(dialogue, %{
+          "translation_language_id" =>
+            get_change(socket.assigns.changeset, :translation_language_id)
+            |> IO.inspect(label: :changeme)
+        })
+      else
+        Library.change_dialogue(dialogue, %{})
+      end
 
     socket
     |> assign(changeset: changeset)
-    |> assign_languages(dialogue)
+    |> assign(dialogue: dialogue)
+    |> assign_languages()
   end
 
-  defp assign_changeset(socket, dialogue_params) do
-    changeset = Library.change_dialogue(socket.assigns.dialogue, dialogue_params)
+  defp assign_dialogue(socket, %Library.Dialogue{} = dialogue, params) do
+    changeset = Library.change_dialogue(dialogue, params)
 
     socket
+    |> assign(dialogue: dialogue)
     |> assign(changeset: changeset)
-    |> assign_languages(changeset)
+    |> notify_dialogue_subscribers(changeset)
+    |> assign_languages()
   end
 
-  defp assign_languages(socket, %Library.Dialogue{} = dialogue) do
+  defp assign_lines(socket, %Library.Dialogue{} = dialogue) do
+    current_lines =
+      dialogue.lines
+      |> Enum.sort_by(& &1.position)
+      |> Enum.map(fn line ->
+        %{
+          id: line.id,
+          source: translation_for_line(line, socket.assigns.source_language),
+          translation: translation_for_line(line, socket.assigns.translation_language)
+        }
+      end)
+
+    max =
+      (dialogue.lines ++ [%Library.DialogueLine{position: 1}])
+      |> Enum.max_by(& &1.position)
+
+    next_line = %{
+      id: "n",
+      source: translation_for_line(nil, socket.assigns.source_language),
+      translation: translation_for_line(nil, socket.assigns.translation_language)
+    }
+
+    socket
+    |> assign(lines: current_line ++ next_line)
+    |> assign(max_position: max.position)
+  end
+
+  defp assign_languages(socket) do
     source_language =
-      socket.assigns.languages
-      |> Enum.find(nil, &(&1.id == dialogue.source_language_id))
+      socket.assigns.changeset
+      |> get_field(:source_language_id)
+      |> language_by_id(socket)
 
-    translation_language = nil
+    translation_language =
+      socket.assigns.changeset
+      |> get_field(:translation_language_id)
+      |> language_by_id(socket)
 
     assign(socket, source_language: source_language, translation_language: translation_language)
   end
@@ -107,13 +166,29 @@ defmodule PhrasingWeb.DialogueLive.Edit do
     assign(socket, source_language: source_language, translation_language: translation_language)
   end
 
-  defp assign_lines(socket, lines) do
-    max =
-      (lines ++ [%Library.DialogueLine{position: 1}])
-      |> Enum.max_by(& &1.position)
+  defp language_by_id(id, socket) do
+    socket.assigns.languages
+    |> Enum.find(nil, &(&1.id == id))
+  end
 
-    socket
-    |> assign(lines: Enum.sort_by(lines, & &1.position))
-    |> assign(max_position: max.position)
+  defp translation_for_line(line, nil) do
+    Dict.change_translation(%Dict.Translation{})
+  end
+
+  defp translation_for_line(nil, language) do
+    new_translation(%{
+  end
+
+  defp translation_for_line(line, language) do
+    line.phrase.translations
+    |> Enum.find(new_translation(line, language), &(&1.language_id == language.id))
+    |> Dict.change_translation()
+  end
+
+  defp new_translation(line, language) do
+    %Dict.Translation{
+      line_id: line.id,
+      language_id: language.id
+    }
   end
 end
