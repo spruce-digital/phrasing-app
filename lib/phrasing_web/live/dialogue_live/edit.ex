@@ -136,7 +136,7 @@ defmodule PhrasingWeb.DialogueLive.Edit do
     }
 
     socket
-    |> assign(lines: current_line ++ next_line)
+    |> assign(lines: current_lines ++ next_line)
     |> assign(max_position: max.position)
   end
 
@@ -176,7 +176,7 @@ defmodule PhrasingWeb.DialogueLive.Edit do
   end
 
   defp translation_for_line(nil, language) do
-    new_translation(%{
+    nil
   end
 
   defp translation_for_line(line, language) do
