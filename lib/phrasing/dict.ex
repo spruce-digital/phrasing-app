@@ -17,6 +17,14 @@ defmodule Phrasing.Dict do
     Phoenix.PubSub.subscribe(Phrasing.PubSub, @topic)
   end
 
+  def data() do
+    Dataloader.Ecto.new(Phrasing.Repo, query: &query/2)
+  end
+
+  def query(queryable, _params) do
+    queryable
+  end
+
   alias Phrasing.Dict.Search
 
   @doc """
@@ -475,6 +483,17 @@ defmodule Phrasing.Dict do
   """
   def list_translations do
     Repo.all(Translation)
+  end
+
+  def list_translations(query) do
+    ilike_query = "%#{query}%"
+
+    query = from t in Translation,
+      # distinct: t.phrase_id,
+      where: ilike(t.text, ^ilike_query),
+      order_by: fragment("length(?)", t.text)
+
+    Repo.all(query)
   end
 
   @doc """

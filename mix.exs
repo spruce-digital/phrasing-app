@@ -38,6 +38,8 @@ defmodule Phrasing.MixProject do
       {:absinthe_plug, "~> 1.4"},
       {:bcrypt_elixir, "~> 2.0"},
       {:comeonin, "~> 5.1.3"},
+      {:cors_plug, "~> 2.0.2"},
+      {:dataloader, "~> 1.0.7"},
       {:ecto_sql, "~> 3.0"},
       {:ex_machina, "~> 2.3", only: :test},
       {:excheck, "~> 0.6", only: :test},

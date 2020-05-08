@@ -8,7 +8,7 @@ defmodule PhrasingWeb.Endpoint do
     signing_salt: "MgQ0zgyN"
   ]
 
-  @origins ["//phrasing.app", "//www.phrasing.app"]
+  @origins ["//phrasing.app", "//www.phrasing.app", "http://localhost:8280/"]
 
   socket "/socket", PhrasingWeb.UserSocket,
     websocket: true,
@@ -52,6 +52,9 @@ defmodule PhrasingWeb.Endpoint do
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session, @session_options
+
+  plug CORSPlug,
+    origin: ["http://localhost:4500"]
 
   plug PhrasingWeb.Router
 end
