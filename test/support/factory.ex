@@ -2,7 +2,7 @@ defmodule Phrasing.Factory do
   use ExMachina.Ecto, repo: Phrasing.Repo
 
   def user_factory do
-    %Phrasing.Accounts.User{
+    %Phrasing.Account.User{
       email: sequence(:email, &"factory_#{&1}@worker.com"),
       encrypted_password: "foo",
     }

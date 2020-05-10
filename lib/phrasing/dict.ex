@@ -99,6 +99,12 @@ defmodule Phrasing.Dict do
     Repo.all(list_phrases_query)
   end
 
+  def list_phrases(user_id: user_id) do
+    Phrase
+    |> where(user_id: ^user_id)
+    |> Repo.all()
+  end
+
   def list_phrases(user_id) do
     cards_query = from c in SRS.Card, where: c.user_id == ^user_id
 
@@ -193,10 +199,42 @@ defmodule Phrasing.Dict do
     end)
   end
 
+  def create_phrase(attrs, translations: translations) do
+    Repo.transaction(fn ->
+      case create_phrase(attrs) do
+        {:ok, phrase} ->
+          translations =
+            translations
+            |> Enum.map(& Map.put(&1, :phrase_id, phrase.id))
+            |> Enum.map(& Translation.changeset(%Translation{}, &1))
+            |> Enum.with_index()
+            |> Enum.map(fn {ch, i} -> Ecto.Multi.insert(Ecto.Multi.new(), i, ch) end)
+            |> Enum.reduce(Ecto.Multi.new(), &Ecto.Multi.append/2)
+            |> Repo.transaction()
+            |> case do
+              {:ok, _translations} ->
+                Repo.preload(phrase, :translations)
+
+              {:error, _index, changeset, _changes} ->
+                Repo.rollback(changeset)
+            end
+
+        {:error, changeset} ->
+          Repo.rollback(changeset)
+      end
+    end)
+  end
+
   def create_phrase(attrs \\ %{}) do
-    %Phrase{}
-    |> Phrase.changeset(attrs)
-    |> Repo.insert()
+    case Map.pop(attrs, :translations) do
+      {nil, attrs} ->
+        %Phrase{}
+        |> Phrase.changeset(attrs)
+        |> Repo.insert()
+
+      {trs, attrs} ->
+        create_phrase(attrs, translations: trs)
+    end
   end
 
   def create_phrase_from_adder(attrs \\ %{}) do

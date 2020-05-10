@@ -329,4 +329,100 @@ defmodule Phrasing.Account do
   def change_profile(%Profile{} = profile) do
     Profile.changeset(profile, %{})
   end
+
+  alias Phrasing.Account.JWT
+
+  @doc """
+  Returns the list of jwts.
+
+  ## Examples
+
+      iex> list_jwts()
+      [%JWT{}, ...]
+
+  """
+  def list_jwts do
+    Repo.all(JWT)
+  end
+
+  @doc """
+  Gets a single jwt.
+
+  Raises `Ecto.NoResultsError` if the Jwt does not exist.
+
+  ## Examples
+
+      iex> get_jwt!(123)
+      %JWT{}
+
+      iex> get_jwt!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_jwt!(id), do: Repo.get!(JWT, id)
+
+  @doc """
+  Creates a jwt.
+
+  ## Examples
+
+      iex> create_jwt(%{field: value})
+      {:ok, %JWT{}}
+
+      iex> create_jwt(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_jwt(attrs \\ %{}) do
+    %JWT{}
+    |> JWT.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a jwt.
+
+  ## Examples
+
+      iex> update_jwt(jwt, %{field: new_value})
+      {:ok, %JWT{}}
+
+      iex> update_jwt(jwt, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_jwt(%JWT{} = jwt, attrs) do
+    jwt
+    |> JWT.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a jwt.
+
+  ## Examples
+
+      iex> delete_jwt(jwt)
+      {:ok, %JWT{}}
+
+      iex> delete_jwt(jwt)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_jwt(%JWT{} = jwt) do
+    Repo.delete(jwt)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking jwt changes.
+
+  ## Examples
+
+      iex> change_jwt(jwt)
+      %Ecto.Changeset{source: %JWT{}}
+
+  """
+  def change_jwt(%JWT{} = jwt) do
+    JWT.changeset(jwt, %{})
+  end
 end

@@ -45,6 +45,7 @@ defmodule Phrasing.MixProject do
       {:excheck, "~> 0.6", only: :test},
       {:floki, ">= 0.0.0", only: :test},
       {:gettext, "~> 0.11"},
+      {:guardian, "~> 1.0"},
       {:jason, "~> 1.1"},
       {:paasaa, "~> 0.5.0"},
       {:phoenix, "~> 1.4.16"},

@@ -31,6 +31,11 @@ config :logger, :console,
 config :phoenix, :json_library, Poison
 config :postgrex, :json_library, Poison
 
+# Configure Guardian
+config :phrasing, Phrasing.Guardian,
+  issuer: "phrasing.dev",
+  secret_key: "DNGUF29vykME2SeWc/3qiGhhlHb1w16z30jZbf2mnNpAmyHWeF9xUoQpjbZhrClw"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

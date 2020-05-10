@@ -18,8 +18,9 @@ defmodule PhrasingWeb.Router do
     plug :check_auth
   end
 
-  pipeline :api do
+  pipeline :gql do
     plug :accepts, ["json"]
+    plug PhrasingWeb.Plugs.AbsintheContext
   end
 
   scope "/", PhrasingWeb do
@@ -41,16 +42,18 @@ defmodule PhrasingWeb.Router do
     live "/phrases/:id", PhraseLive.Show, :show
     live "/library", LibraryLive.Index, :index
     live "/dialogues/:id/edit", DialogueLive.Edit, :edit
+
   end
 
-  forward "/api", Absinthe.Plug,
-    schema: PhrasingWeb.Schema
+  scope "/api" do
+    pipe_through :gql
 
-  if Mix.env == :dev do
-    forward "/graphiql", Absinthe.Plug.GraphiQL,
-      schema: PhrasingWeb.Schema
+    forward "/api", Absinthe.Plug, schema: PhrasingWeb.Schema
+
+    if Mix.env == :dev do
+      forward "/graphiql", Absinthe.Plug.GraphiQL, schema: PhrasingWeb.Schema
+    end
   end
-
 
   # Other scopes may use custom stacks.
   # scope "/api", PhrasingWeb do
