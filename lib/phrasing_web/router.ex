@@ -15,7 +15,10 @@ defmodule PhrasingWeb.Router do
   end
 
   pipeline :auth do
-    plug :check_auth
+    # plug :check_auth
+
+    plug CORSPlug,
+      origin: ["http://localhost:4500"]
   end
 
   pipeline :gql do
@@ -48,7 +51,7 @@ defmodule PhrasingWeb.Router do
   scope "/api" do
     pipe_through :gql
 
-    forward "/api", Absinthe.Plug, schema: PhrasingWeb.Schema
+    forward "/", Absinthe.Plug, schema: PhrasingWeb.Schema
 
     if Mix.env == :dev do
       forward "/graphiql", Absinthe.Plug.GraphiQL, schema: PhrasingWeb.Schema

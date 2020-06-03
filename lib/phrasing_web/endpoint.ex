@@ -53,8 +53,7 @@ defmodule PhrasingWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session, @session_options
 
-  plug CORSPlug,
-    origin: ["http://localhost:4500"]
+  plug CORSPlug, origin: ["http://localhost:4500"]
 
   plug PhrasingWeb.Router
 end

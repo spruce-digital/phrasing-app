@@ -98,8 +98,11 @@ defmodule PhrasingWeb.Schema do
     end
 
     field :phrases, list_of(:phrase) do
-      resolve fn _, %{context: %{current_user: current_user}} ->
-        {:ok, Dict.list_phrases(user_id: current_user.id)}
+      resolve fn
+        _, %{context: %{current_user: current_user}} ->
+          {:ok, Dict.list_phrases(user_id: current_user.id)}
+        _, _ ->
+          {:ok, []}
       end
     end
 
@@ -126,8 +129,8 @@ defmodule PhrasingWeb.Schema do
       arg :input, non_null(:session_input)
 
       resolve fn _, %{input: input}, _ ->
-        with user <- Phrasing.Account.get_by_email(input.email),
-             {:ok, user} <- Bcrypt.check_pass(user, input.password),
+        with user <- Phrasing.Account.get_by_email(input[:email]),
+             {:ok, user} <- Bcrypt.check_pass(user, input[:password]),
              {:ok, token, _} <- Phrasing.Guardian.encode_and_sign(user),
              {:ok, _} <- Phrasing.Account.create_jwt(%{user_id: user.id, token: token}) do
           {:ok, %{token: token, user: user}}
