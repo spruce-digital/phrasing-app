@@ -49,13 +49,13 @@ defmodule PhrasingWeb.Router do
   end
 
   scope "/api" do
-    pipe_through :gql
-
-    forward "/", Absinthe.Plug, schema: PhrasingWeb.Schema
-
     if Mix.env == :dev do
       forward "/graphiql", Absinthe.Plug.GraphiQL, schema: PhrasingWeb.Schema
     end
+
+    pipe_through :gql
+
+    forward "/", Absinthe.Plug, schema: PhrasingWeb.Schema
   end
 
   # Other scopes may use custom stacks.

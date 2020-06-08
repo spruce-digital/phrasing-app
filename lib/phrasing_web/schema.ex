@@ -10,6 +10,7 @@ defmodule PhrasingWeb.Schema.Types do
   object :language do
     field :id, :id
     field :name, :string
+    field :code, :string
   end
 
   object :phrase do
