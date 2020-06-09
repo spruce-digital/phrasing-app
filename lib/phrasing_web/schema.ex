@@ -32,6 +32,7 @@ defmodule PhrasingWeb.Schema.Types do
   input_object :translation_input do
     field :text, :string
     field :language_id, :id
+    field :code, :string
   end
 
   object :user do
@@ -98,6 +99,13 @@ defmodule PhrasingWeb.Schema do
       end
     end
 
+    field :phrase, :phrase do
+      arg :id, non_null(:id)
+      resolve fn %{id: id}, _ ->
+        {:ok, Dict.get_phrase!(id)}
+      end
+    end
+
     field :phrases, list_of(:phrase) do
       resolve fn
         _, %{context: %{current_user: current_user}} ->
@@ -119,9 +127,10 @@ defmodule PhrasingWeb.Schema do
       arg :input, non_null(:session_input)
 
       resolve fn _, %{input: input}, _ ->
-        case Phrasing.Account.create_user(input) do
-          {:ok, user} -> {:ok, user}
-          {:error, changeset} -> {:error, changeset.errors}
+        with {:ok, user} <- Phrasing.Account.create_user(input),
+             {:ok, token, _} <- Phrasing.Guardian.encode_and_sign(user),
+             {:ok, _} <- Phrasing.Account.create_jwt(%{user_id: user.id, token: token}) do
+          {:ok, %{token: token, user: user}}
         end
       end
     end
@@ -143,8 +152,18 @@ defmodule PhrasingWeb.Schema do
       arg :input, non_null(:phrase_input)
 
       resolve fn %{input: input}, %{context: %{current_user: current_user}} ->
+        languages = Dict.list_languages()
+
+        IO.inspect(input, label: :create_phrase_input)
+
         input
         |> Map.put(:user_id, current_user.id)
+        |> Map.update(:translations, %{}, fn trs ->
+          Enum.map(trs, fn tr ->
+            language = Enum.find(languages, fn l -> l.code == tr[:code] end)
+            Map.put(tr, :language_id, language.id)
+          end)
+        end)
         |> Dict.create_phrase()
       end
     end
