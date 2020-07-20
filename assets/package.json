@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "flag-icon-css": "^3.4.5",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view"
